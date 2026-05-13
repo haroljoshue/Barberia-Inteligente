@@ -18,6 +18,11 @@ namespace Barberia.MVC.Controllers
             return View();
         }
 
+        public IActionResult QuienesSomos()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

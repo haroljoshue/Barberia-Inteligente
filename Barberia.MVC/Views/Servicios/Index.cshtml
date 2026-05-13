@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ModelosBarberia.Servicio>
+
+@{
+    ViewData["Title"] = "Servicios";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Listado de Servicios</h2>
+
+    <p>
+        <a asp-action="Create" class="btn btn-success">Registrar Nuevo Servicio</a>
+    </p>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Duración (min)</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var servicio in Model)
+            {
+                <tr>
+                    <td>@servicio.Nombre</td>
+                    <td>@servicio.Descripcion</td>
+                    <td>@servicio.Precio.ToString("C")</td>
+                    <td>@servicio.DuracionMinutos</td>
+                    <td>@(servicio.Activo ? "Sí" : "No")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@servicio.Id" class="btn btn-sm btn-primary">Editar</a>
+                        <a asp-action="Details" asp-route-id="@servicio.Id" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@servicio.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

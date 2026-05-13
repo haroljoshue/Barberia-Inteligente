@@ -61,11 +61,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\CRUD\\CRUD.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\CRUD\\CRUD.csproj",
       "projectName": "CRUD",
-      "projectPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\CRUD\\CRUD.csproj",
+      "projectPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\CRUD\\CRUD.csproj",
       "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\CRUD\\obj\\",
+      "outputPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\CRUD\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

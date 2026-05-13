@@ -1,0 +1,35 @@
+﻿@model ModelosBarberia.Barbero
+
+@{
+    ViewData["Title"] = "Eliminar Barbero";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-danger">Eliminar Barbero</h2>
+
+    <h4>¿Está seguro de que desea eliminar este barbero?</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Especialidad</dt>
+        <dd class="col-sm-9">@Model.Especialidad</dd>
+
+        <dt class="col-sm-3">Teléfono</dt>
+        <dd class="col-sm-9">@Model.Telefono</dd>
+
+        <dt class="col-sm-3">Correo Electrónico</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Disponible</dt>
+        <dd class="col-sm-9">@(Model.Disponible ? "Sí" : "No")</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

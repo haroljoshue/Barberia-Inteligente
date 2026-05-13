@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PiALuBJRliw=",
+  "dgSpecHash": "HaVDAaxwTLA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\Barberia.Api\\Barberia.Api.csproj",
+  "projectFilePath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\Barberia.Api\\Barberia.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

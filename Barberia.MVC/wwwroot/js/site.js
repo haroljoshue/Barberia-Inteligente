@@ -1,4 +1,26 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// Animación suave al hacer scroll
+document.addEventListener("DOMContentLoaded", function () {
+    const elements = document.querySelectorAll(".card, table, form");
 
-// Write your JavaScript code.
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("fade-in");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+
+    elements.forEach(el => {
+        el.classList.add("hidden");
+        observer.observe(el);
+    });
+});
+
+// Clase CSS para animación
+const style = document.createElement("style");
+style.innerHTML = `
+.hidden { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+.fade-in { opacity: 1; transform: translateY(0); }
+`;
+document.head.appendChild(style);

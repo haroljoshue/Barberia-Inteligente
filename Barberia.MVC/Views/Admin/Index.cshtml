@@ -1,0 +1,87 @@
+﻿@model Barberia.MVC.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<div class="container my-5">
+    <h1 class="mb-4 text-primary">Panel de Administración</h1>
+
+    <!-- Botones de gestión -->
+    <div class="row mb-5">
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="Usuarios" asp-action="Index">Gestionar Usuarios</a>
+        </div>
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="Servicios" asp-action="Index">Gestionar Servicios</a>
+        </div>
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="Roles" asp-action="Index">Gestionar Roles</a>
+        </div>
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="Barberos" asp-action="Index">Gestionar Barberos</a>
+        </div>
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="LogSistemas" asp-action="Index">Logs de Sistema</a>
+        </div>
+        <div class="col-md-2 mb-3">
+            <a class="btn btn-primary w-100" asp-controller="LogAgentes" asp-action="Index">Logs de Agentes</a>
+        </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reservas por Servicio</h5>
+                    <canvas id="reservasPorServicio"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Usuarios por Rol</h5>
+                    <canvas id="usuariosPorRol"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos dinámicos desde el modelo
+        const reservasLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Keys));
+        const reservasData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Values));
+
+        const usuariosLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Keys));
+        const usuariosData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Values));
+
+        // Gráfico de reservas por servicio
+        new Chart(document.getElementById('reservasPorServicio'), {
+            type: 'bar',
+            data: {
+                labels: reservasLabels,
+                datasets: [{
+                    label: 'Reservas',
+                    data: reservasData,
+                    backgroundColor: '#0077b6'
+                }]
+            }
+        });
+
+        // Gráfico de usuarios por rol
+        new Chart(document.getElementById('usuariosPorRol'), {
+            type: 'pie',
+            data: {
+                labels: usuariosLabels,
+                datasets: [{
+                    data: usuariosData,
+                    backgroundColor: ['#0077b6', '#0096c7', '#90e0ef']
+                }]
+            }
+        });
+    </script>
+}

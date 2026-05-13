@@ -1,8 +1,82 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio - Barbershop's Ibarra";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center my-5">
+    <h1 class="display-4">Bienvenido a Barbershop's Ibarra</h1>
+    <p class="lead">Tu estilo, nuestra pasión. Descubre lo mejor en cortes, afeitados y cuidado personal.</p>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Low Fade</h5>
+                <p class="card-text">Corte moderno con degradado bajo, ideal para un look fresco.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Taper Fade</h5>
+                <p class="card-text">Degradado progresivo en nuca y laterales, versátil y elegante.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Arreglo de Barba</h5>
+                <p class="card-text">Perfilado y recorte de barba con acabado profesional.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Corte Clásico</h5>
+                <p class="card-text">Corte tradicional con peine y tijera, estilo atemporal.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Mullet</h5>
+                <p class="card-text">Corte retro con estilo actual, largo atrás y corto adelante.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">Fade Medio</h5>
+                <p class="card-text">Degradado a media altura, balance entre clásico y moderno.</p>
+                <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="text-center mt-5">
+    <h3>Promociones Especiales</h3>
+    <p>¡Corte + arreglo de barba a precio especial todos los viernes!</p>
+    <a class="btn btn-success" asp-controller="Citas" asp-action="Create">Reservar Ahora</a>
 </div>

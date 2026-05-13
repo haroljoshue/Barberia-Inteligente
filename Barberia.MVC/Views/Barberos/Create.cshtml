@@ -1,0 +1,57 @@
+﻿@model ModelosBarberia.Barbero
+
+@{
+    ViewData["Title"] = "Registrar Barbero";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Registrar Nuevo Barbero</h2>
+    <hr />
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Nombre -->
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label">Nombre Completo</label>
+            <input asp-for="Nombre" class="form-control" required />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <!-- Especialidad -->
+        <div class="mb-3">
+            <label asp-for="Especialidad" class="form-label">Especialidad</label>
+            <input asp-for="Especialidad" class="form-control" required />
+            <span asp-validation-for="Especialidad" class="text-danger"></span>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="mb-3">
+            <label asp-for="Telefono" class="form-label">Teléfono</label>
+            <input asp-for="Telefono" class="form-control" />
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Correo Electrónico</label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <!-- Disponible -->
+        <div class="form-check mb-3">
+            <input class="form-check-input" asp-for="Disponible" />
+            <label class="form-check-label" asp-for="Disponible">Disponible</label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Registrar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,17 @@
+﻿@model ModelosBarberia.ApplicationUser
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-danger">Eliminar Usuario</h2>
+
+    <h4>¿Seguro que deseas eliminar al usuario <strong>@Model.UserName</strong>?</h4>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

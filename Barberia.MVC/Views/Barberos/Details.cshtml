@@ -1,0 +1,32 @@
+﻿@model ModelosBarberia.Barbero
+
+@{
+    ViewData["Title"] = "Detalles del Barbero";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Detalles del Barbero</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+
+        <dt class="col-sm-3">Especialidad</dt>
+        <dd class="col-sm-9">@Model.Especialidad</dd>
+
+        <dt class="col-sm-3">Teléfono</dt>
+        <dd class="col-sm-9">@Model.Telefono</dd>
+
+        <dt class="col-sm-3">Correo Electrónico</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Disponible</dt>
+        <dd class="col-sm-9">@(Model.Disponible ? "Sí" : "No")</dd>
+    </dl>
+
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</div>

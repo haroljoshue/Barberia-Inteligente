@@ -1,0 +1,47 @@
+﻿@model ModelosBarberia.ViewModels.ClienteDashboardViewModel
+
+@{
+    ViewData["Title"] = "Panel del Cliente";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Bienvenido, @Model.Cliente.NombreCompleto</h2>
+
+    <p>
+        <a asp-action="Agendar" class="btn btn-success">Agendar Nueva Cita</a>
+    </p>
+
+    <h4>Historial de Citas</h4>
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Barbero</th>
+                <th>Servicio</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Observación</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.HistorialCitas.Any())
+            {
+                foreach (var cita in Model.HistorialCitas)
+                {
+                    <tr>
+                        <td>@cita.Barbero.Nombre</td>
+                        <td>@cita.Servicio.Nombre</td>
+                        <td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@cita.Estado</td>
+                        <td>@cita.Observacion</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No tienes citas registradas.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

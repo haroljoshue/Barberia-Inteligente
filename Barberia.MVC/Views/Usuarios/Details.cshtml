@@ -1,0 +1,29 @@
+﻿@model ModelosBarberia.ApplicationUser
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Detalles del Usuario</h2>
+
+    <dl class="row">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+
+        <dt class="col-sm-3">Usuario</dt>
+        <dd class="col-sm-9">@Model.UserName</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Rol</dt>
+        <dd class="col-sm-9">@Model.RolSistema</dd>
+
+        <dt class="col-sm-3">Activo</dt>
+        <dd class="col-sm-9">@(Model.Activo ? "Sí" : "No")</dd>
+    </dl>
+
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</div>

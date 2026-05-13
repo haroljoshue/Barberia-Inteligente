@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "Barberia.Api\\Barberia.Api.csproj",
+        "Action": "StartWithoutDebugging"
+      },
+      {
+        "Path": "Barberia.MVC\\Barberia.MVC.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

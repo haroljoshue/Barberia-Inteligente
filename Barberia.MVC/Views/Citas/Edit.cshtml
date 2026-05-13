@@ -1,0 +1,47 @@
+﻿@model ModelosBarberia.Cita
+
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Editar Cita</h2>
+    <hr />
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Fecha y hora -->
+        <div class="mb-3">
+            <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+            <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+            <span asp-validation-for="FechaHora" class="text-danger"></span>
+        </div>
+
+        <!-- Estado -->
+        <div class="mb-3">
+            <label asp-for="Estado" class="form-label">Estado</label>
+            <select asp-for="Estado" class="form-select" asp-items="Html.GetEnumSelectList<ModelosBarberia.Enum.EstadoCita>()">
+                <option value="">Seleccione un estado</option>
+            </select>
+            <span asp-validation-for="Estado" class="text-danger"></span>
+        </div>
+
+        <!-- Observación -->
+        <div class="mb-3">
+            <label asp-for="Observacion" class="form-label">Observación</label>
+            <textarea asp-for="Observacion" class="form-control"></textarea>
+            <span asp-validation-for="Observacion" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

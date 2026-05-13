@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace CRUD
@@ -22,12 +23,13 @@ namespace CRUD
                 }
                 else
                 {
-                    throw new Exception($"Error: {response.StatusCode}");
+                    var error = response.Content.ReadAsStringAsync().Result;
+                    throw new Exception($"Error: {response.StatusCode} - {error}");
                 }
             }
         }
 
-        public static T? GetById(Guid id)
+        public static T? GetById(string id)
         {
             using (var client = new HttpClient())
             {
@@ -40,12 +42,13 @@ namespace CRUD
                 }
                 else
                 {
-                    throw new Exception($"Error: {response.StatusCode}");
+                    var error = response.Content.ReadAsStringAsync().Result;
+                    throw new Exception($"Error: {response.StatusCode} - {error}");
                 }
             }
         }
 
-        public static List<T> GetBy(string campo, Guid id)
+        public static List<T> GetBy(string campo, string id)
         {
             using (var client = new HttpClient())
             {
@@ -58,7 +61,8 @@ namespace CRUD
                 }
                 else
                 {
-                    throw new Exception($"Error: {response.StatusCode}");
+                    var error = response.Content.ReadAsStringAsync().Result;
+                    throw new Exception($"Error: {response.StatusCode} - {error}");
                 }
             }
         }
@@ -88,7 +92,7 @@ namespace CRUD
             }
         }
 
-        public static bool Update(Guid id, T item)
+        public static bool Update(string id, T item)
         {
             using (var client = new HttpClient())
             {
@@ -112,7 +116,7 @@ namespace CRUD
             }
         }
 
-        public static bool Delete(Guid id)
+        public static bool Delete(string id)
         {
             using (var client = new HttpClient())
             {

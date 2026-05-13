@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zkwcAppzuyM=",
+  "dgSpecHash": "JbxBZKtnVAg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\CRUD\\CRUD.csproj",
+  "projectFilePath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\CRUD\\CRUD.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\microsoft.net.sdk.compilers.toolset\\9.0.301\\microsoft.net.sdk.compilers.toolset.9.0.301.nupkg.sha512"

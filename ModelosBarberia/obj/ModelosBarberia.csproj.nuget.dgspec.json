@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\ModelosBarberia\\ModelosBarberia.csproj": {}
+    "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\ModelosBarberia\\ModelosBarberia.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\ModelosBarberia\\ModelosBarberia.csproj": {
+    "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\ModelosBarberia\\ModelosBarberia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\ModelosBarberia\\ModelosBarberia.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\ModelosBarberia\\ModelosBarberia.csproj",
         "projectName": "ModelosBarberia",
-        "projectPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\ModelosBarberia\\ModelosBarberia.csproj",
+        "projectPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\ModelosBarberia\\ModelosBarberia.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\Proyecto\\ModelosBarberia\\obj\\",
+        "outputPath": "C:\\Users\\user\\Documents\\GitHub\\BarberiaInteligente\\BarberiaInteligente\\ModelosBarberia\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
