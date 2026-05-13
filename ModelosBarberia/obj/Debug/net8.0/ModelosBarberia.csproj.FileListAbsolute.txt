@@ -1,0 +1,12 @@
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\bin\Debug\net8.0\ModelosBarberia.deps.json
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\bin\Debug\net8.0\ModelosBarberia.dll
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\bin\Debug\net8.0\ModelosBarberia.pdb
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.csproj.AssemblyReference.cache
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.AssemblyInfoInputs.cache
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.AssemblyInfo.cs
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.dll
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\refint\ModelosBarberia.dll
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ModelosBarberia.pdb
+C:\Users\user\Documents\GitHub\BarberiaInteligente\ModelosBarberia\ModelosBarberia\obj\Debug\net8.0\ref\ModelosBarberia.dll
