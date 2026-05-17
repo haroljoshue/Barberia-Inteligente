@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using ModelosBarberia.DTO_s;
 using ModelosBarberia.Enum;
+using Npgsql;
 
 
 namespace Barberia.Api.Controllers
@@ -328,6 +329,138 @@ namespace Barberia.Api.Controllers
 
             mensaje = string.Empty;
             return true;
+        }
+
+        [HttpPost("verificar-disponibilidad")]
+        public async Task<IActionResult> VerificarDisponibilidad([FromBody] VerificarDisponibilidadDto dto)
+        {
+            if (dto.BarberoId <= 0)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Debe enviar un barbero válido."
+                });
+            }
+
+            if (dto.FechaHora == default)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Debe enviar la fecha y hora a verificar."
+                });
+            }
+
+            var fechaHoraUtc = dto.FechaHora.ToUniversalTime();
+
+            var existeCita = await _context.Citas.AnyAsync(c =>
+                c.BarberoId == dto.BarberoId &&
+                c.FechaHora == fechaHoraUtc &&
+                c.Estado != EstadoCita.Cancelada
+            );
+
+            var disponible = !existeCita;
+
+            return Ok(new
+            {
+                success = true,
+                disponible,
+                message = disponible
+                    ? "El horario está disponible."
+                    : "El barbero ya tiene una cita en ese horario.",
+                data = new
+                {
+                    barberoId = dto.BarberoId,
+                    fechaHora = fechaHoraUtc
+                }
+            });
+        }
+
+        [HttpPost("horarios-disponibles")]
+        public async Task<IActionResult> HorariosDisponibles([FromBody] HorariosDisponiblesDto dto)
+        {
+            if (dto.BarberoId <= 0)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Debe enviar un barbero válido."
+                });
+            }
+
+            if (dto.Fecha == default)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Debe enviar una fecha válida."
+                });
+            }
+
+            var fecha = dto.Fecha.Date;
+
+            var inicioDia = DateTime.SpecifyKind(fecha, DateTimeKind.Local).ToUniversalTime();
+            var finDia = DateTime.SpecifyKind(fecha.AddDays(1), DateTimeKind.Local).ToUniversalTime();
+
+            var citasOcupadas = await _context.Citas
+                .AsNoTracking()
+                .Where(c =>
+                    c.BarberoId == dto.BarberoId &&
+                    c.FechaHora >= inicioDia &&
+                    c.FechaHora < finDia &&
+                    c.Estado != EstadoCita.Cancelada)
+                .Select(c => c.FechaHora)
+                .ToListAsync();
+
+            var horariosBase = new List<TimeSpan>
+                {
+                    new TimeSpan(9, 0, 0),
+                    new TimeSpan(10, 0, 0),
+                    new TimeSpan(11, 0, 0),
+                    new TimeSpan(12, 0, 0),
+                    new TimeSpan(14, 0, 0),
+                    new TimeSpan(15, 0, 0),
+                    new TimeSpan(16, 0, 0),
+                    new TimeSpan(17, 0, 0),
+                    new TimeSpan(18, 0, 0),
+                    new TimeSpan(19, 0, 0),
+                    new TimeSpan(20, 0, 0),
+                    new TimeSpan(21, 0, 0)
+                };
+
+            var horariosDisponibles = horariosBase
+                .Select(hora => fecha.Add(hora))
+                .Where(horario =>
+                {
+                    var horarioUtc = DateTime.SpecifyKind(horario, DateTimeKind.Local).ToUniversalTime();
+
+                    return !citasOcupadas.Any(c =>
+                        c.Year == horarioUtc.Year &&
+                        c.Month == horarioUtc.Month &&
+                        c.Day == horarioUtc.Day &&
+                        c.Hour == horarioUtc.Hour &&
+                        c.Minute == horarioUtc.Minute);
+                })
+                .Select(horario => new
+                {
+                    fechaHora = horario.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    hora = horario.ToString("HH:mm")
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Horarios disponibles consultados correctamente.",
+                data = new
+                {
+                    barberoId = dto.BarberoId,
+                    fecha = fecha.ToString("yyyy-MM-dd"),
+                    totalDisponibles = horariosDisponibles.Count,
+                    horariosDisponibles
+                }
+            });
         }
 
     }
