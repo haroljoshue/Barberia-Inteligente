@@ -292,24 +292,37 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 
+    @using System.Security.Claims
+    @using System.Text.Json
+
     @if (User.Identity != null
         && User.Identity.IsAuthenticated
         && User.IsInRole("Cliente"))
     {
-        var clienteId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var clienteId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var emailCliente = User.Identity.Name;
+
+        var clienteIdJson = JsonSerializer.Serialize(clienteId);
+        var emailClienteJson = JsonSerializer.Serialize(emailCliente);
 
         <link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
 
         <script type="module">
             import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
 
+            const clienteId = @Html.Raw(clienteIdJson);
+            const emailCliente = @Html.Raw(emailClienteJson);
+
+            console.log("ClienteId enviado a n8n:", clienteId);
+            console.log("Email enviado a n8n:", emailCliente);
+
             createChat({
                 webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
                 mode: 'window',
+                defaultLanguage: 'es',
                 metadata: {
-                    clienteId: '@clienteId',
-                    emailCliente: '@emailCliente',
+                    clienteId: clienteId,
+                    emailCliente: emailCliente,
                     rolSistema: 'Cliente'
                 },
                 initialMessages: [
