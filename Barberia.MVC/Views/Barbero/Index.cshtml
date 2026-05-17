@@ -165,16 +165,30 @@
                             {
                                 <tr>
                                     <td>
-                                        @if (rank == 1) { <span>🥇</span> }
-                                        else if (rank == 2) { <span>🥈</span> }
-                                        else if (rank == 3) { <span>🥉</span> }
-                                        else { <span>@rank</span> }
+                                        @if (rank == 1)
+                                        {
+                                            <span>🥇</span>
+                                        }
+                                        else if (rank == 2)
+                                        {
+                                            <span>🥈</span>
+                                        }
+                                        else if (rank == 3)
+                                        {
+                                            <span>🥉</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@rank</span>
+                                        }
                                     </td>
                                     <td>@cliente.NombreCompleto</td>
                                     <td>@cliente.Email</td>
                                     <td><span class="badge bg-primary">@cliente.Citas?.Count</span></td>
                                 </tr>
-                                @{ rank++; } @* <-- CORRECCIÓN: Operación de C# encerrada de forma explícita *@
+
+                                // CORRECCIÓN EXPLICITA: Sumamos al contador usando llaves puras de C# sin el símbolo '@'
+                                { rank++; }
                             }
                         </tbody>
                     </table>
