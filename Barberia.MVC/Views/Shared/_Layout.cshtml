@@ -10,15 +10,42 @@
     <link rel="stylesheet" href="~/Barberia.MVC.styles.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .text-rojo-barber {
+            color: #a81c1c !important; /* Rojo elegante/oscuro */
+        }
+
+        .bg-rojo-barber {
+            background-color: #a81c1c !important;
+        }
+
+        .nav-link-custom {
+            color: #495057 !important;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+            .nav-link-custom:hover {
+                color: #a81c1c !important;
+            }
+        /* Esto asegura que los links de _LoginPartial adopten la seriedad del diseño blanco */
+        .navbar-nav .nav-link {
+            color: #495057 !important;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #a81c1c !important;
+            }
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100 bg-light">
+<body class="d-flex flex-column min-vh-100 bg-white">
 
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm">
-            <div class="container-fluid px-4">
-
-                <a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index">
-                    💈 Barbershop's Ibarra
+    <header class="border-bottom border-light shadow-sm bg-white sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container-fluid px-5">
+                <a class="navbar-brand fw-bold fs-4 text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="text-rojo-barber">💈</span> Barbershop's <span class="text-rojo-barber">Ibarra</span>
                 </a>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
@@ -28,25 +55,30 @@
 
                 <div class="navbar-collapse collapse" id="mainNavbar">
 
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li class="nav-item">
-                            <a class="nav-link text-light px-3" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-house-door-fill me-1"></i> Inicio
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Inicio
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light px-3" asp-area="" asp-controller="Home" asp-action="Index">
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i class="bi bi-scissors me-1"></i> Servicios
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light px-3" asp-area="" asp-controller="Home" asp-action="QuienesSomos">
-                                <i class="bi bi-people-fill me-1"></i> Quiénes Somos
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Home" asp-action="Barberos">
+                                <i class="bi bi-people me-1"></i> Barberos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Home" asp-action="QuienesSomos">
+                                <i class="bi bi-info-circle me-1"></i> Quiénes Somos
                             </a>
                         </li>
                     </ul>
 
-                    <div class="navbar-nav d-flex align-items-center gap-2 mt-2 mt-lg-0 border-top border-secondary pt-2 pt-lg-0">
+                    <div class="navbar-nav d-flex align-items-center gap-3 mt-2 mt-lg-0 border-top border-light pt-2 pt-lg-0">
                         <partial name="_LoginPartial" />
                     </div>
 
@@ -59,10 +91,12 @@
         @RenderBody()
     </main>
 
-    <footer class="bg-dark text-white-50 py-3 border-top border-secondary mt-auto text-center">
-        <div class="container">
-            <p class="mb-1 text-light">&copy; @DateTime.Now.Year - <span class="text-warning fw-bold">Barbershop's Ibarra</span>. Todos los derechos reservados.</p>
-            <small class="text-muted">Estilo, Calidad y Tradición en Ibarra, Ecuador.</small>
+    <footer class="bg-light text-secondary py-4 border-top border-light mt-auto text-center">
+        <div class="container-fluid px-5">
+            <p class="mb-1 text-dark fw-medium">
+                &copy; @DateTime.Now.Year - <span class="text-rojo-barber fw-bold">Barbershop's Ibarra</span>. Todos los derechos reservados.
+            </p>
+            <small class="text-muted d-block">Estilo, Calidad y Tradición en Ibarra, Ecuador.</small>
         </div>
     </footer>
 
