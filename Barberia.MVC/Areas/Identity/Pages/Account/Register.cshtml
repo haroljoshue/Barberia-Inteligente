@@ -1,77 +1,70 @@
 ﻿@page
 @model RegisterModel
+
 @{
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Crear una nueva cuenta</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NombreCompleto" class="form-control" aria-required="true" placeholder="Nombre completo" />
-                <label asp-for="Input.NombreCompleto">Nombre completo</label>
-                <span asp-validation-for="Input.NombreCompleto" class="text-danger"></span>
-            </div>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
 
-            <div class="form-floating mb-3">
-                <select asp-for="Input.RolSistema" class="form-control" aria-required="true">
-                    <option value="">Seleccione un rol</option>
-                    <option value="Barbero">Barbero</option>
-                    <option value="Cliente">Cliente</option>
-                </select>
-                <label asp-for="Input.RolSistema">Rol</label>
-                <span asp-validation-for="Input.RolSistema" class="text-danger"></span>
-            </div>
+                    <h2 class="text-center mb-4 fw-bold">Crear una nueva cuenta</h2>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registrar</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label"></label>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label"></label>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.NombreCompleto" class="form-label"></label>
+                            <input asp-for="Input.NombreCompleto" class="form-control" aria-required="true" placeholder="Nombre completo" />
+                            <span asp-validation-for="Input.NombreCompleto" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Input.RolSistema" class="form-label"></label>
+                            <select asp-for="Input.RolSistema" class="form-select" aria-required="true">
+                                <option value="">Seleccione un rol</option>
+                                <option value="Barbero">Barbero</option>
+                                <option value="Cliente">Cliente</option>
+                            </select>
+                            <span asp-validation-for="Input.RolSistema" class="text-danger small"></span>
+                        </div>
+
+                        <button id="registerSubmit" type="submit" class="btn btn-dark w-100">
+                            Registrar
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <a asp-page="./Login" class="text-decoration-none">
+                                Ya tengo una cuenta
+                            </a>
                         </div>
                     </form>
-                }
-            }
-        </section>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using ModelosBarberia;
@@ -21,10 +21,15 @@ namespace Barberia.MVC.Controllers
         public async Task<IActionResult> Index()
         {
             var barberoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(barberoId))
+                return Unauthorized();
+
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
             var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/barbero/{barberoId}")
-                        ?? new List<Cita>();
+                       ?? new List<Cita>();
+
             var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}")
                               ?? new List<ApplicationUser>();
 
@@ -34,23 +39,30 @@ namespace Barberia.MVC.Controllers
             {
                 Citas = citas,
                 TopClientes = topClientes,
-                CitasHoy = citas.Count(c => c.FechaHora.Year == hoy.Year && c.FechaHora.Month == hoy.Month && c.FechaHora.Day == hoy.Day),
+                CitasHoy = citas.Count(c => c.FechaHora.Date == hoy),
                 CitasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente),
-                CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida),
+                CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida)
             };
 
             return View(dashboard);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int citaId, EstadoCita nuevoEstado)
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
+
             var response = await client.PutAsJsonAsync($"api/citas/{citaId}/estado", nuevoEstado);
 
-            TempData[response.IsSuccessStatusCode ? "Success" : "Error"] = response.IsSuccessStatusCode
-                ? "Estado actualizado correctamente."
-                : "No se pudo cambiar el estado.";
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Estado actualizado correctamente.";
+            }
+            else
+            {
+                TempData["Error"] = "No se pudo cambiar el estado.";
+            }
 
             return RedirectToAction(nameof(Index));
         }
