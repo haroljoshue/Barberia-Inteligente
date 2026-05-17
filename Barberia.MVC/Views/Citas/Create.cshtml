@@ -1,73 +1,54 @@
 ﻿@model ModelosBarberia.Cita
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Agendar Cita";
 }
 
-<h1>Create</h1>
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Agendar Nueva Cita</h2>
+    <hr />
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<h4>Cita</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClienteId" class="control-label"></label>
-                <input asp-for="ClienteId" class="form-control" />
-                <span asp-validation-for="ClienteId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BarberoId" class="control-label"></label>
-                <input asp-for="BarberoId" class="form-control" />
-                <span asp-validation-for="BarberoId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ServicioId" class="control-label"></label>
-                <input asp-for="ServicioId" class="form-control" />
-                <span asp-validation-for="ServicioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaHora" class="control-label"></label>
-                <input asp-for="FechaHora" class="form-control" />
-                <span asp-validation-for="FechaHora" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Observacion" class="control-label"></label>
-                <input asp-for="Observacion" class="form-control" />
-                <span asp-validation-for="Observacion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PrecioFinal" class="control-label"></label>
-                <input asp-for="PrecioFinal" class="form-control" />
-                <span asp-validation-for="PrecioFinal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaRegistro" class="control-label"></label>
-                <input asp-for="FechaRegistro" class="form-control" />
-                <span asp-validation-for="FechaRegistro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        <!-- Barbero -->
+        <div class="mb-3">
+            <label asp-for="BarberoId" class="form-label">Barbero</label>
+            <select asp-for="BarberoId" class="form-select" asp-items="ViewBag.Barberos">
+                <option value="">-- Selecciona un barbero --</option>
+            </select>
+            <span asp-validation-for="BarberoId" class="text-danger"></span>
+        </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <!-- Servicio -->
+        <div class="mb-3">
+            <label asp-for="ServicioId" class="form-label">Servicio</label>
+            <select asp-for="ServicioId" class="form-select" asp-items="ViewBag.Servicios">
+                <option value="">-- Selecciona un servicio --</option>
+            </select>
+            <span asp-validation-for="ServicioId" class="text-danger"></span>
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="mb-3">
+            <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+            <input asp-for="FechaHora" type="datetime-local" class="form-control" required />
+            <span asp-validation-for="FechaHora" class="text-danger"></span>
+        </div>
+
+        <!-- Observación -->
+        <div class="mb-3">
+            <label asp-for="Observacion" class="form-label">Observación <small class="text-muted">(opcional)</small></label>
+            <textarea asp-for="Observacion" class="form-control" rows="3"
+                      placeholder="Ej: Corte específico, alergias, preferencias..."></textarea>
+            <span asp-validation-for="Observacion" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Agendar Cita</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
