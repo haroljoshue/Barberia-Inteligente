@@ -10,6 +10,7 @@
 		<!-- EF Core base -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.23">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
