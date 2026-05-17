@@ -294,7 +294,7 @@
 
     @if (User.Identity != null
         && User.Identity.IsAuthenticated
-        && User.FindFirst("RolSistema")?.Value == "Cliente")
+        && User.IsInRole("Cliente"))
     {
         var clienteId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var emailCliente = User.Identity.Name;
