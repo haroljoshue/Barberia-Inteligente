@@ -4,48 +4,45 @@
     ViewData["Title"] = "Servicios";
 }
 
-<h1>Nuestros Servicios</h1>
+<div class="container mb-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Nuestros Servicios</h2>
+        <p class="text-muted">Elige el estilo que mejor te representa</p>
+    </div>
 
-<p>
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var s in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body py-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="fs-1 mb-2">✂️</div>
+                                <h5 class="fw-bold">@s.Nombre</h5>
+                                <p class="text-muted small">@(s.Descripcion ?? "Sin descripción disponible.")</p>
+                            </div>
 
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                Duracion Minutos
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DuracionMinutos)
-            </td>
-            <td>
-
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                            <div class="mt-3">
+                                @if (s.Precio > 0)
+                                {
+                                    <p class="fw-bold text-primary fs-5 mb-2">$@s.Precio.ToString("F2")</p>
+                                }
+                                <a asp-controller="Cliente" asp-action="Agendar" asp-route-servicioId="@s.Id" class="btn btn-outline-primary btn-sm w-100">
+                                    Reservar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted py-5">
+                <p class="fs-5">No hay servicios disponibles en este momento.</p>
+            </div>
+        }
+    </div>
+</div>
