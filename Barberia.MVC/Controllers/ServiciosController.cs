@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ModelosBarberia;
 using CRUD;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Barberia.MVC.Controllers
 {
+    [Authorize(Roles = "Admin,Barbero")]
     public class ServiciosController : Controller
     {
         // GET: Servicios

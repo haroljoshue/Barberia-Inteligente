@@ -1,77 +1,60 @@
 ﻿@page
-@model RegisterModel
+@model LoginModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_Layout";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="min-vh-100 d-flex align-items-center justify-content-center py-5"
+     style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)">
+    <div class="card border-0 shadow-lg" style="width:100%;max-width:420px">
+        <div class="card-body p-5">
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Crear una nueva cuenta</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NombreCompleto" class="form-control" aria-required="true" placeholder="Nombre completo" />
-                <label asp-for="Input.NombreCompleto">Nombre completo</label>
-                <span asp-validation-for="Input.NombreCompleto" class="text-danger"></span>
+            <!-- Logo / Header -->
+            <div class="text-center mb-4">
+                <div class="fs-1 mb-2">💈</div>
+                <h3 class="fw-bold text-dark">Barbershop's Ibarra</h3>
+                <p class="text-muted small">Ingresa a tu cuenta</p>
             </div>
 
-            <div class="form-floating mb-3">
-                <select asp-for="Input.RolSistema" class="form-control" aria-required="true">
-                    <option value="">Seleccione un rol</option>
-                    <option value="Barbero">Barbero</option>
-                    <option value="Cliente">Cliente</option>
-                </select>
-                <label asp-for="Input.RolSistema">Rol</label>
-                <span asp-validation-for="Input.RolSistema" class="text-danger"></span>
-            </div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
 
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registrar</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+            <form id="account" method="post">
+
+                <div class="mb-3">
+                    <label asp-for="Input.Email" class="form-label fw-semibold">Correo electrónico</label>
+                    <input asp-for="Input.Email" class="form-control form-control-lg"
+                           autocomplete="username" placeholder="tu@correo.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Password" class="form-label fw-semibold">Contraseña</label>
+                    <input asp-for="Input.Password" class="form-control form-control-lg"
+                           autocomplete="current-password" placeholder="••••••••" />
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <label class="d-flex align-items-center gap-2 text-muted small">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        Recordarme
+                    </label>
+                    <a asp-page="./ForgotPassword" class="text-primary small">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold mb-3">
+                    Iniciar Sesión
+                </button>
+
+                <div class="text-center">
+                    <span class="text-muted small">¿No tienes cuenta?</span>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"
+                       class="text-primary small fw-semibold ms-1">Regístrate aquí</a>
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 

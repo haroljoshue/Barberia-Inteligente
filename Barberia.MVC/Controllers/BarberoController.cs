@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using ModelosBarberia;
 using ModelosBarberia.Enum;
 using ModelosBarberia.ViewModels;
 
 namespace Barberia.MVC.Controllers
 {
+    [Authorize(Roles = "Barbero,Admin")]
     public class BarberoController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -16,37 +18,39 @@ namespace Barberia.MVC.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        // GET: Barbero/Index
-        public async Task<IActionResult> Index(string barberoId)
+        public async Task<IActionResult> Index()
         {
+            // Obtiene el ID del barbero desde la sesión
+            var barberoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
-            // Citas del barbero
-            var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/barbero/{barberoId}");
-
-            // Top clientes del barbero (usuarios con rol Cliente)
-            var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}");
+            var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/barbero/{barberoId}")
+                        ?? new List<Cita>();
+            var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}")
+                              ?? new List<ApplicationUser>();
 
             var dashboard = new BarberoDashboardViewModel
             {
-                Citas = citas ?? new List<Cita>(),
-                TopClientes = topClientes ?? new List<ApplicationUser>()
+                Citas = citas,
+                TopClientes = topClientes,
+                CitasHoy = citas.Count(c => c.FechaHora.Date == DateTime.Today),
+                CitasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente),
+                CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida),
             };
 
             return View(dashboard);
         }
 
-        // POST: Barbero/CambiarEstado
         [HttpPost]
         public async Task<IActionResult> CambiarEstado(int citaId, EstadoCita nuevoEstado)
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
             var response = await client.PutAsJsonAsync($"api/citas/{citaId}/estado", nuevoEstado);
 
-            if (response.IsSuccessStatusCode)
-                return RedirectToAction(nameof(Index));
+            TempData[response.IsSuccessStatusCode ? "Success" : "Error"] = response.IsSuccessStatusCode
+                ? "Estado actualizado correctamente."
+                : "No se pudo cambiar el estado.";
 
-            TempData["Error"] = "No se pudo cambiar el estado de la cita.";
             return RedirectToAction(nameof(Index));
         }
     }

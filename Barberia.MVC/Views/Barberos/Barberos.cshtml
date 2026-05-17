@@ -1,54 +1,87 @@
 ﻿@model IEnumerable<ModelosBarberia.Barbero>
-
 @{
     ViewData["Title"] = "Barberos";
 }
 
-<h1>Nuestros Barberos</h1>
+<div class="container my-5">
 
-<p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">💈 Nuestros Barberos</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-success">+ Registrar Barbero</a>
+        }
+    </div>
 
-</p>
-<table class="table">
-    <thead>
-        <tr>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            ✅ @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Especialidad)
-            </th>
-            <th>
-                Teléfono
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponible)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-5">
+            <div class="fs-1">✂️</div>
+            <p>No hay barberos registrados aún.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var barbero in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center
+                                            justify-content-center fw-bold"
+                                     style="width:50px;height:50px;font-size:1.2rem">
+                                    @barbero.Nombre.Substring(0, 1).ToUpper()
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">@barbero.Nombre</h5>
+                                    <small class="text-muted">@(barbero.Especialidad ?? "Sin especialidad")</small>
+                                </div>
+                            </div>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Especialidad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefono)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Disponible)
-            </td>
+                            <ul class="list-unstyled text-muted small mb-3">
+                                @if (!string.IsNullOrEmpty(barbero.Telefono))
+                                {
+                                    <li>📞 @barbero.Telefono</li>
+                                }
+                                @if (!string.IsNullOrEmpty(barbero.Email))
+                                {
+                                    <li>✉️ @barbero.Email</li>
+                                }
+                                <li>
+                                    @if (barbero.Disponible)
+                                    {
+                                        <span class="badge bg-success">✅ Disponible</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">❌ No disponible</span>
+                                    }
+                                </li>
+                            </ul>
 
-            <td>
-
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="d-flex gap-2">
+                                    <a asp-action="Edit" asp-route-id="@barbero.Id"
+                                       class="btn btn-sm btn-outline-primary w-50">Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@barbero.Id"
+                                       class="btn btn-sm btn-outline-danger w-50">Eliminar</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

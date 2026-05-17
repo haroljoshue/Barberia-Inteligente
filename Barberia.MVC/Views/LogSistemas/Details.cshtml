@@ -1,66 +1,73 @@
 ﻿@model ModelosBarberia.LogSistema
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle Log Sistema";
 }
 
-<h1>Details</h1>
+<div class="container my-4" style="max-width:800px">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">📋 Detalle Log Sistema</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+    </div>
 
-<div>
-    <h4>LogSistema</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tipo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tipo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mensaje)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mensaje)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Entidad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Entidad)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EntidadId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EntidadId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StackTrace)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StackTrace)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UsuarioId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UsuarioId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-0 pt-3">
+            <h6 class="text-muted mb-0">Información General</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="text-muted small">Fecha</label>
+                    <p class="mb-0 fw-bold">@Model.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small">Tipo</label>
+                    <p class="mb-0">
+                        @{
+                            var badge = Model.Tipo?.ToLower() switch
+                            {
+                                "error" => "danger",
+                                "warning" => "warning",
+                                "info" => "info",
+                                _ => "secondary"
+                            };
+                        }
+                        <span class="badge bg-@badge">@Model.Tipo</span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small">Entidad</label>
+                    <p class="mb-0 fw-bold">@(Model.Entidad ?? "—")</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small">Entidad ID</label>
+                    <p class="mb-0 fw-bold">@(Model.EntidadId ?? "—")</p>
+                </div>
+                <div class="col-md-12">
+                    <label class="text-muted small">Usuario ID</label>
+                    <p class="mb-0 fw-bold">@(Model.UsuarioId ?? "—")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-0 pt-3">
+            <h6 class="text-muted mb-0">💬 Mensaje</h6>
+        </div>
+        <div class="card-body">
+            <p class="mb-0">@(Model.Mensaje ?? "—")</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.StackTrace))
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white border-0 pt-3">
+                <h6 class="mb-0">🔍 Stack Trace</h6>
+            </div>
+            <div class="card-body bg-dark text-light rounded-bottom">
+                <pre class="mb-0 small" style="white-space:pre-wrap">@Model.StackTrace</pre>
+            </div>
+        </div>
+    }
 </div>

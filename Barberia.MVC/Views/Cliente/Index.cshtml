@@ -1,47 +1,167 @@
 ﻿@model ModelosBarberia.ViewModels.ClienteDashboardViewModel
-
 @{
-    ViewData["Title"] = "Panel del Cliente";
+    ViewData["Title"] = "Mi Panel";
 }
 
-<div class="container my-5">
-    <h2 class="mb-4 text-primary">Bienvenido, @Model.Cliente.NombreCompleto</h2>
+<div class="container-fluid my-4 px-4">
 
-    <p>
-        <a asp-action="Agendar" class="btn btn-success">Agendar Nueva Cita</a>
-    </p>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary mb-0">👋 Bienvenido, @Model.Cliente.NombreCompleto</h2>
+            <small class="text-muted">@Model.Cliente.Email</small>
+        </div>
+        <a asp-action="Agendar" class="btn btn-success">
+            ✂️ Agendar Nueva Cita
+        </a>
+    </div>
 
-    <h4>Historial de Citas</h4>
-    <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Barbero</th>
-                <th>Servicio</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Observación</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.HistorialCitas.Any())
+    <!-- Alertas -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            ✅ @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            ❌ @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Próxima cita destacada -->
+    @if (Model.ProximaCita != null)
+    {
+        <div class="alert alert-info border-0 shadow-sm mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="fs-1">📅</div>
+                <div>
+                    <strong>Próxima cita:</strong>
+                    @Model.ProximaCita.FechaHora.ToString("dddd dd 'de' MMMM 'a las' HH:mm")
+                    con <strong>@(Model.ProximaCita.Barbero?.Nombre ?? "—")</strong>
+                    — @(Model.ProximaCita.Servicio?.Nombre ?? "—")
+                    <span class="badge bg-info ms-2">@Model.ProximaCita.Estado</span>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Métricas -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="fs-1">📋</div>
+                    <div class="fs-2 fw-bold text-primary">@Model.HistorialCitas.Count</div>
+                    <div class="text-muted small">Total Citas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="fs-1">⏳</div>
+                    <div class="fs-2 fw-bold text-warning">@Model.CitasPendientes</div>
+                    <div class="text-muted small">Pendientes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="fs-1">✅</div>
+                    <div class="fs-2 fw-bold text-success">@Model.CitasCompletadas</div>
+                    <div class="text-muted small">Completadas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm text-center h-100">
+                <div class="card-body">
+                    <div class="fs-1">❌</div>
+                    <div class="fs-2 fw-bold text-danger">
+                        @Model.HistorialCitas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Cancelada)
+                    </div>
+                    <div class="text-muted small">Canceladas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de citas -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
+            <h5 class="text-primary mb-0">✂️ Historial de Citas</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (!Model.HistorialCitas.Any())
             {
-                foreach (var cita in Model.HistorialCitas)
-                {
-                    <tr>
-                        <td>@cita.Barbero.Nombre</td>
-                        <td>@cita.Servicio.Nombre</td>
-                        <td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>@cita.Estado</td>
-                        <td>@cita.Observacion</td>
-                    </tr>
-                }
+                <div class="text-center text-muted py-5">
+                    <div class="fs-1">💈</div>
+                    <p>No tienes citas registradas aún.</p>
+                    <a asp-action="Agendar" class="btn btn-success">Agendar tu primera cita</a>
+                </div>
             }
             else
             {
-                <tr>
-                    <td colspan="5" class="text-center text-muted">No tienes citas registradas.</td>
-                </tr>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Barbero</th>
+                                <th>Servicio</th>
+                                <th>Fecha y Hora</th>
+                                <th>Estado</th>
+                                <th>Observación</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cita in Model.HistorialCitas.OrderByDescending(c => c.FechaHora))
+                            {
+                                <tr>
+                                    <td>@(cita.Barbero?.Nombre ?? "—")</td>
+                                    <td>@(cita.Servicio?.Nombre ?? "—")</td>
+                                    <td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        @{
+                                            var badge = cita.Estado switch
+                                            {
+                                                ModelosBarberia.Enum.EstadoCita.Pendiente => "warning",
+                                                ModelosBarberia.Enum.EstadoCita.Confirmada => "info",
+                                                ModelosBarberia.Enum.EstadoCita.Atendida => "success",
+                                                ModelosBarberia.Enum.EstadoCita.Cancelada => "danger",
+                                                _ => "secondary"
+                                            };
+                                        }
+                                        <span class="badge bg-@badge">@cita.Estado</span>
+                                    </td>
+                                    <td>@(cita.Observacion ?? "—")</td>
+                                    <td>
+                                        @if (cita.Estado == ModelosBarberia.Enum.EstadoCita.Pendiente)
+                                        {
+                                            <form asp-action="Cancelar" method="post" class="d-inline">
+                                                <input type="hidden" name="citaId" value="@cita.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('¿Cancelar esta cita?')">
+                                                    Cancelar
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">—</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>

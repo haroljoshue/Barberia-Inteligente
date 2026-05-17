@@ -3,63 +3,143 @@
     ViewData["Title"] = "Panel de Administración";
 }
 
-<div class="container my-5">
-    <h1 class="mb-4 text-primary">Panel de Administración</h1>
+<div class="container-fluid my-4 px-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary mb-0">Panel de Administración</h2>
+            <small class="text-muted">Bienvenido, @User.Identity?.Name</small>
+        </div>
+        <span class="badge bg-primary fs-6">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
+    </div>
+
+    <!-- Tarjetas de métricas -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-primary">✂️</div>
+                    <div class="fs-2 fw-bold text-primary">@Model.TotalCitas</div>
+                    <div class="text-muted small">Total Citas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-success">📅</div>
+                    <div class="fs-2 fw-bold text-success">@Model.CitasHoy</div>
+                    <div class="text-muted small">Citas Hoy</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-warning">⏳</div>
+                    <div class="fs-2 fw-bold text-warning">@Model.CitasPendientes</div>
+                    <div class="text-muted small">Pendientes</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-info">👥</div>
+                    <div class="fs-2 fw-bold text-info">@Model.TotalUsuarios</div>
+                    <div class="text-muted small">Usuarios</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-danger">💈</div>
+                    <div class="fs-2 fw-bold text-danger">@Model.TotalBarberos</div>
+                    <div class="text-muted small">Barberos Activos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card border-0 shadow-sm h-100 text-center">
+                <div class="card-body">
+                    <div class="fs-1 text-secondary">🛠️</div>
+                    <div class="fs-2 fw-bold text-secondary">@Model.TotalServicios</div>
+                    <div class="text-muted small">Servicios Activos</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Botones de gestión -->
-    <div class="row mb-5">
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="Usuarios" asp-action="Index">Gestionar Usuarios</a>
+    <div class="row g-2 mb-5">
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-primary w-100" asp-controller="Usuarios" asp-action="Index">
+                👥 Usuarios
+            </a>
         </div>
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="Servicios" asp-action="Index">Gestionar Servicios</a>
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-primary w-100" asp-controller="Servicios" asp-action="Index">
+                🛠️ Servicios
+            </a>
         </div>
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="Roles" asp-action="Index">Gestionar Roles</a>
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-primary w-100" asp-controller="Roles" asp-action="Index">
+                🔑 Roles
+            </a>
         </div>
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="Barberos" asp-action="Index">Gestionar Barberos</a>
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-primary w-100" asp-controller="Barberos" asp-action="Index">
+                💈 Barberos
+            </a>
         </div>
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="LogSistemas" asp-action="Index">Logs de Sistema</a>
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-secondary w-100" asp-controller="LogSistemas" asp-action="Index">
+                📋 Logs Sistema
+            </a>
         </div>
-        <div class="col-md-2 mb-3">
-            <a class="btn btn-primary w-100" asp-controller="LogAgentes" asp-action="Index">Logs de Agentes</a>
+        <div class="col-6 col-md-2">
+            <a class="btn btn-outline-secondary w-100" asp-controller="LogAgentes" asp-action="Index">
+                🤖 Logs Agentes
+            </a>
         </div>
     </div>
 
     <!-- Gráficas -->
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-3">
+                    <h5 class="text-primary mb-0">📊 Reservas por Servicio</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Reservas por Servicio</h5>
-                    <canvas id="reservasPorServicio"></canvas>
+                    <canvas id="reservasPorServicio" height="120"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pt-3">
+                    <h5 class="text-primary mb-0">🥧 Usuarios por Rol</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Usuarios por Rol</h5>
-                    <canvas id="usuariosPorRol"></canvas>
+                    <canvas id="usuariosPorRol" height="180"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Datos dinámicos desde el modelo
         const reservasLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Keys));
-        const reservasData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Values));
-
+        const reservasData   = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Values));
         const usuariosLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Keys));
-        const usuariosData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Values));
+        const usuariosData   = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Values));
 
-        // Gráfico de reservas por servicio
         new Chart(document.getElementById('reservasPorServicio'), {
             type: 'bar',
             data: {
@@ -67,20 +147,30 @@
                 datasets: [{
                     label: 'Reservas',
                     data: reservasData,
-                    backgroundColor: '#0077b6'
+                    backgroundColor: 'rgba(0, 119, 182, 0.8)',
+                    borderRadius: 6
                 }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
             }
         });
 
-        // Gráfico de usuarios por rol
         new Chart(document.getElementById('usuariosPorRol'), {
-            type: 'pie',
+            type: 'doughnut',
             data: {
                 labels: usuariosLabels,
                 datasets: [{
                     data: usuariosData,
-                    backgroundColor: ['#0077b6', '#0096c7', '#90e0ef']
+                    backgroundColor: ['#0077b6', '#0096c7', '#90e0ef'],
+                    borderWidth: 0
                 }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
             }
         });
     </script>

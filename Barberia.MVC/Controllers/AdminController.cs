@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Barberia.MVC.Data; // tu contexto
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Barberia.MVC.Data;
+using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
+using ModelosBarberia.Enum;
 
 namespace Barberia.MVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,7 +28,7 @@ namespace Barberia.MVC.Controllers
             var usuariosPorRol = _context.Users
                 .GroupBy(u => u.RolSistema)
                 .Select(g => new {
-                    Rol = g.Key,
+                    Rol = g.Key ?? "Sin Rol",
                     Cantidad = g.Count()
                 }).ToList();
 
@@ -34,7 +37,15 @@ namespace Barberia.MVC.Controllers
                 ReservasPorServicio = reservasPorServicio
                     .ToDictionary(x => x.Nombre, x => x.Cantidad),
                 UsuariosPorRol = usuariosPorRol
-                    .ToDictionary(x => x.Rol, x => x.Cantidad)
+                    .ToDictionary(x => x.Rol, x => x.Cantidad),
+                TotalCitas = _context.Set<Cita>().Count(),
+                CitasHoy = _context.Set<Cita>()
+                    .Count(c => c.FechaHora.Date == DateTime.UtcNow.Date),
+                CitasPendientes = _context.Set<Cita>()
+                    .Count(c => c.Estado == EstadoCita.Pendiente),
+                TotalUsuarios = _context.Users.Count(),
+                TotalBarberos = _context.Set<Barbero>().Count(b => b.Disponible),
+                TotalServicios = _context.Set<Servicio>().Count(s => s.Activo),
             };
 
             return View(viewModel);
@@ -43,7 +54,13 @@ namespace Barberia.MVC.Controllers
 
     public class AdminDashboardViewModel
     {
-        public Dictionary<string, int> ReservasPorServicio { get; set; }
-        public Dictionary<string, int> UsuariosPorRol { get; set; }
+        public Dictionary<string, int> ReservasPorServicio { get; set; } = new();
+        public Dictionary<string, int> UsuariosPorRol { get; set; } = new();
+        public int TotalCitas { get; set; }
+        public int CitasHoy { get; set; }
+        public int CitasPendientes { get; set; }
+        public int TotalUsuarios { get; set; }
+        public int TotalBarberos { get; set; }
+        public int TotalServicios { get; set; }
     }
 }

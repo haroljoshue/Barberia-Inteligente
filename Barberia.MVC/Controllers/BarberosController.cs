@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ModelosBarberia;
 using CRUD;
 
@@ -6,84 +7,72 @@ namespace Barberia.MVC.Controllers
 {
     public class BarberosController : Controller
     {
-        // GET: Barberos
+        // Visible para todos
         public IActionResult Index()
         {
             var barberos = CRUD<Barbero>.GetAll();
             return View(barberos);
         }
 
-        // GET: Barberos
-        public IActionResult Barberos()
-        {
-            var barberos = CRUD<Barbero>.GetAll();
-            return View(barberos);
-        }
-
-        // GET: Barberos/Details/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Details(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
-            if (barbero == null)
-                return NotFound();
-
+            if (barbero == null) return NotFound();
             return View(barbero);
         }
 
-        // GET: Barberos/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create() => View();
 
-        // POST: Barberos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(Barbero barbero)
         {
+            barbero.FechaRegistro = DateTime.UtcNow;
+            ModelState.Remove("Citas");
             if (!ModelState.IsValid) return View(barbero);
-
             CRUD<Barbero>.Create(barbero);
+            TempData["Success"] = "Barbero registrado correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Barberos/Edit/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
-            if (barbero == null)
-                return NotFound();
-
+            if (barbero == null) return NotFound();
             return View(barbero);
         }
 
-        // POST: Barberos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id, Barbero barbero)
         {
+            ModelState.Remove("Citas");
             if (!ModelState.IsValid) return View(barbero);
-
             CRUD<Barbero>.Update(id, barbero);
+            TempData["Success"] = "Barbero actualizado correctamente.";
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Barberos/Delete/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
-            if (barbero == null)
-                return NotFound();
-
+            if (barbero == null) return NotFound();
             return View(barbero);
         }
 
-        // POST: Barberos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(string id)
         {
             CRUD<Barbero>.Delete(id);
+            TempData["Success"] = "Barbero eliminado.";
             return RedirectToAction(nameof(Index));
         }
     }
