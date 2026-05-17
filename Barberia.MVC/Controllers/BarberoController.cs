@@ -20,48 +20,57 @@ namespace Barberia.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var barberoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrWhiteSpace(barberoId))
-                return Unauthorized();
-
-            var client = _httpClientFactory.CreateClient("BarberiaApi");
-
-            var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/barbero/{barberoId}")
-                       ?? new List<Cita>();
-
-            var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}")
-                              ?? new List<ApplicationUser>();
-
-            var hoy = DateTime.Today;
-
-            var dashboard = new BarberoDashboardViewModel
+            try
             {
-                Citas = citas,
-                TopClientes = topClientes,
-                CitasHoy = citas.Count(c => c.FechaHora.Date == hoy),
-                CitasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente),
-                CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida)
-            };
+                var barberoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return View(dashboard);
+                if (string.IsNullOrWhiteSpace(barberoId))
+                    return Unauthorized();
+
+                var client = _httpClientFactory.CreateClient("BarberiaApi");
+
+                var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/barbero/{barberoId}") ?? new List<Cita>();
+                var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}") ?? new List<ApplicationUser>();
+
+                var hoy = DateTime.Today;
+
+                var dashboard = new BarberoDashboardViewModel
+                {
+                    Citas = citas,
+                    TopClientes = topClientes,
+                    CitasHoy = citas.Count(c => c.FechaHora.Date == hoy),
+                    CitasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente),
+                    CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida)
+                };
+
+                return View(dashboard);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error al cargar el panel: {ex.Message}";
+                return View(new BarberoDashboardViewModel
+                {
+                    Citas = new List<Cita>(),
+                    TopClientes = new List<ApplicationUser>()
+                });
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CambiarEstado(int citaId, EstadoCita nuevoEstado)
         {
-            var client = _httpClientFactory.CreateClient("BarberiaApi");
-
-            var response = await client.PutAsJsonAsync($"api/citas/{citaId}/estado", nuevoEstado);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                TempData["Success"] = "Estado actualizado correctamente.";
+                var client = _httpClientFactory.CreateClient("BarberiaApi");
+                var response = await client.PutAsJsonAsync($"api/citas/{citaId}/estado", nuevoEstado);
+
+                TempData[response.IsSuccessStatusCode ? "Success" : "Error"] =
+                    response.IsSuccessStatusCode ? "Estado actualizado correctamente." : "No se pudo cambiar el estado.";
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "No se pudo cambiar el estado.";
+                TempData["Error"] = $"Error al actualizar estado: {ex.Message}";
             }
 
             return RedirectToAction(nameof(Index));
