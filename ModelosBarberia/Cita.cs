@@ -39,5 +39,7 @@ namespace ModelosBarberia
 
         public decimal? PrecioFinal { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+
+        public string? IdVector { get; set; }
     }
 }
