@@ -29,7 +29,25 @@
             .nav-link-custom:hover {
                 color: #a81c1c !important;
             }
-        /* Esto asegura que los links de _LoginPartial adopten la seriedad del diseño blanco */
+
+        /* Estilo premium para los botones de paneles dinámicos */
+        .btn-panel-rol {
+            border: 1px solid #a81c1c;
+            color: #a81c1c;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+
+            .btn-panel-rol:hover {
+                background-color: #a81c1c;
+                color: #ffffff !important;
+                box-shadow: 0 4px 8px rgba(168, 28, 28, 0.15);
+            }
+
         .navbar-nav .nav-link {
             color: #495057 !important;
         }
@@ -62,12 +80,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Servicios" asp-action="Servicios">
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Servicios" asp-action="Index">
                                 <i class="bi bi-scissors me-1"></i> Servicios
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Barberos" asp-action="Barberos">
+                            <a class="nav-link nav-link-custom px-3" asp-area="" asp-controller="Barberos" asp-action="Index">
                                 <i class="bi bi-people me-1"></i> Barberos
                             </a>
                         </li>
@@ -79,6 +97,31 @@
                     </ul>
 
                     <div class="navbar-nav d-flex align-items-center gap-3 mt-2 mt-lg-0 border-top border-light pt-2 pt-lg-0">
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="btn-panel-rol" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-speedometer2 me-1"></i> Panel Admin
+                                </a>
+                            }
+
+                            @if (User.IsInRole("Barbero"))
+                            {
+                                <a class="btn-panel-rol" asp-area="" asp-controller="Barbero" asp-action="Index">
+                                    <i class="bi bi-calendar-week me-1"></i> Mi Barbería
+                                </a>
+                            }
+
+                            @if (User.IsInRole("Cliente"))
+                            {
+                                <a class="btn-panel-rol" asp-area="" asp-controller="Cliente" asp-action="Index">
+                                    <i class="bi bi-journal-check me-1"></i> Mis Citas
+                                </a>
+                            }
+                        }
+
                         <partial name="_LoginPartial" />
                     </div>
 
