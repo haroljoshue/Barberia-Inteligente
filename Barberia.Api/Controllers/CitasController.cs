@@ -105,11 +105,13 @@ namespace Barberia.Api.Controllers
         {
             return _context.Citas.Any(e => e.Id == id);
         }
-
-        [HttpGet("barbero/{barberoId:int}")]
-        public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarbero(int barberoId)
+        [HttpGet("barbero/{barberoId}")]
+        public async Task<ActionResult<IEnumerable<Cita>>> ObtenerPorBarbero(int barberoId)
         {
             var citas = await _context.Citas
+                .Include(c => c.Cliente)
+                .Include(c => c.Barbero)
+                .Include(c => c.Servicio)
                 .Where(c => c.BarberoId == barberoId)
                 .OrderBy(c => c.FechaHora)
                 .ToListAsync();
