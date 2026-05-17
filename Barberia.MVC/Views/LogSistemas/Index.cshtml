@@ -41,7 +41,9 @@
                                     </td>
                                     <td>
                                         @{
-                                            var badge = log.Tipo?.ToLower() switch
+                                            // Convertimos el Enum a string de forma segura y pasamos a minúsculas
+                                            var tipoString = log.Tipo.ToString().ToLower();
+                                            var badge = tipoString switch
                                             {
                                                 "error" => "danger",
                                                 "warning" => "warning",

@@ -1,4 +1,6 @@
 ﻿@model ModelosBarberia.ViewModels.BarberoDashboardViewModel
+@using ModelosBarberia.Enum  @* <-- SOLUCIÓN DEFINTIVA: Apunta al namespace correcto del Enum *@
+@using ModelosBarberia       @* Mantiene el acceso a otras entidades si fuesen requeridas *@
 @{
     ViewData["Title"] = "Panel del Barbero";
 }
@@ -103,11 +105,12 @@
                                     <td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td>
                                         @{
-                                            var badge = cita.Estado switch {
-                                                EstadoCita.Pendiente   => "warning",
-                                                EstadoCita.Confirmada  => "info",
-                                                EstadoCita.Completada  => "success",
-                                                EstadoCita.Cancelada   => "danger",
+                                            var badge = cita.Estado switch
+                                            {
+                                                EstadoCita.Pendiente => "warning",
+                                                EstadoCita.Confirmada => "info",
+                                                EstadoCita.Atendida => "success",
+                                                EstadoCita.Cancelada => "danger",
                                                 _ => "secondary"
                                             };
                                         }
@@ -120,7 +123,7 @@
                                             <select name="nuevoEstado" class="form-select form-select-sm">
                                                 @foreach (EstadoCita estado in Enum.GetValues(typeof(EstadoCita)))
                                                 {
-                                                    <option value="@estado" @(cita.Estado == estado ? "selected" : "")>
+                                                    <option value="@estado" selected="@(cita.Estado == estado)">
                                                         @estado
                                                     </option>
                                                 }
@@ -160,19 +163,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @{int rank = 1;}
+                            @{
+                                int rank = 1;
+                            }
                             @foreach (var cliente in Model.TopClientes)
                             {
                                 <tr>
                                     <td>
-                                        @if (rank == 1) { <span>🥇</span> }
-                                        else if (rank == 2) { <span>🥈</span> }
-                                        else if (rank == 3) { <span>🥉</span> }
-                                        else { <span>@rank</span> }
+                                        @if (rank == 1)
+                                        {
+                                            <span>🥇</span>
+                                        }
+                                        else if (rank == 2)
+                                        {
+                                            <span>🥈</span>
+                                        }
+                                        else if (rank == 3)
+                                        {
+                                            <span>🥉</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@rank</span>
+                                        }
                                     </td>
                                     <td>@cliente.NombreCompleto</td>
                                     <td>@cliente.Email</td>
-                                    <td><span class="badge bg-primary">@cliente.Citas.Count</span></td>
+                                    <td><span class="badge bg-primary">@cliente.Citas?.Count</span></td>
                                 </tr>
                                 rank++;
                             }

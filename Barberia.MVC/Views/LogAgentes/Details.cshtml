@@ -17,7 +17,7 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="text-muted small">Fecha</label>
-                    <p class="mb-0 fw-bold">@log.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                    <p class="mb-0 fw-bold">@Model.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
                 </div>
                 <div class="col-md-6">
                     <label class="text-muted small">Usuario ID</label>
@@ -25,7 +25,20 @@
                 </div>
                 <div class="col-md-6">
                     <label class="text-muted small">Tipo</label>
-                    <p class="mb-0"><span class="badge bg-info">@Model.Tipo</span></p>
+                    <p class="mb-0">
+                        @{
+                            // Mapeo dinámico de colores de Bootstrap para los estados del Agente de IA
+                            var badge = Model.Tipo switch
+                            {
+                                ModelosBarberia.Enum.TipoLogAgente.Consulta => "info",
+                                ModelosBarberia.Enum.TipoLogAgente.Respuesta => "success",
+                                ModelosBarberia.Enum.TipoLogAgente.Error => "danger",
+                                ModelosBarberia.Enum.TipoLogAgente.Timeout => "warning",
+                                _ => "secondary"
+                            };
+                        }
+                        <span class="badge bg-@badge">@Model.Tipo</span>
+                    </p>
                 </div>
                 <div class="col-md-3">
                     <label class="text-muted small">Tokens Usados</label>

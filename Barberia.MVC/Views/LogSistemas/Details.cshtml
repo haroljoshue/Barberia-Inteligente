@@ -23,11 +23,14 @@
                     <label class="text-muted small">Tipo</label>
                     <p class="mb-0">
                         @{
-                            var badge = Model.Tipo?.ToLower() switch
+                            // Mapeo corregido usando los nombres reales de tu enum en español
+                            var badge = Model.Tipo switch
                             {
-                                "error" => "danger",
-                                "warning" => "warning",
-                                "info" => "info",
+                                ModelosBarberia.Enum.TipoLogSistema.Error => "danger",
+                                ModelosBarberia.Enum.TipoLogSistema.Critico => "danger",
+                                ModelosBarberia.Enum.TipoLogSistema.Advertencia => "warning",
+                                ModelosBarberia.Enum.TipoLogSistema.Informacion => "info",
+                                ModelosBarberia.Enum.TipoLogSistema.Operacion => "success",
                                 _ => "secondary"
                             };
                         }

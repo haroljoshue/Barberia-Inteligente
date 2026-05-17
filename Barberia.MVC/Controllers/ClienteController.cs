@@ -32,7 +32,7 @@ namespace Barberia.MVC.Controllers
                 Cliente = cliente!,
                 HistorialCitas = citas,
                 CitasPendientes = citas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Pendiente),
-                CitasCompletadas = citas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Completada),
+                CitasCompletadas = citas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Atendida),
                 ProximaCita = citas
                     .Where(c => c.FechaHora >= DateTime.Now &&
                                 c.Estado != ModelosBarberia.Enum.EstadoCita.Cancelada)
@@ -46,12 +46,27 @@ namespace Barberia.MVC.Controllers
         public async Task<IActionResult> Agendar()
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
-            var barberos = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
+
+            // 1. Consumimos los datos crudos de la API
+            var barberosRaw = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
             var servicios = await client.GetFromJsonAsync<List<Servicio>>("api/servicios") ?? new();
 
+            // 2. Filtramos los disponibles y los transformamos en el tipo que exige el ViewModel (ApplicationUser)
+            var listaUsuariosBarberos = barberosRaw
+                .Where(b => b.Disponible)
+                .Select(b => new ApplicationUser
+                {
+                    Id = b.Id.ToString(), // IdentityUser usa string para el Id
+                    NombreCompleto = b.Nombre ?? "Barbero Sin Nombre",
+                    Email = b.Email,
+                    PhoneNumber = b.Telefono
+                })
+                .ToList();
+
+            // 3. Construimos el modelo final
             var vm = new AgendarCitaViewModel
             {
-                Barberos = barberos.Where(b => b.Disponible).ToList(),
+                Barberos = listaUsuariosBarberos, // Cumple perfectamente con List<ApplicationUser>
                 Servicios = servicios.Where(s => s.Activo).ToList()
             };
 
