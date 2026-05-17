@@ -1,4 +1,4 @@
-﻿@model ModelosBarberia.ViewModels.ClienteDashboardViewModel
+﻿@model List<ModelosBarberia.Servicio>
 @{
     ViewData["Title"] = "Inicio - Barbershop's Ibarra";
 }
@@ -18,13 +18,13 @@
 <div class="container mb-5">
     <div class="text-center mb-4">
         <h2 class="fw-bold">Nuestros Servicios</h2>
-        <p class="text-muted">Elige el estilo que mejor te representa (Precios actualizados en tiempo real)</p>
+        <p class="text-muted">Elige el estilo que mejor te representa</p>
     </div>
 
     <div class="row g-4">
-        @if (Model?.Servicios != null && Model.Servicios.Any())
+        @if (Model != null && Model.Any())
         {
-            @foreach (var s in Model.Servicios)
+            @foreach (var s in Model)
             {
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card border-0 shadow-sm h-100 text-center">
@@ -52,7 +52,7 @@
         else
         {
             <div class="col-12 text-center text-muted py-5">
-                <p class="fs-5">No hay servicios disponibles listados en el sistema en este momento.</p>
+                <p class="fs-5">No hay servicios disponibles en este momento.</p>
             </div>
         }
     </div>
