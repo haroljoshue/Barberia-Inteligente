@@ -1,54 +1,113 @@
-﻿@model ModelosBarberia.Cita
+﻿@model ModelosBarberia.ViewModels.AgendarCitaViewModel
 @{
     ViewData["Title"] = "Agendar Cita";
+
+    // Capturamos si pasamos un servicio seleccionado por URL desde el home público
+    var servicioPreseleccionado = Context.Request.Query["servicioId"].ToString();
 }
 
 <div class="container my-5">
-    <h2 class="mb-4 text-primary">Agendar Nueva Cita</h2>
-    <hr />
-    <form asp-action="Create" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
 
-        <!-- Barbero -->
-        <div class="mb-3">
-            <label asp-for="BarberoId" class="form-label">Barbero</label>
-            <select asp-for="BarberoId" class="form-select" asp-items="ViewBag.Barberos">
-                <option value="">-- Selecciona un barbero --</option>
-            </select>
-            <span asp-validation-for="BarberoId" class="text-danger"></span>
+            <div class="mb-3">
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver a mi panel
+                </a>
+            </div>
+
+            <div class="card border-0 shadow">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h4 class="mb-0 fw-bold">✂️ Agendar Nueva Cita</h4>
+                    <p class="small text-muted mb-0">Selecciona tu barbero, el servicio y tu horario ideal</p>
+                </div>
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            ❌ @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Agendar" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">1. Elige el Servicio</label>
+                            <select name="ServicioId" class="form-select form-select-lg" required>
+                                <option value="" disabled selected=@(string.IsNullOrEmpty(servicioPreseleccionado) ? "selected" : null)>
+                                    -- Selecciona un servicio --
+                                </option>
+                                @foreach (var servicio in Model.Servicios)
+                                {
+                                    if (servicio.Id.ToString() == servicioPreseleccionado)
+                                    {
+                                        <option value="@servicio.Id" selected>@servicio.Nombre ($@servicio.Precio.ToString("F2"))</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@servicio.Id">@servicio.Nombre ($@servicio.Precio.ToString("F2"))</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">2. Selecciona tu Barbero</label>
+                            <select name="BarberoId" class="form-select form-select-lg" required>
+                                <option value="" disabled selected>-- Elige el profesional --</option>
+                                @foreach (var barbero in Model.Barberos)
+                                {
+                                    <option value="@barbero.Id">@barbero.NombreCompleto</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary">3. Fecha y Hora de la Cita</label>
+                            <input type="datetime-local"
+                                   name="FechaHora"
+                                   id="fechaHoraInput"
+                                   class="form-select form-select-lg"
+                                   required />
+                            <div class="form-text text-muted small">Nota: Respeta los horarios de atención de la barbería.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Observaciones (Opcional)</label>
+                            <textarea name="Observacion" class="form-control" rows="2" placeholder="Ej. Deseo diseño en las patillas, llegaré 5 min antes, etc."></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark shadow-sm">
+                                📅 Confirmar y Agendar Turno
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
-
-        <!-- Servicio -->
-        <div class="mb-3">
-            <label asp-for="ServicioId" class="form-label">Servicio</label>
-            <select asp-for="ServicioId" class="form-select" asp-items="ViewBag.Servicios">
-                <option value="">-- Selecciona un servicio --</option>
-            </select>
-            <span asp-validation-for="ServicioId" class="text-danger"></span>
-        </div>
-
-        <!-- Fecha y Hora -->
-        <div class="mb-3">
-            <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
-            <input asp-for="FechaHora" type="datetime-local" class="form-control" required />
-            <span asp-validation-for="FechaHora" class="text-danger"></span>
-        </div>
-
-        <!-- Observación -->
-        <div class="mb-3">
-            <label asp-for="Observacion" class="form-label">Observación <small class="text-muted">(opcional)</small></label>
-            <textarea asp-for="Observacion" class="form-control" rows="3"
-                      placeholder="Ej: Corte específico, alergias, preferencias..."></textarea>
-            <span asp-validation-for="Observacion" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-success">Agendar Cita</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        // Validación básica de UI: Evitar que elijan fechas u horas del pasado
+        document.addEventListener("DOMContentLoaded", function () {
+            const now = new Date();
+
+            // Ajustar zona horaria local para el formato input datetime-local
+            const offset = now.getTimezoneOffset() * 60000;
+            const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+
+            const dateInput = document.getElementById("fechaHoraInput");
+            if(dateInput) {
+                dateInput.min = localISOTime;
+            }
+        });
+    </script>
 }

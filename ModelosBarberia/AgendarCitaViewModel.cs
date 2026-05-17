@@ -1,7 +1,10 @@
 ﻿using ModelosBarberia;
 
-public class AgendarCitaViewModel
+namespace ModelosBarberia.ViewModels
 {
-    public List<ApplicationUser> Barberos { get; set; } = new();
-    public List<Servicio> Servicios { get; set; } = new();
+    public class AgendarCitaViewModel
+    {
+        public List<ApplicationUser> Barberos { get; set; } = new();
+        public List<Servicio> Servicios { get; set; } = new();
+    }
 }
