@@ -1,62 +1,63 @@
-﻿@{
+﻿@model ModelosBarberia.ViewModels.ClienteDashboardViewModel
+@{
     ViewData["Title"] = "Inicio - Barbershop's Ibarra";
 }
 
-<!-- Hero Section -->
 <div class="bg-dark text-white py-5 mb-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;">
     <div class="container text-center py-4">
         <h1 class="display-3 fw-bold mb-3">💈 Barbershop's Ibarra</h1>
         <p class="lead fs-4 text-light opacity-75 mb-4">Tu estilo, nuestra pasión. Descubre lo mejor en cortes, afeitados y cuidado personal.</p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a asp-controller="Citas" asp-action="Create" class="btn btn-warning btn-lg fw-bold px-4">
+            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-warning btn-lg fw-bold px-4">
                 ✂️ Reservar Ahora
-            </a>
-            <a asp-controller="Barberos" asp-action="Index" class="btn btn-outline-light btn-lg px-4">
-                👥 Ver Barberos
             </a>
         </div>
     </div>
 </div>
 
-<!-- Servicios -->
 <div class="container mb-5">
     <div class="text-center mb-4">
         <h2 class="fw-bold">Nuestros Servicios</h2>
-        <p class="text-muted">Elige el estilo que mejor te representa</p>
+        <p class="text-muted">Elige el estilo que mejor te representa (Precios actualizados en tiempo real)</p>
     </div>
 
     <div class="row g-4">
-        @{
-            var servicios = new[]
-            {
-        new { Nombre = "Low Fade", Desc = "Corte moderno con degradado bajo, ideal para un look fresco.", Icono = "✂️" },
-        new { Nombre = "Taper Fade", Desc = "Degradado progresivo en nuca y laterales, versátil y elegante.", Icono = "💇" },
-        new { Nombre = "Arreglo de Barba", Desc = "Perfilado y recorte de barba con acabado profesional.", Icono = "🪒" },
-        new { Nombre = "Corte Clásico", Desc = "Corte tradicional con peine y tijera, estilo atemporal.", Icono = "👑" },
-        new { Nombre = "Mullet", Desc = "Corte retro con estilo actual, largo atrás y corto adelante.", Icono = "🎸" },
-        new { Nombre = "Fade Medio", Desc = "Degradado a media altura, balance entre clásico y moderno.", Icono = "⭐" },
-        };
-        }
-
-        @foreach (var s in servicios)
+        @if (Model?.Servicios != null && Model.Servicios.Any())
         {
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm h-100 text-center">
-                    <div class="card-body py-4">
-                        <div class="fs-1 mb-2">@s.Icono</div>
-                        <h5 class="fw-bold">@s.Nombre</h5>
-                        <p class="text-muted small">@s.Desc</p>
-                        <a asp-controller="Citas" asp-action="Create" class="btn btn-outline-primary btn-sm mt-2">
-                            Reservar
-                        </a>
+            @foreach (var s in Model.Servicios)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body py-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="fs-1 mb-2">✂️</div>
+                                <h5 class="fw-bold">@s.Nombre</h5>
+                                <p class="text-muted small">@(s.Descripcion ?? "Sin descripción disponible.")</p>
+                            </div>
+
+                            <div class="mt-3">
+                                @if (s.Precio > 0)
+                                {
+                                    <p class="fw-bold text-primary fs-5 mb-2">$@s.Precio.ToString("F2")</p>
+                                }
+                                <a asp-controller="Cliente" asp-action="Agendar" asp-route-servicioId="@s.Id" class="btn btn-outline-primary btn-sm w-100">
+                                    Reservar
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted py-5">
+                <p class="fs-5">No hay servicios disponibles listados en el sistema en este momento.</p>
             </div>
         }
     </div>
 </div>
 
-<!-- Por qué elegirnos -->
 <div class="bg-light py-5 mb-5">
     <div class="container">
         <div class="text-center mb-4">
@@ -87,15 +88,13 @@
     </div>
 </div>
 
-<!-- Promoción -->
 <div class="container mb-5">
-    <div class="card border-0 shadow text-white text-center py-5"
-         style="background: linear-gradient(135deg, #0077b6, #0096c7);">
+    <div class="card border-0 shadow text-white text-center py-5" style="background: linear-gradient(135deg, #0077b6, #0096c7);">
         <div class="card-body">
             <div class="fs-1 mb-2">🎉</div>
             <h3 class="fw-bold">Promoción Especial</h3>
             <p class="fs-5 opacity-75">¡Corte + arreglo de barba a precio especial todos los viernes!</p>
-            <a asp-controller="Citas" asp-action="Create" class="btn btn-warning btn-lg fw-bold px-5 mt-2">
+            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-warning btn-lg fw-bold px-5 mt-2">
                 Reservar Ahora
             </a>
         </div>
