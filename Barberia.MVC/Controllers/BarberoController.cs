@@ -20,7 +20,6 @@ namespace Barberia.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Obtiene el ID del barbero desde la sesión
             var barberoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
@@ -29,11 +28,13 @@ namespace Barberia.MVC.Controllers
             var topClientes = await client.GetFromJsonAsync<List<ApplicationUser>>($"api/usuarios/top-clientes/{barberoId}")
                               ?? new List<ApplicationUser>();
 
+            var hoy = DateTime.Today;
+
             var dashboard = new BarberoDashboardViewModel
             {
                 Citas = citas,
                 TopClientes = topClientes,
-                CitasHoy = citas.Count(c => c.FechaHora.Date == DateTime.Today),
+                CitasHoy = citas.Count(c => c.FechaHora.Year == hoy.Year && c.FechaHora.Month == hoy.Month && c.FechaHora.Day == hoy.Day),
                 CitasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente),
                 CitasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida),
             };

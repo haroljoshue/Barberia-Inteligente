@@ -1,13 +1,12 @@
 ﻿@model ModelosBarberia.ViewModels.BarberoDashboardViewModel
-@using ModelosBarberia.Enum  @* <-- SOLUCIÓN DEFINTIVA: Apunta al namespace correcto del Enum *@
-@using ModelosBarberia       @* Mantiene el acceso a otras entidades si fuesen requeridas *@
+@using ModelosBarberia.Enum  
+@using ModelosBarberia       
 @{
     ViewData["Title"] = "Panel del Barbero";
 }
 
 <div class="container-fluid my-4 px-4">
 
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="text-primary mb-0">💈 Panel del Barbero</h2>
@@ -16,7 +15,6 @@
         <span class="badge bg-primary fs-6">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
     </div>
 
-    <!-- Alertas -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -32,7 +30,6 @@
         </div>
     }
 
-    <!-- Métricas -->
     <div class="row g-3 mb-5">
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm text-center h-100">
@@ -72,7 +69,6 @@
         </div>
     </div>
 
-    <!-- Tabla de citas -->
     <div class="card border-0 shadow-sm mb-5">
         <div class="card-header bg-white border-0 pt-3">
             <h5 class="text-primary mb-0">✂️ Mis Citas</h5>
@@ -140,7 +136,6 @@
         </div>
     </div>
 
-    <!-- Top Clientes -->
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-0 pt-3">
             <h5 class="text-primary mb-0">👥 Top Clientes</h5>
@@ -170,28 +165,16 @@
                             {
                                 <tr>
                                     <td>
-                                        @if (rank == 1)
-                                        {
-                                            <span>🥇</span>
-                                        }
-                                        else if (rank == 2)
-                                        {
-                                            <span>🥈</span>
-                                        }
-                                        else if (rank == 3)
-                                        {
-                                            <span>🥉</span>
-                                        }
-                                        else
-                                        {
-                                            <span>@rank</span>
-                                        }
+                                        @if (rank == 1) { <span>🥇</span> }
+                                        else if (rank == 2) { <span>🥈</span> }
+                                        else if (rank == 3) { <span>🥉</span> }
+                                        else { <span>@rank</span> }
                                     </td>
                                     <td>@cliente.NombreCompleto</td>
                                     <td>@cliente.Email</td>
                                     <td><span class="badge bg-primary">@cliente.Citas?.Count</span></td>
                                 </tr>
-                                rank++;
+                                @{ rank++; } @* <-- CORRECCIÓN: Operación de C# encerrada de forma explícita *@
                             }
                         </tbody>
                     </table>
@@ -199,5 +182,4 @@
             }
         </div>
     </div>
-
 </div>
