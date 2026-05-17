@@ -14,7 +14,6 @@ namespace Barberia.MVC.Controllers
             return View(barberos);
         }
 
-        [Authorize(Roles = "Admin,Cliente,Barbero")]
         public IActionResult Barberos()
         {
             var barberos = CRUD<Barbero>.GetAll();

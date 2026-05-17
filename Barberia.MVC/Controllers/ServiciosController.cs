@@ -17,7 +17,6 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Servicios
-        [Authorize(Roles = "Admin,Barbero,Cliente")]
         public IActionResult Servicios()
         {
             var servicios = CRUD<Servicio>.GetAll();
