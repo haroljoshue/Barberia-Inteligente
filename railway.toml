@@ -1,7 +1,9 @@
 [build]
 builder = "nixpacks"
-buildCommand = "dotnet publish Barberia.Api/Barberia.Api.csproj -c Release -o out"
+buildCommand = "dotnet publish Barberia.Api/Barberia.Api.csproj -c Release -o out /p:TargetFramework=net8.0"
 
 [deploy]
 startCommand = "dotnet out/Barberia.Api.dll"
 
+[nixpacks]
+aptPkgs = ["dotnet-sdk-8.0"]
