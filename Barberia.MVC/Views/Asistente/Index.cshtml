@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Asistente Inteligente";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h2 class="mb-2">Asistente Inteligente</h2>
+            <p class="text-muted">
+                Consulta tus cortes anteriores, revisa horarios disponibles o agenda una cita.
+            </p>
+
+            <div id="n8n-chat"></div>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
+
+<script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
+
+    createChat({
+            webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
+        target: '#n8n-chat',
+        mode: 'window',
+        initialMessages: [
+            'Hola 👋 Soy el asistente inteligente de Barber’s Shop Ibarra.',
+            'Puedo ayudarte a consultar tus cortes anteriores, revisar horarios disponibles o agendar una cita.'
+        ],
+        i18n: {
+            en: {
+                title: 'Barber’s Shop Ibarra',
+                subtitle: 'Asistente inteligente de citas',
+                inputPlaceholder: 'Escribe tu mensaje...'
+            }
+        }
+    });
+</script>
