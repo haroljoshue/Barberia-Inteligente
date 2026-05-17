@@ -4,3 +4,4 @@ buildCommand = "dotnet publish Barberia.Api/Barberia.Api.csproj -c Release -o ou
 
 [deploy]
 startCommand = "dotnet out/Barberia.Api.dll"
+
