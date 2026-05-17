@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -291,29 +292,38 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 
-    <div id="n8n-chat"></div>
+    @if (User.Identity != null
+        && User.Identity.IsAuthenticated
+        && User.FindFirst("RolSistema")?.Value == "Cliente")
+    {
+        var clienteId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var emailCliente = User.Identity.Name;
 
-    <script type="module">
-        import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
+        <link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
 
-        createChat({
-                    webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
-            target: '#n8n-chat',
-            mode: 'window',
-            showWelcomeScreen: false,
-            initialMessages: [
-                'Hola 👋 Soy el asistente inteligente de Barbershop’s Ibarra.',
-                'Puedo ayudarte a consultar tus cortes anteriores, revisar horarios disponibles o agendar una cita.'
-            ],
-            i18n: {
-                en: {
-                    title: 'Barbershop’s Ibarra',
-                    subtitle: 'Asistente inteligente de citas',
-                    inputPlaceholder: 'Escribe tu mensaje...',
-                    getStarted: 'Nueva conversación'
+        <script type="module">
+            import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
+
+            createChat({
+                webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
+                mode: 'window',
+                metadata: {
+                    clienteId: '@clienteId',
+                    emailCliente: '@emailCliente',
+                    rolSistema: 'Cliente'
+                },
+                initialMessages: [
+                    'Hola 👋, soy el asistente inteligente de la barbería. ¿En qué puedo ayudarte?'
+                ],
+                i18n: {
+                    es: {
+                        title: 'Barbería Inteligente',
+                        subtitle: 'Agenda y consulta tus citas',
+                        inputPlaceholder: 'Escribe tu mensaje...'
+                    }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
+    }
 </body>
 </html>
