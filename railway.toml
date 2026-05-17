@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "dotnet publish Barberia.Api/Barberia.Api.csproj -c Release -o out"
+
+[deploy]
+startCommand = "dotnet out/Barberia.Api.dll"
