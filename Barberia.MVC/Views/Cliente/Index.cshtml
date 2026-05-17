@@ -5,18 +5,16 @@
 
 <div class="container-fluid my-4 px-4">
 
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="text-primary mb-0">👋 Bienvenido, @Model.Cliente.NombreCompleto</h2>
-            <small class="text-muted">@Model.Cliente.Email</small>
+            <h2 class="text-primary mb-0">👋 Bienvenido, @(Model?.Cliente?.NombreCompleto ?? "Cliente")</h2>
+            <small class="text-muted">@Model?.Cliente?.Email</small>
         </div>
         <a asp-action="Agendar" class="btn btn-success">
             ✂️ Agendar Nueva Cita
         </a>
     </div>
 
-    <!-- Alertas -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show">
@@ -32,8 +30,7 @@
         </div>
     }
 
-    <!-- Próxima cita destacada -->
-    @if (Model.ProximaCita != null)
+    @if (Model?.ProximaCita != null)
     {
         <div class="alert alert-info border-0 shadow-sm mb-4">
             <div class="d-flex align-items-center gap-3">
@@ -49,13 +46,12 @@
         </div>
     }
 
-    <!-- Métricas -->
     <div class="row g-3 mb-5">
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm text-center h-100">
                 <div class="card-body">
                     <div class="fs-1">📋</div>
-                    <div class="fs-2 fw-bold text-primary">@Model.HistorialCitas.Count</div>
+                    <div class="fs-2 fw-bold text-primary">@(Model?.HistorialCitas?.Count ?? 0)</div>
                     <div class="text-muted small">Total Citas</div>
                 </div>
             </div>
@@ -64,7 +60,7 @@
             <div class="card border-0 shadow-sm text-center h-100">
                 <div class="card-body">
                     <div class="fs-1">⏳</div>
-                    <div class="fs-2 fw-bold text-warning">@Model.CitasPendientes</div>
+                    <div class="fs-2 fw-bold text-warning">@(Model?.CitasPendientes ?? 0)</div>
                     <div class="text-muted small">Pendientes</div>
                 </div>
             </div>
@@ -73,7 +69,7 @@
             <div class="card border-0 shadow-sm text-center h-100">
                 <div class="card-body">
                     <div class="fs-1">✅</div>
-                    <div class="fs-2 fw-bold text-success">@Model.CitasCompletadas</div>
+                    <div class="fs-2 fw-bold text-success">@(Model?.CitasCompletadas ?? 0)</div>
                     <div class="text-muted small">Completadas</div>
                 </div>
             </div>
@@ -83,7 +79,7 @@
                 <div class="card-body">
                     <div class="fs-1">❌</div>
                     <div class="fs-2 fw-bold text-danger">
-                        @Model.HistorialCitas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Cancelada)
+                        @(Model?.HistorialCitas?.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Cancelada) ?? 0)
                     </div>
                     <div class="text-muted small">Canceladas</div>
                 </div>
@@ -91,13 +87,12 @@
         </div>
     </div>
 
-    <!-- Historial de citas -->
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
             <h5 class="text-primary mb-0">✂️ Historial de Citas</h5>
         </div>
         <div class="card-body p-0">
-            @if (!Model.HistorialCitas.Any())
+            @if (Model?.HistorialCitas == null || !Model.HistorialCitas.Any())
             {
                 <div class="text-center text-muted py-5">
                     <div class="fs-1">💈</div>

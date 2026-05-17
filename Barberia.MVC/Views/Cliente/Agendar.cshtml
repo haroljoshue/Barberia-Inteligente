@@ -1,0 +1,54 @@
+﻿@model ModelosBarberia.Cita
+@{
+    ViewData["Title"] = "Agendar Cita";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Agendar Nueva Cita</h2>
+    <hr />
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- Barbero -->
+        <div class="mb-3">
+            <label asp-for="BarberoId" class="form-label">Barbero</label>
+            <select asp-for="BarberoId" class="form-select" asp-items="ViewBag.Barberos">
+                <option value="">-- Selecciona un barbero --</option>
+            </select>
+            <span asp-validation-for="BarberoId" class="text-danger"></span>
+        </div>
+
+        <!-- Servicio -->
+        <div class="mb-3">
+            <label asp-for="ServicioId" class="form-label">Servicio</label>
+            <select asp-for="ServicioId" class="form-select" asp-items="ViewBag.Servicios">
+                <option value="">-- Selecciona un servicio --</option>
+            </select>
+            <span asp-validation-for="ServicioId" class="text-danger"></span>
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="mb-3">
+            <label asp-for="FechaHora" class="form-label">Fecha y Hora</label>
+            <input asp-for="FechaHora" type="datetime-local" class="form-control" required />
+            <span asp-validation-for="FechaHora" class="text-danger"></span>
+        </div>
+
+        <!-- Observación -->
+        <div class="mb-3">
+            <label asp-for="Observacion" class="form-label">Observación <small class="text-muted">(opcional)</small></label>
+            <textarea asp-for="Observacion" class="form-control" rows="3"
+                      placeholder="Ej: Corte específico, alergias, preferencias..."></textarea>
+            <span asp-validation-for="Observacion" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Agendar Cita</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -19,13 +19,20 @@ namespace Barberia.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Cliente desde sesión, no desde parámetro
             var clienteId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
+            // Solicitud del usuario segura
             var cliente = await client.GetFromJsonAsync<ApplicationUser>($"api/usuarios/{clienteId}");
-            var citas = await client.GetFromJsonAsync<List<Cita>>($"api/citas/cliente/{clienteId}")
-                        ?? new List<Cita>();
+
+            // CORRECCIÓN CRÍTICA: Control seguro del 404 si el cliente no registra citas aún
+            var citas = new List<Cita>();
+            var citasResponse = await client.GetAsync($"api/citas/cliente/{clienteId}");
+
+            if (citasResponse.IsSuccessStatusCode)
+            {
+                citas = await citasResponse.Content.ReadFromJsonAsync<List<Cita>>() ?? new List<Cita>();
+            }
 
             var vm = new ClienteDashboardViewModel
             {
@@ -47,26 +54,23 @@ namespace Barberia.MVC.Controllers
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
-            // 1. Consumimos los datos crudos de la API
             var barberosRaw = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
             var servicios = await client.GetFromJsonAsync<List<Servicio>>("api/servicios") ?? new();
 
-            // 2. Filtramos los disponibles y los transformamos en el tipo que exige el ViewModel (ApplicationUser)
             var listaUsuariosBarberos = barberosRaw
                 .Where(b => b.Disponible)
                 .Select(b => new ApplicationUser
                 {
-                    Id = b.Id.ToString(), // IdentityUser usa string para el Id
+                    Id = b.Id.ToString(),
                     NombreCompleto = b.Nombre ?? "Barbero Sin Nombre",
                     Email = b.Email,
                     PhoneNumber = b.Telefono
                 })
                 .ToList();
 
-            // 3. Construimos el modelo final
             var vm = new AgendarCitaViewModel
             {
-                Barberos = listaUsuariosBarberos, // Cumple perfectamente con List<ApplicationUser>
+                Barberos = listaUsuariosBarberos,
                 Servicios = servicios.Where(s => s.Activo).ToList()
             };
 
@@ -77,7 +81,6 @@ namespace Barberia.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Agendar(AgendarCitaRequest request)
         {
-            // Asigna el cliente desde la sesión
             request.ClienteId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
             var client = _httpClientFactory.CreateClient("BarberiaApi");
