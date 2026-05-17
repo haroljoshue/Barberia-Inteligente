@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using ModelosBarberia;
 using CRUD;
 using System.Security.Claims;
+using ModelosBarberia.DTOs;
 
 namespace Barberia.MVC.Controllers
 {

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using Barberia.Api.Data;
+using ModelosBarberia.DTOs;
 
 namespace Barberia.Api.Controllers
 {
@@ -105,15 +106,35 @@ namespace Barberia.Api.Controllers
         {
             return _context.Citas.Any(e => e.Id == id);
         }
+
         [HttpGet("barbero/{barberoId}")]
-        public async Task<ActionResult<IEnumerable<Cita>>> ObtenerPorBarbero(int barberoId)
+        public async Task<ActionResult<IEnumerable<CitaBarberoDto>>> ObtenerPorBarbero(int barberoId)
         {
             var citas = await _context.Citas
                 .Include(c => c.Cliente)
-                .Include(c => c.Barbero)
                 .Include(c => c.Servicio)
                 .Where(c => c.BarberoId == barberoId)
                 .OrderBy(c => c.FechaHora)
+                .Select(c => new CitaBarberoDto
+                {
+                    Id = c.Id,
+
+                    ClienteNombre = c.Cliente != null
+                        ? c.Cliente.NombreCompleto
+                        : "Sin cliente",
+
+                    ServicioNombre = c.Servicio != null
+                        ? c.Servicio.Nombre
+                        : "Sin servicio",
+
+                    FechaHora = c.FechaHora,
+
+                    Estado = (int)c.Estado,
+
+                    Observacion = c.Observacion,
+
+                    PrecioFinal = c.PrecioFinal
+                })
                 .ToListAsync();
 
             return Ok(citas);
