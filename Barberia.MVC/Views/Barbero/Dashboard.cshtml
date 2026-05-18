@@ -1,0 +1,109 @@
+﻿@model ModelosBarberia.ViewModels.BarberoDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard del Barbero";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Panel de Control</h2>
+
+    <!-- Tarjetas de estadísticas -->
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Total Citas</h5>
+                    <p class="display-6">@Model.TotalCitas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Pendientes</h5>
+                    <p class="display-6 text-warning">@Model.CitasPendientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Completadas</h5>
+                    <p class="display-6 text-success">@Model.CitasCompletadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Canceladas</h5>
+                    <p class="display-6 text-danger">@Model.CitasCanceladas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ganancias -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5>Ganancias Totales</h5>
+                    <p class="display-6 text-primary">$@Model.GananciasTotales</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de citas por mes -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="text-center">Citas por Mes</h5>
+                    <canvas id="citasPorMesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón regresar -->
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <a asp-controller="Barbero" asp-action="Index" class="btn btn-secondary btn-lg">
+                ← Regresar al Panel
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('citasPorMesChart').getContext('2d');
+        const citasPorMesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Mes))),
+                datasets: [
+                    {
+                        label: 'Total Citas',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Total))),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Ganancias',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Ganancias))),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Citas y Ganancias por Mes' }
+                }
+            }
+        });
+    </script>
+}

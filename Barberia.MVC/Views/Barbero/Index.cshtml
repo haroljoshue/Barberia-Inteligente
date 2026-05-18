@@ -9,6 +9,12 @@
 
     <h2>Panel del Barbero</h2>
 
+    <div class="mb-3">
+        <a asp-controller="Barbero" asp-action="Dashboard" class="btn btn-info btn-lg">
+            Ir al Dashboard
+        </a>
+    </div>
+
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success">@TempData["Success"]</div>

@@ -89,5 +89,39 @@ namespace Barberia.MVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [Authorize(Roles = "Barbero")]
+        public async Task<IActionResult> Dashboard()
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var client = _httpClientFactory.CreateClient("BarberiaApi");
+
+            // Buscar el barbero actual por email
+            var barberos = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
+            var barberoActual = barberos.FirstOrDefault(b => b.Email == userEmail);
+
+            if (barberoActual == null)
+            {
+                TempData["Error"] = "No se encontró el perfil de barbero asociado a esta cuenta.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            int barberoId = barberoActual.Id;
+
+            // Consumir el endpoint del dashboard
+            var dashboardApi = await client.GetFromJsonAsync<BarberoDashboardViewModel>(
+                $"api/Barberos/barbero/{barberoId}/dashboard"
+            );
+
+            if (dashboardApi == null)
+            {
+                TempData["Error"] = "No se pudo cargar el dashboard.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Retornar la vista con el modelo ya mapeado
+            return View(dashboardApi);
+        }
+
     }
 }
