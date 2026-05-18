@@ -1321,3 +1321,142 @@ main > .container:first-child {
     color: rgba(255,255,255,0.6) !important;
 }
 
+/* ============================================
+   💬 CHAT N8N - DISEÑO SIMPLE Y CORREGIDO
+   ============================================ */
+
+/* Burbuja flotante */
+#chat-bubble {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #7C9885; /* color primario */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 9999;
+    transition: all 0.2s ease;
+}
+
+    #chat-bubble:hover {
+        background-color: #5A7A63; /* primario oscuro */
+        transform: scale(1.08);
+    }
+
+/* Contenedor del chat */
+#chat-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 370px;
+    height: 540px;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    border: 1px solid #e5e7eb;
+    z-index: 10000;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #fff;
+    display: none; /* controlado por toggleChat() */
+}
+
+/* Botón cerrar */
+#chat-close-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.1);
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10001;
+    font-size: 0.8rem;
+    transition: background-color 0.15s ease;
+}
+
+    #chat-close-btn:hover {
+        background-color: rgba(0,0,0,0.2);
+    }
+
+/* Header */
+#n8n-chat-mount .chat-header {
+    background-color: #7C9885;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+    #n8n-chat-mount .chat-header h1 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    #n8n-chat-mount .chat-header p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.8);
+    }
+
+/* Footer e input */
+#n8n-chat-mount .chat-footer {
+    background-color: #fff;
+    border-top: 1px solid #e5e7eb;
+    padding: 0.75rem;
+}
+
+#n8n-chat-mount .chat-inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+}
+
+    #n8n-chat-mount .chat-inputs textarea {
+        flex: 1;
+        border: none;
+        outline: none;
+        resize: none;
+        background: transparent;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+/* Botón enviar */
+#n8n-chat-mount .chat-input-send-button {
+    background-color: #fbbf24; /* dorado */
+    color: #1f2937;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    #n8n-chat-mount .chat-input-send-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    #n8n-chat-mount .chat-input-send-button:not([disabled]):hover {
+        background-color: #f59e0b;
+    }

@@ -101,10 +101,13 @@
                             }
                             else
                             {
-                                <a asp-controller="Citas" asp-action="Create"
+                                <a asp-controller="Cliente"
+                                   asp-action="Agendar"
+                                   asp-route-barberoId="@barbero.Id"
                                    class="btn btn-primary w-100">
-                                    Reservar cita
+                                    Reservar ahora
                                 </a>
+
                             }
                         </div>
                     </div>
