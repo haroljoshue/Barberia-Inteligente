@@ -146,9 +146,11 @@
             console.log("ClienteId enviado a n8n:", clienteId);
             console.log("Email enviado a n8n:", emailCliente);
 
-            createChat({
+                createChat({
                 webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
-                mode: 'window',
+                mode: 'window',          // ← mantén window
+                showWelcomeScreen: true, // ← agrega esto
+                defaultOpen: false,      // ← agrega esto para que inicie cerrado
                 defaultLanguage: 'es',
                 metadata: {
                     clienteId: clienteId,
