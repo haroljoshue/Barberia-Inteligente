@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using ModelosBarberia;
 using ModelosBarberia.ViewModels;
+using ModelosBarberia.DTO_s;
 
 namespace Barberia.MVC.Controllers
 {
@@ -74,6 +75,7 @@ namespace Barberia.MVC.Controllers
         public async Task<IActionResult> Agendar(AgendarCitaRequest request)
         {
             request.ClienteId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            request.FechaHora = DateTime.SpecifyKind(request.FechaHora, DateTimeKind.Utc);
 
             var client = _httpClientFactory.CreateClient("BarberiaApi");
             var response = await client.PostAsJsonAsync("api/citas", request);
@@ -87,6 +89,7 @@ namespace Barberia.MVC.Controllers
             TempData["Error"] = "No se pudo agendar la cita. Intenta de nuevo.";
             return RedirectToAction(nameof(Agendar));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
