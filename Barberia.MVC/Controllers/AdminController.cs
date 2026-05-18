@@ -7,7 +7,7 @@ using ModelosBarberia.Enum;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrador")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;

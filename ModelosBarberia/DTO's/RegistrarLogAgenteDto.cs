@@ -1,47 +1,32 @@
-﻿// Registra interacciones con el agente de IA
-namespace ModelosBarberia
+﻿using ModelosBarberia.Enum;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ModelosBarberia.DTO_s
 {
-    using ModelosBarberia.Enum;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public class LogAgente
+    public class RegistrarLogAgenteDto
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
         public string UsuarioId { get; set; } = string.Empty;
-
-        [ForeignKey("UsuarioId")]
-        public ApplicationUser Usuario { get; set; } = null!;
-
-        [Required]
         public TipoLogAgente Tipo { get; set; }
 
-        [Required, StringLength(1000)]
         public string Pregunta { get; set; } = string.Empty;
-
         public string? Respuesta { get; set; }
 
         public int? TokensUsados { get; set; }
-
         public int? TiempoRespuestaMs { get; set; }
 
-        [StringLength(100)]
         public string? HerramientaUsada { get; set; }
 
         public int? CantidadResultados { get; set; }
 
         public decimal? SimilitudPromedio { get; set; }
-
         public decimal? SimilitudMaxima { get; set; }
 
         public bool ConsultaExitosa { get; set; } = true;
 
-        [StringLength(500)]
         public string? MensajeError { get; set; }
-
-        public DateTime Fecha { get; set; } = DateTime.UtcNow;
     }
 }
