@@ -1579,3 +1579,36 @@ main > .container:first-child {
     background: none !important;
     padding: 0 !important;
 }
+
+/* Fix burbuja usuario chat */
+.chat-message-from-user {
+    display: flex !important;
+    justify-content: flex-end !important;
+    padding: 0 !important;
+    background: none !important;
+}
+
+    .chat-message-from-user .chat-message-markdown {
+        background-color: var(--color-primary) !important;
+        color: white !important;
+        border-radius: 12px 4px 12px 12px !important;
+        padding: 0.5rem 0.9rem !important;
+        font-size: 0.875rem !important;
+        max-width: 75% !important;
+        display: inline-block !important;
+        min-width: unset !important;
+        width: auto !important;
+    }
+
+        .chat-message-from-user .chat-message-markdown p {
+            margin: 0 !important;
+            color: white !important;
+            white-space: normal !important;
+        }
+
+/* Quita el fondo verde del contenedor padre */
+.chat-message.chat-message-from-user > *:not(.chat-message-markdown) {
+    background: transparent !important;
+    min-width: unset !important;
+    width: auto !important;
+}

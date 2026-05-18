@@ -7,11 +7,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="text-primary mb-0">👋 Bienvenido, @(Model?.Cliente?.NombreCompleto ?? "Cliente")</h2>
+            <h2 class="text-primary mb-0">Bienvenido, @(Model?.Cliente?.NombreCompleto ?? "Cliente")</h2>
             <small class="text-muted">@Model?.Cliente?.Email</small>
         </div>
         <a asp-action="Agendar" class="btn btn-success">
-            ✂️ Agendar Nueva Cita
+            Agendar Nueva Cita
         </a>
     </div>
 
@@ -34,7 +34,7 @@
     {
         <div class="alert alert-info border-0 shadow-sm mb-4">
             <div class="d-flex align-items-center gap-3">
-                <div class="fs-1">📅</div>
+                <div class="fs-1"></div>
                 <div>
                     <strong>Próxima cita:</strong>
                     @Model.ProximaCita.FechaHora.ToString("dddd dd 'de' MMMM 'a las' HH:mm")
@@ -89,7 +89,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
-            <h5 class="text-primary mb-0">✂️ Historial de Citas</h5>
+            <h5 class="text-primary mb-0">Historial de Citas</h5>
         </div>
         <div class="card-body p-0">
             @if (Model?.HistorialCitas == null || !Model.HistorialCitas.Any())

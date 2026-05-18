@@ -7,6 +7,7 @@ namespace ModelosBarberia
     {
         [Key]
         public int Id { get; set; }
+        public string? UserId { get; set; }
 
         [Required, StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
