@@ -1,34 +1,26 @@
-﻿@model Barberia.MVC.Controllers.AdminController.AdminDashboardViewModel
+﻿@model Barberia.MVC.Controllers.AdminDashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard Administrativo";
 
-    string FormatNumber(double value, int decimals = 2)
+    string Numero(double valor, int decimales = 2)
     {
-        return value.ToString($"N{decimals}");
+        return valor.ToString($"N{decimales}");
     }
 
-    string FormatPercent(double value)
+    string Porcentaje(double valor)
     {
-        return value.ToString("N2") + "%";
+        return valor.ToString("N2") + "%";
     }
 }
 
 <div class="container-fluid py-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Dashboard Administrativo</h1>
-            <p class="text-muted mb-0">
-                Resumen general de citas, usuarios, servicios, agente inteligente y logs del sistema.
-            </p>
-        </div>
-
-        <div class="text-end">
-            <span class="badge bg-dark">
-                Dimensión embedding: @Model.DimensionEmbedding
-            </span>
-        </div>
+    <div class="mb-4">
+        <h1 class="h3 mb-1">Dashboard Administrativo</h1>
+        <p class="text-muted mb-0">
+            Resumen general del sistema de Barbería Inteligente.
+        </p>
     </div>
 
     <!-- ========================= -->
@@ -40,7 +32,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Total de citas</p>
-                    <h3 class="mb-0">@Model.TotalCitas</h3>
+                    <h3>@Model.TotalCitas</h3>
                 </div>
             </div>
         </div>
@@ -49,7 +41,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Citas de hoy</p>
-                    <h3 class="mb-0">@Model.CitasHoy</h3>
+                    <h3>@Model.CitasHoy</h3>
                 </div>
             </div>
         </div>
@@ -58,7 +50,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Citas pendientes</p>
-                    <h3 class="mb-0">@Model.CitasPendientes</h3>
+                    <h3>@Model.CitasPendientes</h3>
                 </div>
             </div>
         </div>
@@ -67,7 +59,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Usuarios registrados</p>
-                    <h3 class="mb-0">@Model.TotalUsuarios</h3>
+                    <h3>@Model.TotalUsuarios</h3>
                 </div>
             </div>
         </div>
@@ -79,8 +71,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <p class="text-muted mb-1">Barberos disponibles</p>
-                    <h3 class="mb-0">@Model.TotalBarberos</h3>
+                    <p class="text-muted mb-1">Total barberos</p>
+                    <h3>@Model.TotalBarberos</h3>
                 </div>
             </div>
         </div>
@@ -88,8 +80,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <p class="text-muted mb-1">Servicios activos</p>
-                    <h3 class="mb-0">@Model.TotalServicios</h3>
+                    <p class="text-muted mb-1">Total servicios</p>
+                    <h3>@Model.TotalServicios</h3>
                 </div>
             </div>
         </div>
@@ -98,7 +90,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Citas con vector</p>
-                    <h3 class="mb-0">@Model.CitasConVector</h3>
+                    <h3>@Model.CitasConVector</h3>
                 </div>
             </div>
         </div>
@@ -107,7 +99,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Citas sin vector</p>
-                    <h3 class="mb-0">@Model.CitasSinVector</h3>
+                    <h3>@Model.CitasSinVector</h3>
                 </div>
             </div>
         </div>
@@ -117,62 +109,55 @@
     <!-- ========================= -->
     <!-- VECTOR DB -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                        <div>
-                            <h5 class="mb-0">Vectorización de citas</h5>
-                            <small class="text-muted">
-                                Porcentaje de citas que ya tienen un vector almacenado.
-                            </small>
-                        </div>
-                        <strong>@FormatPercent(Model.PorcentajeVectorizacion)</strong>
-                    </div>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <h5 class="mb-0">Vectorización de citas</h5>
+                    <small class="text-muted">
+                        Citas que ya tienen embedding almacenado en Qdrant.
+                    </small>
+                </div>
+                <strong>@Porcentaje(Model.PorcentajeVectorizacion)</strong>
+            </div>
 
-                    <div class="progress" style="height: 22px;">
-                        <div class="progress-bar"
-                             role="progressbar"
-                             style="width: @Model.PorcentajeVectorizacion.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
-                            @FormatPercent(Model.PorcentajeVectorizacion)
-                        </div>
-                    </div>
+            <div class="progress" style="height: 22px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     style="width: @Model.PorcentajeVectorizacion.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                    @Porcentaje(Model.PorcentajeVectorizacion)
+                </div>
+            </div>
 
-                    <div class="row mt-3 text-center">
-                        <div class="col-md-4">
-                            <span class="text-muted">Total citas</span>
-                            <h5>@Model.TotalCitas</h5>
-                        </div>
-                        <div class="col-md-4">
-                            <span class="text-muted">Con vector</span>
-                            <h5>@Model.CitasConVector</h5>
-                        </div>
-                        <div class="col-md-4">
-                            <span class="text-muted">Sin vector</span>
-                            <h5>@Model.CitasSinVector</h5>
-                        </div>
-                    </div>
-
+            <div class="row text-center mt-3">
+                <div class="col-md-4">
+                    <span class="text-muted">Total citas</span>
+                    <h5>@Model.TotalCitas</h5>
+                </div>
+                <div class="col-md-4">
+                    <span class="text-muted">Con vector</span>
+                    <h5>@Model.CitasConVector</h5>
+                </div>
+                <div class="col-md-4">
+                    <span class="text-muted">Sin vector</span>
+                    <h5>@Model.CitasSinVector</h5>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ========================= -->
-    <!-- MÉTRICAS DEL AGENTE -->
+    <!-- AGENTE -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
+    <h4 class="mb-3">Agente inteligente</h4>
 
-        <div class="col-12">
-            <h4 class="mb-3">Agente inteligente</h4>
-        </div>
+    <div class="row g-3 mb-4">
 
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Consultas totales</p>
-                    <h3 class="mb-0">@Model.TotalConsultasAgente</h3>
+                    <h3>@Model.TotalConsultasAgente</h3>
                 </div>
             </div>
         </div>
@@ -181,7 +166,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Consultas exitosas</p>
-                    <h3 class="mb-0">@Model.ConsultasExitosasAgente</h3>
+                    <h3>@Model.ConsultasExitosasAgente</h3>
                 </div>
             </div>
         </div>
@@ -190,7 +175,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Consultas con error</p>
-                    <h3 class="mb-0">@Model.ConsultasErrorAgente</h3>
+                    <h3>@Model.ConsultasErrorAgente</h3>
                 </div>
             </div>
         </div>
@@ -198,8 +183,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <p class="text-muted mb-1">Sin resultados</p>
-                    <h3 class="mb-0">@Model.ConsultasSinResultados</h3>
+                    <p class="text-muted mb-1">Consultas sin resultados</p>
+                    <h3>@Model.ConsultasSinResultados</h3>
                 </div>
             </div>
         </div>
@@ -212,8 +197,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Tiempo promedio</p>
-                    <h3 class="mb-0">@FormatNumber(Model.TiempoPromedioRespuestaAgente) ms</h3>
-                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                    <h3>@Numero(Model.TiempoPromedioRespuestaAgente) ms</h3>
+                    <small class="text-muted">Ignora valores en cero.</small>
                 </div>
             </div>
         </div>
@@ -222,8 +207,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Tokens promedio</p>
-                    <h3 class="mb-0">@FormatNumber(Model.TokensPromedioAgente)</h3>
-                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                    <h3>@Numero(Model.TokensPromedioAgente)</h3>
+                    <small class="text-muted">Ignora valores en cero.</small>
                 </div>
             </div>
         </div>
@@ -232,8 +217,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Similitud promedio</p>
-                    <h3 class="mb-0">@FormatNumber(Model.SimilitudPromedioAgente, 4)</h3>
-                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                    <h3>@Numero(Model.SimilitudPromedioAgente, 4)</h3>
+                    <small class="text-muted">Ignora valores en cero.</small>
                 </div>
             </div>
         </div>
@@ -242,8 +227,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Similitud máxima</p>
-                    <h3 class="mb-0">@FormatNumber(Model.SimilitudMaximaAgente, 4)</h3>
-                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                    <h3>@Numero(Model.SimilitudMaximaAgente, 4)</h3>
+                    <small class="text-muted">Ignora valores en cero.</small>
                 </div>
             </div>
         </div>
@@ -251,19 +236,17 @@
     </div>
 
     <!-- ========================= -->
-    <!-- LOGS DEL SISTEMA -->
+    <!-- LOGS SISTEMA -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
+    <h4 class="mb-3">Logs del sistema</h4>
 
-        <div class="col-12">
-            <h4 class="mb-3">Logs del sistema</h4>
-        </div>
+    <div class="row g-3 mb-4">
 
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Total logs</p>
-                    <h3 class="mb-0">@Model.TotalLogsSistema</h3>
+                    <h3>@Model.TotalLogsSistema</h3>
                 </div>
             </div>
         </div>
@@ -272,7 +255,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Exitosos</p>
-                    <h3 class="mb-0">@Model.LogsSistemaExitosos</h3>
+                    <h3>@Model.LogsSistemaExitosos</h3>
                 </div>
             </div>
         </div>
@@ -281,7 +264,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Errores</p>
-                    <h3 class="mb-0">@Model.LogsSistemaError</h3>
+                    <h3>@Model.LogsSistemaError</h3>
                 </div>
             </div>
         </div>
@@ -290,8 +273,8 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
                     <p class="text-muted mb-1">Latencia promedio</p>
-                    <h3 class="mb-0">@FormatNumber(Model.LatenciaPromedioSistema) ms</h3>
-                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                    <h3>@Numero(Model.LatenciaPromedioSistema) ms</h3>
+                    <small class="text-muted">Ignora valores en cero.</small>
                 </div>
             </div>
         </div>
@@ -313,7 +296,9 @@
                     {
                         foreach (var item in Model.ReservasPorServicio.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalCitas == 0 ? 0 : Math.Round((double)item.Value / Model.TotalCitas * 100, 2);
+                            var porcentaje = Model.TotalCitas == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalCitas * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -346,7 +331,9 @@
                     {
                         foreach (var item in Model.UsuariosPorRol.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalUsuarios == 0 ? 0 : Math.Round((double)item.Value / Model.TotalUsuarios * 100, 2);
+                            var porcentaje = Model.TotalUsuarios == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalUsuarios * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -383,7 +370,9 @@
                     {
                         foreach (var item in Model.HerramientasUsadas.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalConsultasAgente == 0 ? 0 : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
+                            var porcentaje = Model.TotalConsultasAgente == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -400,9 +389,7 @@
                     }
                     else
                     {
-                        <p class="text-muted mb-0">
-                            Todavía no hay herramientas registradas por el agente.
-                        </p>
+                        <p class="text-muted mb-0">Todavía no hay herramientas registradas por el agente.</p>
                     }
                 </div>
             </div>
@@ -418,7 +405,9 @@
                     {
                         foreach (var item in Model.ConsultasPorTipo.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalConsultasAgente == 0 ? 0 : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
+                            var porcentaje = Model.TotalConsultasAgente == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -435,9 +424,7 @@
                     }
                     else
                     {
-                        <p class="text-muted mb-0">
-                            Todavía no hay tipos de consulta registrados.
-                        </p>
+                        <p class="text-muted mb-0">Todavía no hay tipos de consulta registrados.</p>
                     }
                 </div>
             </div>
@@ -457,7 +444,9 @@
                     {
                         foreach (var item in Model.LogsSistemaPorTipo.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalLogsSistema == 0 ? 0 : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
+                            var porcentaje = Model.TotalLogsSistema == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -490,7 +479,9 @@
                     {
                         foreach (var item in Model.LogsSistemaPorEntidad.OrderByDescending(x => x.Value))
                         {
-                            var porcentaje = Model.TotalLogsSistema == 0 ? 0 : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
+                            var porcentaje = Model.TotalLogsSistema == 0
+                            ? 0
+                            : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
 
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between">
@@ -518,215 +509,211 @@
     <!-- ========================= -->
     <!-- CITAS POR CLIENTE -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Citas por cliente</h5>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Citas por cliente</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.CitasPorCliente.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ClienteId</th>
+                                <th class="text-end">Cantidad de citas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.CitasPorCliente.OrderByDescending(x => x.Value))
+                            {
+                                <tr>
+                                    <td>@item.Key</td>
+                                    <td class="text-end">
+                                        <span class="badge bg-primary">@item.Value</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    @if (Model.CitasPorCliente.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>ClienteId</th>
-                                        <th class="text-end">Cantidad de citas</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.CitasPorCliente.OrderByDescending(x => x.Value))
-                                    {
-                                        <tr>
-                                            <td>@item.Key</td>
-                                            <td class="text-end">
-                                                <span class="badge bg-primary">@item.Value</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted mb-0">No hay citas asociadas a clientes.</p>
-                    }
-                </div>
-            </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0">No hay citas asociadas a clientes.</p>
+            }
         </div>
     </div>
 
     <!-- ========================= -->
     <!-- ÚLTIMOS LOGS DEL AGENTE -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Últimos logs del agente</h5>
-                    <span class="badge bg-secondary">@Model.UltimosLogsAgente.Count registros</span>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Últimos logs del agente</h5>
+            <span class="badge bg-secondary">@Model.UltimosLogsAgente.Count registros</span>
+        </div>
+        <div class="card-body">
+            @if (Model.UltimosLogsAgente.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Tipo</th>
+                                <th>Pregunta</th>
+                                <th>Herramienta</th>
+                                <th>Resultados</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.UltimosLogsAgente)
+                            {
+                                <tr>
+                                    <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@log.UsuarioId</td>
+                                    <td>@log.Tipo</td>
+                                    <td style="max-width: 350px;">
+                                        @{
+                                            var pregunta = log.Pregunta ?? "";
+                                            var preguntaCorta = pregunta.Length > 80
+                                            ? pregunta.Substring(0, 80) + "..."
+                                            : pregunta;
+                                        }
+                                        <span title="@pregunta">@preguntaCorta</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(log.HerramientaUsada))
+                                        {
+                                            <span class="badge bg-info text-dark">@log.HerramientaUsada</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @(log.CantidadResultados.HasValue? log.CantidadResultados.Value.ToString() : "N/A")
+                                    </td>
+                                    <td>
+                                        @if (log.ConsultaExitosa && string.IsNullOrWhiteSpace(log.MensajeError))
+                                        {
+                                            <span class="badge bg-success">Exitosa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Error</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    @if (Model.UltimosLogsAgente.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Usuario</th>
-                                        <th>Tipo</th>
-                                        <th>Pregunta</th>
-                                        <th>Herramienta</th>
-                                        <th>Resultados</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var log in Model.UltimosLogsAgente)
-                                    {
-                                        <tr>
-                                            <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                            <td>@log.UsuarioId</td>
-                                            <td>@log.Tipo</td>
-                                            <td style="max-width: 350px;">
-                                                <span title="@log.Pregunta">
-                                                    @(log.Pregunta.Length > 80 ? log.Pregunta.Substring(0, 80) + "..." : log.Pregunta)
-                                                </span>
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(log.HerramientaUsada))
-                                                {
-                                                    <span class="badge bg-info text-dark">@log.HerramientaUsada</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">Sin herramienta</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @(log.CantidadResultados.HasValue? log.CantidadResultados.Value.ToString() : "N/A")
-                                            </td>
-                                            <td>
-                                                @if (log.ConsultaExitosa && string.IsNullOrWhiteSpace(log.MensajeError))
-                                                {
-                                                    <span class="badge bg-success">Exitosa</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger">Error</span>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted mb-0">
-                            Todavía no hay logs del agente. Esto es normal si aún no estás guardando cada consulta del asistente en la tabla <strong>LogsAgente</strong>.
-                        </p>
-                    }
-                </div>
-            </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0">
+                    Todavía no hay logs del agente registrados.
+                </p>
+            }
         </div>
     </div>
 
     <!-- ========================= -->
     <!-- ÚLTIMOS LOGS DEL SISTEMA -->
     <!-- ========================= -->
-    <div class="row g-3 mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Últimos logs del sistema</h5>
-                    <span class="badge bg-secondary">@Model.UltimosLogsSistema.Count registros</span>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Últimos logs del sistema</h5>
+            <span class="badge bg-secondary">@Model.UltimosLogsSistema.Count registros</span>
+        </div>
+        <div class="card-body">
+            @if (Model.UltimosLogsSistema.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Mensaje</th>
+                                <th>Entidad</th>
+                                <th>EntidadId</th>
+                                <th>Latencia</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.UltimosLogsSistema)
+                            {
+                                <tr>
+                                    <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@log.Tipo</td>
+                                    <td style="max-width: 420px;">
+                                        @{
+                                            var mensaje = log.Mensaje ?? "";
+                                            var mensajeCorto = mensaje.Length > 90
+                                            ? mensaje.Substring(0, 90) + "..."
+                                            : mensaje;
+                                        }
+                                        <span title="@mensaje">@mensajeCorto</span>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(log.Entidad))
+                                        {
+                                            @log.Entidad
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrWhiteSpace(log.EntidadId))
+                                        {
+                                            @log.EntidadId
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (log.LatenciaMs.HasValue && log.LatenciaMs.Value > 0)
+                                        {
+                                            <span>@log.LatenciaMs ms</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (log.Exitoso)
+                                        {
+                                            <span class="badge bg-success">Exitoso</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Error</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-body">
-                    @if (Model.UltimosLogsSistema.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Tipo</th>
-                                        <th>Mensaje</th>
-                                        <th>Entidad</th>
-                                        <th>EntidadId</th>
-                                        <th>Latencia</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var log in Model.UltimosLogsSistema)
-                                    {
-                                        <tr>
-                                            <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                            <td>@log.Tipo</td>
-                                            <td style="max-width: 420px;">
-                                                <span title="@log.Mensaje">
-                                                    @(log.Mensaje.Length > 90 ? log.Mensaje.Substring(0, 90) + "..." : log.Mensaje)
-                                                </span>
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(log.Entidad))
-                                                {
-                                                    @log.Entidad
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">N/A</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(log.EntidadId))
-                                                {
-                                                    @log.EntidadId
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">N/A</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (log.LatenciaMs.HasValue && log.LatenciaMs.Value > 0)
-                                                {
-                                                    <span>@log.LatenciaMs ms</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="text-muted">N/A</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (log.Exitoso)
-                                                {
-                                                    <span class="badge bg-success">Exitoso</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger">Error</span>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-muted mb-0">
-                            No hay logs del sistema registrados.
-                        </p>
-                    }
-                </div>
-            </div>
+            }
+            else
+            {
+                <p class="text-muted mb-0">
+                    No hay logs del sistema registrados.
+                </p>
+            }
         </div>
     </div>
 

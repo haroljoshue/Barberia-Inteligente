@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Barberia.MVC.Data;
 using Microsoft.AspNetCore.Authorization;
-using Barberia.MVC.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using ModelosBarberia.Enum;
 
@@ -22,248 +23,411 @@ namespace Barberia.MVC.Controllers
         {
             var viewModel = new AdminDashboardViewModel();
 
+            // =========================
+            // CITAS
+            // =========================
             try
             {
-                // =========================
-                // FECHAS - ECUADOR
-                // =========================
-                var ahoraEcuador = ObtenerFechaEcuador();
-                var hoyInicio = ahoraEcuador.Date;
+                viewModel.TotalCitas = _context.Citas.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando total de citas.");
+            }
+
+            try
+            {
+                var hoyInicio = DateTime.Today;
                 var mananaInicio = hoyInicio.AddDays(1);
 
-                // =========================
-                // CITAS
-                // =========================
-                var citas = _context.Set<Cita>().AsQueryable();
-
-                var totalCitas = citas.Count();
-
-                viewModel.TotalCitas = totalCitas;
-
-                viewModel.CitasHoy = citas.Count(c =>
+                viewModel.CitasHoy = _context.Citas.Count(c =>
                     c.FechaHora >= hoyInicio &&
                     c.FechaHora < mananaInicio
                 );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando citas de hoy.");
+            }
 
-                viewModel.CitasPendientes = citas.Count(c =>
+            try
+            {
+                viewModel.CitasPendientes = _context.Citas.Count(c =>
                     c.Estado == EstadoCita.Pendiente
                 );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando citas pendientes.");
+            }
 
-                viewModel.CitasConVector = citas.Count(c =>
-                    c.IdVector != null && c.IdVector != ""
+            try
+            {
+                // Si IdVector es string?
+                viewModel.CitasConVector = _context.Citas.Count(c =>
+                    c.IdVector != null && c.IdVector.Trim() != ""
                 );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando citas con vector.");
+            }
 
-                viewModel.CitasSinVector = citas.Count(c =>
-                    c.IdVector == null || c.IdVector == ""
+            try
+            {
+                // Si IdVector es string?
+                viewModel.CitasSinVector = _context.Citas.Count(c =>
+                    c.IdVector == null || c.IdVector.Trim() == ""
                 );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando citas sin vector.");
+            }
 
-                viewModel.PorcentajeVectorizacion = totalCitas == 0
+            try
+            {
+                viewModel.PorcentajeVectorizacion = viewModel.TotalCitas == 0
                     ? 0
-                    : Math.Round((double)viewModel.CitasConVector / totalCitas * 100, 2);
+                    : Math.Round((double)viewModel.CitasConVector / viewModel.TotalCitas * 100, 2);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando porcentaje de vectorización.");
+            }
 
-                viewModel.CitasPorCliente = citas
+            try
+            {
+                viewModel.CitasPorCliente = _context.Citas
                     .GroupBy(c => c.ClienteId)
                     .Select(g => new
                     {
-                        Cliente = g.Key == null || g.Key == "" ? "Sin cliente" : g.Key,
+                        Cliente = string.IsNullOrEmpty(g.Key) ? "Sin cliente" : g.Key,
                         Cantidad = g.Count()
                     })
                     .ToList()
                     .ToDictionary(x => x.Cliente, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando citas por cliente.");
+            }
 
-                // =========================
-                // USUARIOS
-                // =========================
+            // =========================
+            // USUARIOS
+            // =========================
+            try
+            {
                 viewModel.TotalUsuarios = _context.Users.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando usuarios.");
+            }
 
+            try
+            {
                 viewModel.UsuariosPorRol = _context.Users
                     .GroupBy(u => u.RolSistema)
                     .Select(g => new
                     {
-                        Rol = g.Key == null || g.Key == "" ? "Sin Rol" : g.Key,
+                        Rol = string.IsNullOrEmpty(g.Key) ? "Sin Rol" : g.Key,
                         Cantidad = g.Count()
                     })
                     .ToList()
                     .ToDictionary(x => x.Rol, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando usuarios por rol.");
+            }
 
-                // =========================
-                // BARBEROS
-                // =========================
-                viewModel.TotalBarberos = _context.Set<Barbero>()
-                    .Count(b => b.Disponible);
+            // =========================
+            // BARBEROS
+            // =========================
+            try
+            {
+                // Cuenta TODOS los barberos, no solo disponibles.
+                viewModel.TotalBarberos = _context.Barberos.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando barberos.");
+            }
 
-                // =========================
-                // SERVICIOS
-                // =========================
-                viewModel.TotalServicios = _context.Set<Servicio>()
-                    .Count(s => s.Activo);
+            // =========================
+            // SERVICIOS
+            // =========================
+            try
+            {
+                // Cuenta TODOS los servicios, no solo activos.
+                viewModel.TotalServicios = _context.Servicios.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando servicios.");
+            }
 
-                /*
-                 Esta versión NO depende de s.Citas.Count().
-                 Cuenta las citas desde la tabla Citas y las une con Servicios.
-                 Así es más confiable para el dashboard.
-                */
-                var reservasPorServicio = _context.Set<Cita>()
-                    .GroupBy(c => c.ServicioId)
-                    .Select(g => new
-                    {
-                        ServicioId = g.Key,
-                        Cantidad = g.Count()
-                    })
-                    .ToList();
-
-                var servicios = _context.Set<Servicio>()
-                    .Select(s => new
-                    {
-                        s.Id,
-                        s.Nombre
-                    })
-                    .ToList();
-
-                viewModel.ReservasPorServicio = servicios
-                    .GroupJoin(
-                        reservasPorServicio,
+            try
+            {
+                viewModel.ReservasPorServicio = _context.Citas
+                    .Join(
+                        _context.Servicios,
+                        cita => cita.ServicioId,
                         servicio => servicio.Id,
-                        reserva => reserva.ServicioId,
-                        (servicio, reservas) => new
+                        (cita, servicio) => new
                         {
-                            Nombre = servicio.Nombre,
-                            Cantidad = reservas.Sum(r => r.Cantidad)
+                            Servicio = servicio.Nombre
                         }
                     )
+                    .GroupBy(x => x.Servicio)
+                    .Select(g => new
+                    {
+                        Nombre = g.Key,
+                        Cantidad = g.Count()
+                    })
+                    .ToList()
                     .ToDictionary(x => x.Nombre, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando reservas por servicio.");
+            }
 
-                // =========================
-                // LOGS DEL AGENTE
-                // =========================
-                var logsAgente = _context.Set<LogAgente>()
-                    .OrderByDescending(l => l.Fecha)
+            // =========================
+            // LOGS DEL AGENTE
+            // =========================
+            try
+            {
+                viewModel.TotalConsultasAgente = _context.LogsAgente.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando logs del agente.");
+            }
+
+            try
+            {
+                viewModel.ConsultasExitosasAgente = _context.LogsAgente
+                    .Count(l => l.ConsultaExitosa);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando consultas exitosas del agente.");
+            }
+
+            try
+            {
+                viewModel.ConsultasErrorAgente = _context.LogsAgente
+                    .Count(l => !l.ConsultaExitosa || l.MensajeError != null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando consultas con error del agente.");
+            }
+
+            try
+            {
+                viewModel.ConsultasSinResultados = _context.LogsAgente
+                    .Count(l => l.CantidadResultados.HasValue && l.CantidadResultados.Value == 0);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando consultas sin resultados.");
+            }
+
+            try
+            {
+                var tiempos = _context.LogsAgente
+                    .Where(l => l.TiempoRespuestaMs.HasValue && l.TiempoRespuestaMs.Value > 0)
+                    .Select(l => (double)l.TiempoRespuestaMs!.Value)
                     .ToList();
 
-                viewModel.TotalConsultasAgente = logsAgente.Count;
+                viewModel.TiempoPromedioRespuestaAgente = PromedioSeguro(tiempos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando tiempo promedio del agente.");
+            }
 
-                viewModel.ConsultasExitosasAgente = logsAgente.Count(l =>
-                    l.ConsultaExitosa
-                );
+            try
+            {
+                var tokens = _context.LogsAgente
+                    .Where(l => l.TokensUsados.HasValue && l.TokensUsados.Value > 0)
+                    .Select(l => (double)l.TokensUsados!.Value)
+                    .ToList();
 
-                viewModel.ConsultasErrorAgente = logsAgente.Count(l =>
-                    !l.ConsultaExitosa ||
-                    !string.IsNullOrWhiteSpace(l.MensajeError)
-                );
+                viewModel.TokensPromedioAgente = PromedioSeguro(tokens);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando tokens promedio del agente.");
+            }
 
-                /*
-                 Aquí ignoramos null y 0.
-                 Esto es lo que pediste: no tomar en cuenta los datos
-                 que todavía estás guardando en cero.
-                */
-                viewModel.TiempoPromedioRespuestaAgente = PromedioSeguro(
-                    logsAgente
-                        .Where(l => l.TiempoRespuestaMs.HasValue && l.TiempoRespuestaMs.Value > 0)
-                        .Select(l => (double)l.TiempoRespuestaMs!.Value)
-                );
+            try
+            {
+                var similitudes = _context.LogsAgente
+                    .Where(l => l.SimilitudPromedio.HasValue && l.SimilitudPromedio.Value > 0)
+                    .Select(l => (double)l.SimilitudPromedio!.Value)
+                    .ToList();
 
-                viewModel.TokensPromedioAgente = PromedioSeguro(
-                    logsAgente
-                        .Where(l => l.TokensUsados.HasValue && l.TokensUsados.Value > 0)
-                        .Select(l => (double)l.TokensUsados!.Value)
-                );
+                viewModel.SimilitudPromedioAgente = PromedioSeguro(similitudes, 4);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando similitud promedio del agente.");
+            }
 
-                viewModel.SimilitudPromedioAgente = PromedioSeguro(
-                    logsAgente
-                        .Where(l => l.SimilitudPromedio.HasValue && l.SimilitudPromedio.Value > 0)
-                        .Select(l => (double)l.SimilitudPromedio!.Value),
-                    4
-                );
+            try
+            {
+                var similitudesMaximas = _context.LogsAgente
+                    .Where(l => l.SimilitudMaxima.HasValue && l.SimilitudMaxima.Value > 0)
+                    .Select(l => (double)l.SimilitudMaxima!.Value)
+                    .ToList();
 
-                viewModel.SimilitudMaximaAgente = MaximoSeguro(
-                    logsAgente
-                        .Where(l => l.SimilitudMaxima.HasValue && l.SimilitudMaxima.Value > 0)
-                        .Select(l => (double)l.SimilitudMaxima!.Value),
-                    4
-                );
+                viewModel.SimilitudMaximaAgente = MaximoSeguro(similitudesMaximas, 4);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando similitud máxima del agente.");
+            }
 
-                /*
-                 OJO:
-                 Aquí sí contamos CantidadResultados == 0 porque eso significa
-                 "consultas sin resultados". No es un promedio contaminado.
-                */
-                viewModel.ConsultasSinResultados = logsAgente.Count(l =>
-                    l.CantidadResultados.HasValue &&
-                    l.CantidadResultados.Value == 0
-                );
-
-                viewModel.HerramientasUsadas = logsAgente
-                    .Where(l => !string.IsNullOrWhiteSpace(l.HerramientaUsada))
+            try
+            {
+                viewModel.HerramientasUsadas = _context.LogsAgente
+                    .Where(l => l.HerramientaUsada != null && l.HerramientaUsada != "")
                     .GroupBy(l => l.HerramientaUsada!)
                     .Select(g => new
                     {
                         Herramienta = g.Key,
                         Cantidad = g.Count()
                     })
+                    .ToList()
                     .ToDictionary(x => x.Herramienta, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando herramientas usadas.");
+            }
 
-                viewModel.ConsultasPorTipo = logsAgente
+            try
+            {
+                viewModel.ConsultasPorTipo = _context.LogsAgente
                     .GroupBy(l => l.Tipo)
                     .Select(g => new
                     {
                         Tipo = g.Key.ToString(),
                         Cantidad = g.Count()
                     })
+                    .ToList()
                     .ToDictionary(x => x.Tipo, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando consultas por tipo.");
+            }
 
-                viewModel.UltimosLogsAgente = logsAgente
+            try
+            {
+                viewModel.UltimosLogsAgente = _context.LogsAgente
+                    .OrderByDescending(l => l.Fecha)
                     .Take(10)
                     .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cargando últimos logs del agente.");
+            }
 
-                // =========================
-                // LOGS DEL SISTEMA
-                // =========================
-                var logsSistema = _context.Set<LogSistema>()
-                    .OrderByDescending(l => l.Fecha)
+            // =========================
+            // LOGS DEL SISTEMA
+            // =========================
+            try
+            {
+                viewModel.TotalLogsSistema = _context.LogsSistema.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando logs del sistema.");
+            }
+
+            try
+            {
+                viewModel.LogsSistemaExitosos = _context.LogsSistema.Count(l => l.Exitoso);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando logs exitosos del sistema.");
+            }
+
+            try
+            {
+                viewModel.LogsSistemaError = _context.LogsSistema.Count(l => !l.Exitoso);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error contando logs con error del sistema.");
+            }
+
+            try
+            {
+                var latencias = _context.LogsSistema
+                    .Where(l => l.LatenciaMs.HasValue && l.LatenciaMs.Value > 0)
+                    .Select(l => (double)l.LatenciaMs!.Value)
                     .ToList();
 
-                viewModel.TotalLogsSistema = logsSistema.Count;
+                viewModel.LatenciaPromedioSistema = PromedioSeguro(latencias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculando latencia promedio del sistema.");
+            }
 
-                viewModel.LogsSistemaExitosos = logsSistema.Count(l =>
-                    l.Exitoso
-                );
-
-                viewModel.LogsSistemaError = logsSistema.Count(l =>
-                    !l.Exitoso
-                );
-
-                viewModel.LatenciaPromedioSistema = PromedioSeguro(
-                    logsSistema
-                        .Where(l => l.LatenciaMs.HasValue && l.LatenciaMs.Value > 0)
-                        .Select(l => (double)l.LatenciaMs!.Value)
-                );
-
-                viewModel.LogsSistemaPorTipo = logsSistema
+            try
+            {
+                viewModel.LogsSistemaPorTipo = _context.LogsSistema
                     .GroupBy(l => l.Tipo)
                     .Select(g => new
                     {
                         Tipo = g.Key.ToString(),
                         Cantidad = g.Count()
                     })
+                    .ToList()
                     .ToDictionary(x => x.Tipo, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando logs del sistema por tipo.");
+            }
 
-                viewModel.LogsSistemaPorEntidad = logsSistema
-                    .Where(l => !string.IsNullOrWhiteSpace(l.Entidad))
+            try
+            {
+                viewModel.LogsSistemaPorEntidad = _context.LogsSistema
+                    .Where(l => l.Entidad != null && l.Entidad != "")
                     .GroupBy(l => l.Entidad!)
                     .Select(g => new
                     {
                         Entidad = g.Key,
                         Cantidad = g.Count()
                     })
+                    .ToList()
                     .ToDictionary(x => x.Entidad, x => x.Cantidad);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error agrupando logs del sistema por entidad.");
+            }
 
-                viewModel.UltimosLogsSistema = logsSistema
+            try
+            {
+                viewModel.UltimosLogsSistema = _context.LogsSistema
+                    .OrderByDescending(l => l.Fecha)
                     .Take(10)
                     .ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error general cargando el Dashboard de Administración.");
+                _logger.LogError(ex, "Error cargando últimos logs del sistema.");
             }
 
             return View(viewModel);
@@ -292,73 +456,46 @@ namespace Barberia.MVC.Controllers
 
             return Math.Round(lista.Max(), decimales);
         }
+    }
 
-        private static DateTime ObtenerFechaEcuador()
-        {
-            try
-            {
-                // Railway/Linux
-                var zonaEcuador = TimeZoneInfo.FindSystemTimeZoneById("America/Guayaquil");
-                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaEcuador);
-            }
-            catch
-            {
-                try
-                {
-                    // Windows/Visual Studio
-                    var zonaEcuador = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time");
-                    return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaEcuador);
-                }
-                catch
-                {
-                    // Respaldo simple UTC-5
-                    return DateTime.UtcNow.AddHours(-5);
-                }
-            }
-        }
+    public class AdminDashboardViewModel
+    {
+        public Dictionary<string, int> ReservasPorServicio { get; set; } = new();
+        public Dictionary<string, int> UsuariosPorRol { get; set; } = new();
+        public Dictionary<string, int> CitasPorCliente { get; set; } = new();
 
-        public class AdminDashboardViewModel
-        {
-            public Dictionary<string, int> ReservasPorServicio { get; set; } = new();
-            public Dictionary<string, int> UsuariosPorRol { get; set; } = new();
-            public Dictionary<string, int> CitasPorCliente { get; set; } = new();
+        public int TotalCitas { get; set; }
+        public int CitasHoy { get; set; }
+        public int CitasPendientes { get; set; }
+        public int TotalUsuarios { get; set; }
+        public int TotalBarberos { get; set; }
+        public int TotalServicios { get; set; }
 
-            public int TotalCitas { get; set; }
-            public int CitasHoy { get; set; }
-            public int CitasPendientes { get; set; }
-            public int TotalUsuarios { get; set; }
-            public int TotalBarberos { get; set; }
-            public int TotalServicios { get; set; }
+        public int CitasConVector { get; set; }
+        public int CitasSinVector { get; set; }
+        public double PorcentajeVectorizacion { get; set; }
+        public int DimensionEmbedding { get; set; } = 1536;
 
-            public int CitasConVector { get; set; }
-            public int CitasSinVector { get; set; }
-            public double PorcentajeVectorizacion { get; set; }
-            public int DimensionEmbedding { get; set; } = 1536;
+        public int TotalConsultasAgente { get; set; }
+        public int ConsultasExitosasAgente { get; set; }
+        public int ConsultasErrorAgente { get; set; }
+        public double TiempoPromedioRespuestaAgente { get; set; }
+        public double TokensPromedioAgente { get; set; }
+        public int ConsultasSinResultados { get; set; }
+        public double SimilitudPromedioAgente { get; set; }
+        public double SimilitudMaximaAgente { get; set; }
 
-            // Métricas del agente
-            public int TotalConsultasAgente { get; set; }
-            public int ConsultasExitosasAgente { get; set; }
-            public int ConsultasErrorAgente { get; set; }
-            public double TiempoPromedioRespuestaAgente { get; set; }
-            public double TokensPromedioAgente { get; set; }
-            public int ConsultasSinResultados { get; set; }
-            public double SimilitudPromedioAgente { get; set; }
-            public double SimilitudMaximaAgente { get; set; }
+        public Dictionary<string, int> HerramientasUsadas { get; set; } = new();
+        public Dictionary<string, int> ConsultasPorTipo { get; set; } = new();
+        public List<LogAgente> UltimosLogsAgente { get; set; } = new();
 
-            public Dictionary<string, int> HerramientasUsadas { get; set; } = new();
-            public Dictionary<string, int> ConsultasPorTipo { get; set; } = new();
-            public List<LogAgente> UltimosLogsAgente { get; set; } = new();
+        public int TotalLogsSistema { get; set; }
+        public int LogsSistemaExitosos { get; set; }
+        public int LogsSistemaError { get; set; }
+        public double LatenciaPromedioSistema { get; set; }
 
-            // Métricas de logs del sistema
-            public int TotalLogsSistema { get; set; }
-            public int LogsSistemaExitosos { get; set; }
-            public int LogsSistemaError { get; set; }
-            public double LatenciaPromedioSistema { get; set; }
-
-            public Dictionary<string, int> LogsSistemaPorTipo { get; set; } = new();
-            public Dictionary<string, int> LogsSistemaPorEntidad { get; set; } = new();
-            public List<LogSistema> UltimosLogsSistema { get; set; } = new();
-
-        }
+        public Dictionary<string, int> LogsSistemaPorTipo { get; set; } = new();
+        public Dictionary<string, int> LogsSistemaPorEntidad { get; set; } = new();
+        public List<LogSistema> UltimosLogsSistema { get; set; } = new();
     }
 }
