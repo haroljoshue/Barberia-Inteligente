@@ -126,16 +126,27 @@
     @using System.Text.Json
 
     @if (User.Identity != null
-        && User.Identity.IsAuthenticated
-        && User.IsInRole("Cliente"))
+    && User.Identity.IsAuthenticated
+    && User.IsInRole("Cliente"))
     {
         var clienteId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var emailCliente = User.Identity.Name;
-
         var clienteIdJson = JsonSerializer.Serialize(clienteId);
         var emailClienteJson = JsonSerializer.Serialize(emailCliente);
 
         <link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
+
+        <!-- Contenedor flotante controlado por nosotros -->
+        <div id="chat-bubble" onclick="toggleChat()" title="Asistente IA">
+            <i class="bi bi-chat-dots-fill"></i>
+        </div>
+
+        <div id="chat-container" style="display:none">
+            <div id="chat-close-btn" onclick="toggleChat()">
+                <i class="bi bi-x-lg"></i>
+            </div>
+            <div id="n8n-chat-mount"></div>
+        </div>
 
         <script type="module">
             import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
@@ -143,14 +154,10 @@
             const clienteId = @Html.Raw(clienteIdJson);
             const emailCliente = @Html.Raw(emailClienteJson);
 
-            console.log("ClienteId enviado a n8n:", clienteId);
-            console.log("Email enviado a n8n:", emailCliente);
-
-                createChat({
+            createChat({
                 webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
-                mode: 'window',          // ← mantén window
-                showWelcomeScreen: true, // ← agrega esto
-                defaultOpen: false,      // ← agrega esto para que inicie cerrado
+                mode: 'fullscreen',
+                target: '#n8n-chat-mount',
                 defaultLanguage: 'es',
                 metadata: {
                     clienteId: clienteId,
@@ -168,6 +175,16 @@
                     }
                 }
             });
+        </script>
+
+        <script>
+            function toggleChat() {
+                const container = document.getElementById('chat-container');
+                const bubble = document.getElementById('chat-bubble');
+                const isVisible = container.style.display !== 'none';
+                container.style.display = isVisible ? 'none' : 'flex';
+                bubble.style.display = isVisible ? 'flex' : 'none';
+            }
         </script>
     }
 </body>
