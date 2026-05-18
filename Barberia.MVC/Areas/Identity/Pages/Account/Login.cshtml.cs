@@ -109,7 +109,7 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
                     );
 
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Home");
                 }
 
                 if (result.RequiresTwoFactor)
