@@ -1320,9 +1320,8 @@ main > .container:first-child {
 .site-footer .text-muted {
     color: rgba(255,255,255,0.6) !important;
 }
-
 /* ============================================
-   CHAT N8N - DISEÑO SIMPLE Y RESPONSIVE
+   CHAT N8N - DISEÑO BÁSICO
    ============================================ */
 
 /* Burbuja flotante */
@@ -1357,8 +1356,8 @@ main > .container:first-child {
     right: 1.5rem;
     width: 370px;
     height: 540px;
-    border-radius: 16px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
     border: 1px solid #e5e7eb;
     z-index: 10000;
     display: none; /* controlado por toggleChat() */
@@ -1392,7 +1391,7 @@ main > .container:first-child {
 
 /* Header */
 #n8n-chat-mount .chat-header {
-    background-color: #7C9885;
+    background-color: #7C9885; /* mismo color primario */
     color: #fff;
     padding: 1rem;
     text-align: center;
@@ -1439,8 +1438,8 @@ main > .container:first-child {
 
 /* Botón enviar */
 #n8n-chat-mount .chat-input-send-button {
-    background-color: #fbbf24; /* dorado */
-    color: #1f2937;
+    background-color: #7C9885; /* mismo color primario */
+    color: #fff;
     border: none;
     border-radius: 50%;
     width: 36px;
@@ -1458,7 +1457,7 @@ main > .container:first-child {
     }
 
     #n8n-chat-mount .chat-input-send-button:not([disabled]):hover {
-        background-color: #f59e0b;
+        background-color: #5A7A63;
     }
 
 /* Responsive para móviles */

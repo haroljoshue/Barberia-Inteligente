@@ -155,9 +155,9 @@
             const clienteId = @Html.Raw(clienteIdJson);
             const emailCliente = @Html.Raw(emailClienteJson);
 
-                createChat({
-                webhookUrl: '...',
-                mode: 'embedded',   // usar "embedded" en lugar de fullscreen
+            createChat({
+                webhookUrl: 'https://n8n-production-65ed.up.railway.app/webhook/b5311b15-aec7-4f2b-820f-23a9a89093bb/chat',
+                mode: 'embedded',
                 target: '#n8n-chat-mount',
                 defaultLanguage: 'es',
                 metadata: {
@@ -166,7 +166,7 @@
                     rolSistema: 'Cliente'
                 },
                 initialMessages: [
-                    'Hola, soy el asistente inteligente de la barbería. ¿En qué puedo ayudarte?'
+                    'Hola 👋, soy el asistente inteligente de la barbería. ¿En qué puedo ayudarte?'
                 ],
                 i18n: {
                     es: {
@@ -176,7 +176,6 @@
                     }
                 }
             });
-
         </script>
 
         <script>
