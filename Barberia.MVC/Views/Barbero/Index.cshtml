@@ -7,7 +7,7 @@
 
 <div class="container py-4">
 
-    <h2>Panel del Barbero</h2>
+    <h2 class="mb-4">Panel del Barbero</h2>
 
     @if (TempData["Success"] != null)
     {
@@ -19,15 +19,59 @@
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
-    <h4>Citas</h4>
+    <!-- Resumen de métricas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6>Total Citas</h6>
+                    <p class="display-6">@Model.TotalCitas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6>Ganancias</h6>
+                    <p class="display-6">$@Model.GananciasTotales.ToString("F2")</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6>Pendientes</h6>
+                    <p class="display-6">@Model.CitasPendientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6>Completadas</h6>
+                    <p class="display-6">@Model.CitasCompletadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h6>Canceladas</h6>
+                    <p class="display-6">@Model.CitasCanceladas</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Tabla de citas -->
+    <h4>Citas</h4>
     @if (Model?.Citas == null || !Model.Citas.Any())
     {
         <p>No hay citas.</p>
     }
     else
     {
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Cliente</th>
@@ -37,23 +81,19 @@
                     <th>Acción</th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach (var cita in Model.Citas)
                 {
                     <tr>
                         <td>@(cita.Cliente?.NombreCompleto ?? "—")</td>
                         <td>@(cita.Servicio?.Nombre ?? "—")</td>
-                        <td>@cita.FechaHora</td>
+                        <td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@cita.Estado</td>
-
                         <td>
                             <form asp-action="CambiarEstado" method="post">
                                 @Html.AntiForgeryToken()
-
                                 <input type="hidden" name="citaId" value="@cita.Id" />
-
-                                <select name="nuevoEstado" class="form-select">
+                                <select name="nuevoEstado" class="form-select form-select-sm">
                                     @foreach (EstadoCita estado in Enum.GetValues(typeof(EstadoCita)))
                                     {
                                         <option value="@estado" selected="@(estado == cita.Estado)">
@@ -61,10 +101,7 @@
                                         </option>
                                     }
                                 </select>
-
-                                <button type="submit" class="btn btn-primary btn-sm">
-                                    Cambiar
-                                </button>
+                                <button type="submit" class="btn btn-primary btn-sm mt-1">Cambiar</button>
                             </form>
                         </td>
                     </tr>
@@ -72,4 +109,56 @@
             </tbody>
         </table>
     }
+
+    <!-- Citas por mes -->
+    <h4 class="mt-5">Citas por Mes</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Mes</th>
+                <th>Total</th>
+                <th>Ganancias</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CitasPorMes)
+            {
+                <tr>
+                    <td>@item.Mes</td>
+                    <td>@item.Total</td>
+                    <td>$@item.Ganancias.ToString("F2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Gráfico con Chart.js -->
+    <div class="mt-4">
+        <canvas id="citasChart"></canvas>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('citasChart').getContext('2d');
+        const citasChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(x => x.Mes))),
+                datasets: [
+                    {
+                        label: 'Citas',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(x => x.Total))),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Ganancias',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(x => x.Ganancias))),
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)'
+                    }
+                ]
+            }
+        });
+    </script>
+}

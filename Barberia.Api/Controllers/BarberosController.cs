@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ModelosBarberia.Enum;
 
 namespace Barberia.Api.Controllers
 {
@@ -161,5 +162,42 @@ namespace Barberia.Api.Controllers
                 return StatusCode(500, new { mensaje = "Error al eliminar el barbero. Verifique si tiene citas asociadas.", detalle = ex.Message });
             }
         }
+
+        // GET: api/Citas/barbero/{barberoId}/dashboard
+        [HttpGet("barbero/{barberoId}/dashboard")]
+        public async Task<ActionResult<object>> ObtenerDashboardBarbero(int barberoId)
+        {
+            var citas = await _context.Citas
+                .Where(c => c.BarberoId == barberoId)
+                .ToListAsync();
+
+            var totalCitas = citas.Count;
+            var citasPendientes = citas.Count(c => c.Estado == EstadoCita.Pendiente);
+            var citasCompletadas = citas.Count(c => c.Estado == EstadoCita.Atendida);
+            var citasCanceladas = citas.Count(c => c.Estado == EstadoCita.Cancelada);
+
+            var gananciasTotales = citas
+                .Where(c => c.Estado == EstadoCita.Atendida)
+                .Sum(c => c.PrecioFinal);
+
+            var citasPorMes = citas
+                .GroupBy(c => new { c.FechaHora.Year, c.FechaHora.Month })
+                .Select(g => new {
+                    Mes = $"{g.Key.Month}/{g.Key.Year}",
+                    Total = g.Count(),
+                    Ganancias = g.Where(c => c.Estado == EstadoCita.Atendida).Sum(c => c.PrecioFinal)
+                });
+
+            return Ok(new
+            {
+                TotalCitas = totalCitas,
+                Pendientes = citasPendientes,
+                Completadas = citasCompletadas,
+                Canceladas = citasCanceladas,
+                GananciasTotales = gananciasTotales,
+                CitasPorMes = citasPorMes
+            });
+        }
+
     }
 }

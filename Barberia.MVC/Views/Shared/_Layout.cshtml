@@ -91,11 +91,6 @@
                         <partial name="_LoginPartial" />
                     </div>
 
-                    <div>
-
-                        <p>Roles actuales: @string.Join(",", User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value))</p>
-
-                    </div>
                 </div>
             </div>
         </nav>
