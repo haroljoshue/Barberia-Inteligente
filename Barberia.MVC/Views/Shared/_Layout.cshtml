@@ -49,7 +49,8 @@
         var clienteIdJson = JsonSerializer.Serialize(clienteId);
         var emailClienteJson = JsonSerializer.Serialize(emailCliente);
 
-        <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+        <!-- Estilos del chat n8n -->
+        <link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
 
         <!-- Burbuja flotante -->
         <div id="chat-bubble" onclick="toggleChat()" title="Asistente IA">
@@ -57,15 +58,17 @@
         </div>
 
         <!-- Contenedor del chat -->
-        <div id="chat-container" style="display:none">
+        <div id="chat-container" style="display:none; flex-direction: column;">
+            <!-- Botón cerrar -->
             <div id="chat-close-btn" onclick="toggleChat()">
                 <i class="bi bi-x-lg"></i>
             </div>
+            <!-- Área donde se monta el chat -->
             <div id="n8n-chat-mount"></div>
         </div>
 
         <script type="module">
-            import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+            import { createChat } from 'https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/chat.bundle.es.js';
 
             const clienteId = @Html.Raw(clienteIdJson);
             const emailCliente = @Html.Raw(emailClienteJson);
