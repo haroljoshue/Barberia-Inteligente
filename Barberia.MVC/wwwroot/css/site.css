@@ -73,13 +73,14 @@
 /* ============================================
    🌐 ESTILOS GLOBALES
    ============================================ */
-*,
-*::before,
-*::after {
-    box-sizing: border-box !important;
-    margin: 0 !important;
-    padding: 0 !important;
+body.barberia *,
+body.barberia *::before,
+body.barberia *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
+
 
 html {
     scroll-behavior: smooth !important;
