@@ -39,7 +39,7 @@
 
     <!-- Por qué elegirnos -->
     <div class="text-center my-5">
-        <h2 class="text-primary mb-2">⭐ ¿Por qué elegirnos?</h2>
+        <h2 class="text-primary mb-2">¿Por qué elegirnos?</h2>
         <p class="text-muted">Más que una barbería, una experiencia</p>
     </div>
 
@@ -47,10 +47,10 @@
         @{
             var razones = new[]
             {
-        new { Icono = "🏆", Titulo = "Experiencia Profesional", Texto = "Más de 10 años ofreciendo servicios de barbería de primera calidad." },
-        new { Icono = "⏰", Titulo = "Puntualidad", Texto = "Valoramos tu tiempo y respetamos cada cita al máximo." },
-        new { Icono = "✨", Titulo = "Calidad Garantizada", Texto = "Trabajamos con productos y herramientas de la más alta calidad." },
-        new { Icono = "📱", Titulo = "Reservas en Línea", Texto = "Agenda tu cita de forma rápida, fácil y sencilla desde donde estés." },
+        new { Icono = "", Titulo = "Experiencia Profesional", Texto = "Más de 10 años ofreciendo servicios de barbería de primera calidad." },
+        new { Icono = "", Titulo = "Puntualidad", Texto = "Valoramos tu tiempo y respetamos cada cita al máximo." },
+        new { Icono = "", Titulo = "Calidad Garantizada", Texto = "Trabajamos con productos y herramientas de la más alta calidad." },
+        new { Icono = "", Titulo = "Reservas en Línea", Texto = "Agenda tu cita de forma rápida, fácil y sencilla desde donde estés." },
         };
         }
         @foreach (var r in razones)
@@ -83,7 +83,7 @@
                 <div class="col-12 col-md-4">
                     <div class="card h-100">
                         <div class="card-body text-center">
-                            <div class="fs-1 mb-2">✂️</div>
+                            <div class="fs-1 mb-2"></div>
                             <h5 class="card-title">@s.Nombre</h5>
                             <p class="card-text small">@(s.Descripcion ?? "Servicio profesional de barbería.")</p>
                             <div class="precio mb-3">$@s.Precio.ToString("F2")</div>
