@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Barbero,Administrador")]
+    [Authorize]
     public class BarberoController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -19,6 +19,7 @@ namespace Barberia.MVC.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [Authorize(Roles = "Barbero")]
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -73,6 +74,7 @@ namespace Barberia.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Barbero")]
         public async Task<IActionResult> CambiarEstado(int citaId, EstadoCita nuevoEstado)
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
