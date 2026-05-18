@@ -1295,10 +1295,43 @@ main > .container:first-child {
         transform: translateY(-1px) !important;
     }
 
+/* Botón flotante abrir/cerrar */
+#chat-bubble {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--color-primary); /* tu verde pastel */
+    color: var(--color-text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    z-index: 9999;
+    transition: all var(--transition-fast);
+}
+
+    #chat-bubble:hover {
+        background-color: var(--color-primary-dark);
+        transform: scale(1.1);
+    }
+
+/* Header del chat */
+#n8n-chat-mount .chat-header {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 1rem;
+    text-align: center;
+}
+
 /* Burbuja de mensajes del sistema */
 #n8n-chat-mount .chat-message {
-    background-color: #3B82F6; /* azul */
-    color: #fff;
+    background-color: var(--color-secondary); /* marrón pastel */
+    color: var(--color-text-light);
     border-radius: 12px;
     padding: 0.5rem 0.75rem;
     max-width: 80%;
@@ -1307,6 +1340,23 @@ main > .container:first-child {
 
     /* Burbuja de mensajes del usuario */
     #n8n-chat-mount .chat-message.user {
-        background-color: #2563EB; /* azul más oscuro */
-        color: #fff;
+        background-color: var(--color-accent); /* lila pastel */
+        color: var(--color-text-light);
+    }
+
+/* Botón enviar */
+#n8n-chat-mount .chat-input-send-button {
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast);
+}
+
+    #n8n-chat-mount .chat-input-send-button:hover {
+        background-color: var(--color-secondary-dark);
     }
