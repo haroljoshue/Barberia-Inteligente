@@ -1,177 +1,403 @@
 ﻿@model Barberia.MVC.Controllers.AdminDashboardViewModel
+
 @{
-    ViewData["Title"] = "Panel de Administración";
+    ViewData["Title"] = "Dashboard Administrativo";
 }
 
-<div class="container-fluid my-4 px-4">
+<div class="container-fluid py-4">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="text-primary mb-0">Panel de Administración</h2>
-            <small class="text-muted">Bienvenido, @User.Identity?.Name</small>
-        </div>
-        <span class="badge bg-primary fs-6">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</span>
+    <div class="mb-4">
+        <h1 class="fw-bold">Dashboard Administrativo</h1>
+        <p class="text-muted">
+            Monitoreo de citas, usuarios, agente conversacional y almacenamiento vectorial.
+        </p>
     </div>
 
-    <!-- Tarjetas de métricas -->
+    <h4 class="mb-3">Resumen general</h4>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total de citas</h6>
+                    <h2 class="fw-bold">@Model.TotalCitas</h2>
+                    <small>Registros ingresados</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Citas de hoy</h6>
+                    <h2 class="fw-bold">@Model.CitasHoy</h2>
+                    <small>Reservas de la fecha actual</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Citas pendientes</h6>
+                    <h2 class="fw-bold">@Model.CitasPendientes</h2>
+                    <small>Reservas aún no atendidas</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total usuarios</h6>
+                    <h2 class="fw-bold">@Model.TotalUsuarios</h2>
+                    <small>Usuarios registrados</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h4 class="mb-3">Agente conversacional</h4>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Consultas al agente</h6>
+                    <h2 class="fw-bold">@Model.TotalConsultasAgente</h2>
+                    <small>Total de preguntas recibidas</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Consultas exitosas</h6>
+                    <h2 class="fw-bold text-success">@Model.ConsultasExitosasAgente</h2>
+                    <small>Respuestas procesadas correctamente</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Consultas con error</h6>
+                    <h2 class="fw-bold text-danger">@Model.ConsultasErrorAgente</h2>
+                    <small>Consultas fallidas o sin respuesta válida</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Tiempo promedio</h6>
+                    <h2 class="fw-bold">@Model.TiempoPromedioRespuestaAgente ms</h2>
+                    <small>Tiempo promedio de respuesta</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Tokens promedio</h6>
+                    <h2 class="fw-bold">@Model.TokensPromedioAgente</h2>
+                    <small>Estimación de tokens usados</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Consultas sin resultados</h6>
+                    <h2 class="fw-bold">@Model.ConsultasSinResultados</h2>
+                    <small>Consultas sin resultados vectoriales</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Similitud promedio</h6>
+                    <h2 class="fw-bold">@Model.SimilitudPromedioAgente</h2>
+                    <small>Promedio de relevancia semántica</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Similitud máxima</h6>
+                    <h2 class="fw-bold">@Model.SimilitudMaximaAgente</h2>
+                    <small>Mayor coincidencia registrada</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h4 class="mb-3">Base vectorial</h4>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Citas con vector</h6>
+                    <h2 class="fw-bold">@Model.CitasConVector</h2>
+                    <small>Registros almacenados en Qdrant</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Citas sin vector</h6>
+                    <h2 class="fw-bold">@Model.CitasSinVector</h2>
+                    <small>Registros sin embedding asociado</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Vectorización exitosa</h6>
+                    <h2 class="fw-bold">@Model.PorcentajeVectorizacion%</h2>
+                    <div class="progress mt-2">
+                        <div class="progress-bar" role="progressbar"
+                             style="width:@Model.PorcentajeVectorizacion%">
+                            @Model.PorcentajeVectorizacion%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Dimensión embedding</h6>
+                    <h2 class="fw-bold">@Model.DimensionEmbedding</h2>
+                    <small>Modelo: text-embedding-3-small</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Herramientas usadas por el agente</h5>
+
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.HerramientasUsadas.Any())
+                            {
+                                foreach (var item in Model.HerramientasUsadas)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2" class="text-muted">No hay datos registrados.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Consultas por tipo</h5>
+
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ConsultasPorTipo.Any())
+                            {
+                                foreach (var item in Model.ConsultasPorTipo)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2" class="text-muted">No hay datos registrados.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="mb-3">Últimas consultas al agente</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Tipo</th>
+                                    <th>Pregunta</th>
+                                    <th>Herramienta</th>
+                                    <th>Tiempo</th>
+                                    <th>Tokens</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.UltimosLogsAgente.Any())
+                                {
+                                    foreach (var log in Model.UltimosLogsAgente)
+                                    {
+                                        var badge = log.ConsultaExitosa ? "success" : "danger";
+                                        var estado = log.ConsultaExitosa ? "Exitosa" : "Error";
+
+                                        <tr>
+                                            <td>@log.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td>@log.UsuarioId</td>
+                                            <td>@log.Tipo</td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(log.Pregunta))
+                                                {
+                                                    @(log.Pregunta.Length > 60
+                                                                                            ? log.Pregunta.Substring(0, 60) + "..."
+                                                                                            : log.Pregunta)
+                                                                                }
+                                            </td>
+                                            <td>@log.HerramientaUsada</td>
+                                            <td>@log.TiempoRespuestaMs ms</td>
+                                            <td>@log.TokensUsados</td>
+                                            <td>
+                                                <span class="badge bg-@badge">@estado</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8" class="text-muted">No existen consultas registradas.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <div class="row g-3 mb-5">
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-primary">✂️</div>
-                    <div class="fs-2 fw-bold text-primary">@Model.TotalCitas</div>
-                    <div class="text-muted small">Total Citas</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-success">📅</div>
-                    <div class="fs-2 fw-bold text-success">@Model.CitasHoy</div>
-                    <div class="text-muted small">Citas Hoy</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-warning">⏳</div>
-                    <div class="fs-2 fw-bold text-warning">@Model.CitasPendientes</div>
-                    <div class="text-muted small">Pendientes</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-info">👥</div>
-                    <div class="fs-2 fw-bold text-info">@Model.TotalUsuarios</div>
-                    <div class="text-muted small">Usuarios</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-danger">💈</div>
-                    <div class="fs-2 fw-bold text-danger">@Model.TotalBarberos</div>
-                    <div class="text-muted small">Barberos Activos</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="fs-1 text-secondary">🛠️</div>
-                    <div class="fs-2 fw-bold text-secondary">@Model.TotalServicios</div>
-                    <div class="text-muted small">Servicios Activos</div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Botones de gestión -->
-    <div class="row g-2 mb-5">
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-primary w-100" asp-controller="Usuarios" asp-action="Index">
-                👥 Usuarios
-            </a>
-        </div>
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-primary w-100" asp-controller="Servicios" asp-action="Index">
-                🛠️ Servicios
-            </a>
-        </div>
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-primary w-100" asp-controller="Roles" asp-action="Index">
-                🔑 Roles
-            </a>
-        </div>
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-primary w-100" asp-controller="Barberos" asp-action="Index">
-                💈 Barberos
-            </a>
-        </div>
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-secondary w-100" asp-controller="LogSistemas" asp-action="Index">
-                📋 Logs Sistema
-            </a>
-        </div>
-        <div class="col-6 col-md-2">
-            <a class="btn btn-outline-secondary w-100" asp-controller="LogAgentes" asp-action="Index">
-                🤖 Logs Agentes
-            </a>
-        </div>
-    </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Reservas por servicio</h5>
 
-    <!-- Gráficas -->
-    <div class="row g-4">
-        <div class="col-md-7">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 pt-3">
-                    <h5 class="text-primary mb-0">📊 Reservas por Servicio</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="reservasPorServicio" height="120"></canvas>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ReservasPorServicio)
+                            {
+                                <tr>
+                                    <td>@item.Key</td>
+                                    <td>@item.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
-        <div class="col-md-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 pt-3">
-                    <h5 class="text-primary mb-0">🥧 Usuarios por Rol</h5>
-                </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <canvas id="usuariosPorRol" height="180"></canvas>
+                    <h5 class="mb-3">Usuarios por rol</h5>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Rol</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.UsuariosPorRol)
+                            {
+                                <tr>
+                                    <td>@item.Key</td>
+                                    <td>@item.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const reservasLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Keys));
-        const reservasData   = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReservasPorServicio.Values));
-        const usuariosLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Keys));
-        const usuariosData   = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.UsuariosPorRol.Values));
-
-        new Chart(document.getElementById('reservasPorServicio'), {
-            type: 'bar',
-            data: {
-                labels: reservasLabels,
-                datasets: [{
-                    label: 'Reservas',
-                    data: reservasData,
-                    backgroundColor: 'rgba(0, 119, 182, 0.8)',
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-            }
-        });
-
-        new Chart(document.getElementById('usuariosPorRol'), {
-            type: 'doughnut',
-            data: {
-                labels: usuariosLabels,
-                datasets: [{
-                    data: usuariosData,
-                    backgroundColor: ['#0077b6', '#0096c7', '#90e0ef'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-    </script>
-}

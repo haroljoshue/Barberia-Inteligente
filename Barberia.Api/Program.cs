@@ -34,6 +34,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<EmbeddingService>();
 builder.Services.AddHttpClient<QdrantService>();
+builder.Services.AddScoped<LogSistemaService>();
 
 var app = builder.Build();
 

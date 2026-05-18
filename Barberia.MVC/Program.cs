@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using CRUD;
 using Barberia.MVC.Areas.Identity.Pages.Account;
+using Barberia.MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ builder.Services.AddHttpClient("BarberiaApi", client =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
+builder.Services.AddScoped<LogSistemaService>();
 
 var app = builder.Build();
 

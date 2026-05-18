@@ -1,12 +1,12 @@
-﻿// Registra eventos del sistema como errores, advertencias y operaciones
-namespace ModelosBarberia
-{
-    using ModelosBarberia.Enum;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public class LogSistema
+﻿    // Registra eventos del sistema como errores, advertencias y operaciones
+    namespace ModelosBarberia
     {
+        using ModelosBarberia.Enum;
+        using System.ComponentModel.DataAnnotations;
+        using System.ComponentModel.DataAnnotations.Schema;
+
+        public class LogSistema
+        {
         [Key]
         public int Id { get; set; }
 
@@ -23,11 +23,16 @@ namespace ModelosBarberia
         public string? EntidadId { get; set; }
 
         public string? StackTrace { get; set; }
+
         public string? UsuarioId { get; set; }
 
         [ForeignKey("UsuarioId")]
         public ApplicationUser? Usuario { get; set; }
 
+        public int? LatenciaMs { get; set; }
+
+        public bool Exitoso { get; set; } = true;
+
         public DateTime Fecha { get; set; } = DateTime.UtcNow;
     }
-}
+    }

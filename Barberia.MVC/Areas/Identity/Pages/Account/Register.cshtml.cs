@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ModelosBarberia;
+using Barberia.MVC.Services;
+using ModelosBarberia.Enum;
 
 namespace Barberia.MVC.Areas.Identity.Pages.Account
 {
@@ -25,13 +27,15 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly LogSistemaService _logSistemaService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            LogSistemaService logSistemaService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -39,6 +43,7 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _logSistemaService = logSistemaService;
         }
 
         [BindProperty]
@@ -104,6 +109,17 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    await _logSistemaService.RegistrarAsync(
+                        tipo: TipoLogSistema.Autenticacion,
+                        mensaje: "Usuario registrado correctamente.",
+                        entidad: "Usuario",
+                        entidadId: user.Id,
+                        stackTrace: null,
+                        usuarioId: user.Id,
+                        latenciaMs: null,
+                        exitoso: true
+                    );
+
                     // asignar rol en Identity
                     if (!string.IsNullOrEmpty(Input.RolSistema))
                     {
@@ -132,6 +148,17 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
+                await _logSistemaService.RegistrarAsync(
+                    tipo: TipoLogSistema.Validacion,
+                    mensaje: $"Error al registrar usuario: {Input.Email}.",
+                    entidad: "Usuario",
+                    entidadId: null,
+                    stackTrace: string.Join(" | ", result.Errors.Select(e => e.Description)),
+                    usuarioId: null,
+                    latenciaMs: null,
+                    exitoso: false
+                );
 
                 foreach (var error in result.Errors)
                 {
