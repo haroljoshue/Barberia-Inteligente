@@ -11,10 +11,12 @@ namespace Barberia.MVC.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, ILogger<AdminController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -57,68 +59,88 @@ namespace Barberia.MVC.Controllers
                 })
                 .ToList();
 
-            var logsAgente = _context.Set<LogAgente>();
+            int totalConsultasAgente = 0;
+            int consultasExitosasAgente = 0;
+            int consultasErrorAgente = 0;
+            double tiempoPromedioRespuestaAgente = 0;
+            double tokensPromedioAgente = 0;
+            int consultasSinResultados = 0;
+            double similitudPromedioAgente = 0;
+            double similitudMaximaAgente = 0;
 
-            var totalConsultasAgente = logsAgente.Count();
+            Dictionary<string, int> herramientasUsadas = new();
+            Dictionary<string, int> consultasPorTipo = new();
+            List<LogAgente> ultimosLogsAgente = new();
 
-            var consultasExitosasAgente = logsAgente
-                .Count(l => l.ConsultaExitosa);
+            try
+            {
+                var logsAgente = _context.Set<LogAgente>();
 
-            var consultasErrorAgente = logsAgente
-                .Count(l => !l.ConsultaExitosa || l.MensajeError != null);
+                totalConsultasAgente = logsAgente.Count();
 
-            var tiempoPromedioRespuestaAgente = logsAgente
-                .Where(l => l.TiempoRespuestaMs != null && l.TiempoRespuestaMs > 0)
-                .Select(l => l.TiempoRespuestaMs!.Value)
-                .DefaultIfEmpty(0)
-                .Average();
+                consultasExitosasAgente = logsAgente
+                    .Count(l => l.ConsultaExitosa);
 
-            var tokensPromedioAgente = logsAgente
-                .Where(l => l.TokensUsados != null && l.TokensUsados > 0)
-                .Select(l => l.TokensUsados!.Value)
-                .DefaultIfEmpty(0)
-                .Average();
+                consultasErrorAgente = logsAgente
+                    .Count(l => !l.ConsultaExitosa || l.MensajeError != null);
 
-            var consultasSinResultados = logsAgente
-                .Count(l => l.CantidadResultados == 0);
+                tiempoPromedioRespuestaAgente = logsAgente
+                    .Where(l => l.TiempoRespuestaMs != null && l.TiempoRespuestaMs > 0)
+                    .Select(l => l.TiempoRespuestaMs!.Value)
+                    .DefaultIfEmpty(0)
+                    .Average();
 
-            var similitudPromedioAgente = logsAgente
-                .Where(l => l.SimilitudPromedio != null && l.SimilitudPromedio > 0)
-                .Select(l => (double)l.SimilitudPromedio!.Value)
-                .DefaultIfEmpty(0)
-                .Average();
+                tokensPromedioAgente = logsAgente
+                    .Where(l => l.TokensUsados != null && l.TokensUsados > 0)
+                    .Select(l => l.TokensUsados!.Value)
+                    .DefaultIfEmpty(0)
+                    .Average();
 
-            var similitudMaximaAgente = logsAgente
-                .Where(l => l.SimilitudMaxima != null && l.SimilitudMaxima > 0)
-                .Select(l => (double)l.SimilitudMaxima!.Value)
-                .DefaultIfEmpty(0)
-                .Max();
+                consultasSinResultados = logsAgente
+                    .Count(l => l.CantidadResultados == 0);
 
-            var herramientasUsadas = logsAgente
-                .Where(l => l.HerramientaUsada != null && l.HerramientaUsada != "")
-                .GroupBy(l => l.HerramientaUsada!)
-                .Select(g => new
-                {
-                    Herramienta = g.Key,
-                    Cantidad = g.Count()
-                })
-                .ToList()
-                .ToDictionary(x => x.Herramienta, x => x.Cantidad);
+                similitudPromedioAgente = logsAgente
+                    .Where(l => l.SimilitudPromedio != null && l.SimilitudPromedio > 0)
+                    .Select(l => (double)l.SimilitudPromedio!.Value)
+                    .DefaultIfEmpty(0)
+                    .Average();
 
-            var consultasPorTipo = logsAgente
-                .GroupBy(l => l.Tipo)
-                .Select(g => new
-                {
-                    Tipo = g.Key.ToString(),
-                    Cantidad = g.Count()
-                })
-                .ToList()
-                .ToDictionary(x => x.Tipo, x => x.Cantidad);
+                similitudMaximaAgente = logsAgente
+                    .Where(l => l.SimilitudMaxima != null && l.SimilitudMaxima > 0)
+                    .Select(l => (double)l.SimilitudMaxima!.Value)
+                    .DefaultIfEmpty(0)
+                    .Max();
 
-            var ultimosLogsAgente = logsAgente
-                .OrderByDescending(l => l.Fecha)
-                .Take(10)
-                .ToList();
+                herramientasUsadas = logsAgente
+                    .Where(l => l.HerramientaUsada != null && l.HerramientaUsada != "")
+                    .GroupBy(l => l.HerramientaUsada!)
+                    .Select(g => new
+                    {
+                        Herramienta = g.Key,
+                        Cantidad = g.Count()
+                    })
+                    .ToList()
+                    .ToDictionary(x => x.Herramienta, x => x.Cantidad);
+
+                consultasPorTipo = logsAgente
+                    .GroupBy(l => l.Tipo)
+                    .Select(g => new
+                    {
+                        Tipo = g.Key.ToString(),
+                        Cantidad = g.Count()
+                    })
+                    .ToList()
+                    .ToDictionary(x => x.Tipo, x => x.Cantidad);
+
+                ultimosLogsAgente = logsAgente
+                    .OrderByDescending(l => l.Fecha)
+                    .Take(10)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "No se pudieron cargar las métricas de logs del agente en el dashboard de administrador.");
+            }
 
             var viewModel = new AdminDashboardViewModel
             {
@@ -188,7 +210,6 @@ namespace Barberia.MVC.Controllers
         public double PorcentajeVectorizacion { get; set; }
         public int DimensionEmbedding { get; set; } = 1536;
 
-        // Métricas del agente
         public int TotalConsultasAgente { get; set; }
         public int ConsultasExitosasAgente { get; set; }
         public int ConsultasErrorAgente { get; set; }

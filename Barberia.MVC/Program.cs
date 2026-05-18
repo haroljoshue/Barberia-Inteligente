@@ -39,9 +39,10 @@ builder.Services.AddHttpClient("BarberiaApi", client =>
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 });
 
+builder.Services.AddScoped<LogSistemaService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
-builder.Services.AddScoped<LogSistemaService>();
+
 
 var app = builder.Build();
 
