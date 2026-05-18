@@ -20,7 +20,7 @@ namespace Barberia.MVC.Controllers
             return View(barberos);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Details(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
@@ -28,12 +28,12 @@ namespace Barberia.MVC.Controllers
             return View(barbero);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create(Barbero barbero)
         {
             barbero.FechaRegistro = DateTime.UtcNow;
@@ -44,7 +44,7 @@ namespace Barberia.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Edit(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
@@ -54,7 +54,7 @@ namespace Barberia.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Edit(string id, Barbero barbero)
         {
             ModelState.Remove("Citas");
@@ -64,7 +64,7 @@ namespace Barberia.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Delete(string id)
         {
             var barbero = CRUD<Barbero>.GetById(id);
@@ -74,7 +74,7 @@ namespace Barberia.MVC.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult DeleteConfirmed(string id)
         {
             CRUD<Barbero>.Delete(id);

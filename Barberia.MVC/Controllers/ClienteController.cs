@@ -8,7 +8,7 @@ using ModelosBarberia.DTO_s;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Cliente,Admin")]
+    [Authorize(Roles = "Cliente,Administrador")]
     public class ClienteController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

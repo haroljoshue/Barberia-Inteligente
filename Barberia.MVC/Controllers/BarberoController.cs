@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Barbero,Admin")]
+    [Authorize(Roles = "Barbero,Administrador")]
     public class BarberoController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

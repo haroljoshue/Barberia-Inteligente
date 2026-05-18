@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrador")]
     public class UsuariosController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

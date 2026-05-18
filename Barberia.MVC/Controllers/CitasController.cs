@@ -26,7 +26,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Citas/Create
-        [Authorize(Roles = "Cliente,Admin")]
+        [Authorize(Roles = "Cliente,Administrador")]
         public IActionResult Create()
         {
             CargarDropdowns();
@@ -36,7 +36,7 @@ namespace Barberia.MVC.Controllers
         // POST: Citas/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Cliente,Admin")]
+        [Authorize(Roles = "Cliente,Administrador")]
         public IActionResult Create(Cita cita)
         {
             // Asigna el cliente desde la sesión
@@ -60,7 +60,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Citas/Edit/5
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Edit(string id)
         {
             var cita = CRUD<Cita>.GetById(id);
@@ -72,7 +72,7 @@ namespace Barberia.MVC.Controllers
         // POST: Citas/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Edit(string id, Cita cita)
         {
             ModelState.Remove("Cliente");
@@ -98,7 +98,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Citas/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Delete(string id)
         {
             var cita = CRUD<Cita>.GetById(id);
@@ -109,7 +109,7 @@ namespace Barberia.MVC.Controllers
         // POST: Citas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult DeleteConfirmed(string id)
         {
             CRUD<Cita>.Delete(id);

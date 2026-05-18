@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrador")]
     public class RolesController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

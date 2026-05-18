@@ -5,7 +5,7 @@ using CRUD;
 
 namespace Barberia.MVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrador")]
     public class LogAgentesController : Controller
     {
         public IActionResult Index()

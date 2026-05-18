@@ -9,7 +9,7 @@ namespace Barberia.MVC.Controllers
     public class ServiciosController : Controller
     {
         // GET: Servicios
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Index()
         {
             var servicios = CRUD<Servicio>.GetAll();
@@ -24,7 +24,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Servicios/Details/5
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Details(string id)
         {
             var servicio = CRUD<Servicio>.GetById(id);
@@ -35,7 +35,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Servicios/Create
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Create()
         {
             return View();
@@ -44,7 +44,7 @@ namespace Barberia.MVC.Controllers
         // POST: Servicios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Create(Servicio servicio)
         {
             if (!ModelState.IsValid) return View(servicio);
@@ -54,7 +54,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Servicios/Edit/5
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Edit(string id)
         {
             var servicio = CRUD<Servicio>.GetById(id);
@@ -67,7 +67,7 @@ namespace Barberia.MVC.Controllers
         // POST: Servicios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Edit(string id, Servicio servicio)
         {
             if (!ModelState.IsValid) return View(servicio);
@@ -77,7 +77,7 @@ namespace Barberia.MVC.Controllers
         }
 
         // GET: Servicios/Delete/5
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult Delete(string id)
         {
             var servicio = CRUD<Servicio>.GetById(id);
@@ -90,7 +90,7 @@ namespace Barberia.MVC.Controllers
         // POST: Servicios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Barbero")]
+        [Authorize(Roles = "Administrador,Barbero")]
         public IActionResult DeleteConfirmed(string id)
         {
             CRUD<Servicio>.Delete(id);
