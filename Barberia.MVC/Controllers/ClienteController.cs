@@ -97,38 +97,21 @@ namespace Barberia.MVC.Controllers
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
-            // 💡 CORRECCIÓN: Primero obtenemos la cita existente para no perder sus datos nativos
-            var citaResponse = await client.GetAsync($"api/citas/{citaId}");
+            // Usamos el endpoint específico para cambiar estado
+            var response = await client.PutAsJsonAsync(
+                $"api/citas/{citaId}/estado",
+                ModelosBarberia.Enum.EstadoCita.Cancelada
+            );
 
-            if (!citaResponse.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                TempData["Error"] = "No se encontró la cita a cancelar.";
+                TempData["Success"] = "Cita cancelada con éxito.";
                 return RedirectToAction(nameof(Index));
-            }
-
-            var cita = await citaResponse.Content.ReadFromJsonAsync<Cita>();
-            if (cita != null)
-            {
-                // Cambiamos el estado a Cancelada
-                cita.Estado = ModelosBarberia.Enum.EstadoCita.Cancelada;
-
-                // Aseguramos que las navegaciones vayan en null para evitar el Error 400 que arreglamos antes
-                cita.Cliente = null;
-                cita.Barbero = null;
-                cita.Servicio = null;
-
-                // Enviamos la actualización al PUT completo que ya sabemos que funciona
-                var response = await client.PutAsJsonAsync($"api/citas/{citaId}", cita);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    TempData["Success"] = "Cita cancelada con éxito.";
-                    return RedirectToAction(nameof(Index));
-                }
             }
 
             TempData["Error"] = "No se pudo cancelar la cita.";
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

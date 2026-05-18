@@ -4,6 +4,7 @@ using Barberia.Api.Data;
 using ModelosBarberia;
 using ModelosBarberia.DTOs;
 using ModelosBarberia.Enum;
+using ModelosBarberia.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
