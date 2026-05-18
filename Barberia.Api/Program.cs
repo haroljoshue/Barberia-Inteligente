@@ -30,6 +30,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<EmbeddingService>();
 builder.Services.AddHttpClient<QdrantService>();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = false;
+    });
+
 
 builder.Services.AddSwaggerGen();
 

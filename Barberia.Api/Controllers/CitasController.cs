@@ -20,13 +20,30 @@ namespace Barberia.Api.Controllers
 
         // GET: api/citas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cita>>> GetCitas()
+        public async Task<IActionResult> GetCitas()
         {
-            return await _context.Citas
+            var citas = await _context.Citas
                 .Include(c => c.Cliente)
                 .Include(c => c.Barbero)
                 .Include(c => c.Servicio)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.ClienteId,
+                    c.BarberoId,
+                    c.ServicioId,
+                    c.FechaHora,
+                    c.Estado,
+                    c.Observacion,
+                    c.PrecioFinal,
+                    c.FechaRegistro,
+                    Cliente = c.Cliente == null ? null : new { c.Cliente.Id, c.Cliente.NombreCompleto, c.Cliente.Email },
+                    Barbero = c.Barbero == null ? null : new { c.Barbero.Id, c.Barbero.Nombre },
+                    Servicio = c.Servicio == null ? null : new { c.Servicio.Id, c.Servicio.Nombre, c.Servicio.Precio }
+                })
                 .ToListAsync();
+
+            return Ok(citas);
         }
 
         // GET: api/citas/cliente/{clienteId}
@@ -38,6 +55,20 @@ namespace Barberia.Api.Controllers
                 .Include(c => c.Servicio)
                 .Where(c => c.ClienteId == clienteId)
                 .OrderByDescending(c => c.FechaHora)
+                .Select(c => new
+                {
+                    c.Id,
+                    c.ClienteId,
+                    c.BarberoId,
+                    c.ServicioId,
+                    c.FechaHora,
+                    c.Estado,
+                    c.Observacion,
+                    c.PrecioFinal,
+                    c.FechaRegistro,
+                    Barbero = c.Barbero == null ? null : new { c.Barbero.Id, c.Barbero.Nombre, c.Barbero.Especialidad },
+                    Servicio = c.Servicio == null ? null : new { c.Servicio.Id, c.Servicio.Nombre, c.Servicio.Precio }
+                })
                 .ToListAsync();
 
             return Ok(citas);

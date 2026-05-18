@@ -1548,3 +1548,34 @@ main > .container:first-child {
         bottom: 1rem !important;
     }
 }
+
+/* Fix mensaje usuario */
+#n8n-chat-mount .chat-message-from-user .chat-message-markdown {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+    border-radius: 12px 4px 12px 12px !important;
+    padding: 0.5rem 0.9rem !important;
+    font-size: 0.875rem !important;
+    max-width: 75% !important;
+    display: inline-block !important;
+    word-break: break-word !important;
+}
+
+    #n8n-chat-mount .chat-message-from-user .chat-message-markdown p {
+        margin: 0 !important;
+        color: white !important;
+        font-size: 0.875rem !important;
+    }
+
+/* Alinea el mensaje usuario a la derecha */
+#n8n-chat-mount .chat-message.chat-message-from-user {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: flex-end !important;
+}
+
+/* Quita el fondo grande verde del contenedor */
+#n8n-chat-mount .chat-message-from-user > div:not(.chat-message-markdown):not(.chat-message-actions) {
+    background: none !important;
+    padding: 0 !important;
+}
