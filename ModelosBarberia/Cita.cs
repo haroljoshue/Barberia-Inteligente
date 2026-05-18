@@ -14,19 +14,22 @@ namespace ModelosBarberia
         public string ClienteId { get; set; } = string.Empty;
 
         [ForeignKey("ClienteId")]
-        public ApplicationUser Cliente { get; set; } = null!;
+
+        public ApplicationUser? Cliente { get; set; }
 
         [Required]
         public int BarberoId { get; set; }
 
         [ForeignKey("BarberoId")]
-        public Barbero Barbero { get; set; } = null!;
+
+        public Barbero? Barbero { get; set; }
 
         [Required]
         public int ServicioId { get; set; }
 
         [ForeignKey("ServicioId")]
-        public Servicio Servicio { get; set; } = null!;
+
+        public Servicio? Servicio { get; set; }
 
         [Required, DataType(DataType.DateTime)]
         public DateTime FechaHora { get; set; }
