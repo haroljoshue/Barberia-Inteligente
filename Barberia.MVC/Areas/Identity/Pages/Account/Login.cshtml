@@ -19,7 +19,7 @@
 
             <h2 class="text-center mb-4">Iniciar sesión</h2>
 
-            <form id="account" method="post">
+            <form id="account" method="post" asp-route-returnUrl="@Model.ReturnUrl">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
