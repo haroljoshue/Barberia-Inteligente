@@ -28,6 +28,7 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly LogSistemaService _logSistemaService;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -35,7 +36,8 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            LogSistemaService logSistemaService)
+            LogSistemaService logSistemaService,
+            IHttpClientFactory httpClientFactory) // <-- inyectado
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _logSistemaService = logSistemaService;
+            _httpClientFactory = httpClientFactory;
         }
 
         [BindProperty]
@@ -124,10 +127,34 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
                     if (!string.IsNullOrEmpty(Input.RolSistema))
                     {
                         await _userManager.AddToRoleAsync(user, Input.RolSistema);
+                        if (!string.IsNullOrEmpty(Input.RolSistema))
+                        {
+                            await _userManager.AddToRoleAsync(user, Input.RolSistema);
+
+                            // Si el rol es Barbero, crear registro en la API
+                            if (Input.RolSistema == "Barbero")
+                            {
+                                var client = _httpClientFactory.CreateClient("BarberiaApi");
+
+                                var nuevoBarbero = new Barbero
+                                {
+                                    UserId = user.Id,
+                                    Nombre = Input.NombreCompleto,
+                                    Email = Input.Email,
+                                    Disponible = true,
+                                    FechaRegistro = DateTime.UtcNow
+                                };
+
+                                await client.PostAsJsonAsync("api/barberos", nuevoBarbero);
+                            }
+                        }
+
+
                     }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
