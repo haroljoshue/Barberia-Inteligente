@@ -5,9 +5,10 @@
 
 <div class="container-fluid my-4 px-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Encabezado con botón -->
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
         <div>
-            <h2 class="text-primary mb-0">Bienvenido, @(Model?.Cliente?.NombreCompleto ?? "Cliente")</h2>
+            <h2 class="mb-0">Bienvenido, @(Model?.Cliente?.NombreCompleto ?? "Cliente")</h2>
             <small class="text-muted">@Model?.Cliente?.Email</small>
         </div>
         <a asp-action="Agendar" class="btn btn-success">
@@ -15,70 +16,64 @@
         </a>
     </div>
 
+    <!-- Mensajes -->
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
-            ✅ @TempData["Success"]
+        <div class="alert alert-success alert-dismissible fade show mb-4">
+            @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
-            ❌ @TempData["Error"]
+        <div class="alert alert-danger alert-dismissible fade show mb-4">
+            @TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
+    <!-- Próxima cita -->
     @if (Model?.ProximaCita != null)
     {
-        <div class="alert alert-info border-0 shadow-sm mb-4">
-            <div class="d-flex align-items-center gap-3">
-                <div class="fs-1"></div>
-                <div>
-                    <strong>Próxima cita:</strong>
-                    @Model.ProximaCita.FechaHora.ToString("dddd dd 'de' MMMM 'a las' HH:mm")
-                    con <strong>@(Model.ProximaCita.Barbero?.Nombre ?? "—")</strong>
-                    — @(Model.ProximaCita.Servicio?.Nombre ?? "—")
-                    <span class="badge bg-info ms-2">@Model.ProximaCita.Estado</span>
-                </div>
-            </div>
+        <div class="alert alert-info border-0 shadow-sm mb-5">
+            <strong>Próxima cita:</strong>
+            @Model.ProximaCita.FechaHora.ToString("dddd dd 'de' MMMM 'a las' HH:mm")
+            con <strong>@(Model.ProximaCita.Barbero?.Nombre ?? "—")</strong>
+            — @(Model.ProximaCita.Servicio?.Nombre ?? "—")
+            <span class="badge bg-info ms-2">@Model.ProximaCita.Estado</span>
         </div>
     }
 
+    <!-- Estadísticas en fila -->
     <div class="row g-3 mb-5">
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card shadow-sm text-center h-100">
                 <div class="card-body">
-                    <div class="fs-1">📋</div>
-                    <div class="fs-2 fw-bold text-primary">@(Model?.HistorialCitas?.Count ?? 0)</div>
+                    <div class="fs-2 fw-bold">@(Model?.HistorialCitas?.Count ?? 0)</div>
                     <div class="text-muted small">Total Citas</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card shadow-sm text-center h-100">
                 <div class="card-body">
-                    <div class="fs-1">⏳</div>
-                    <div class="fs-2 fw-bold text-warning">@(Model?.CitasPendientes ?? 0)</div>
+                    <div class="fs-2 fw-bold">@(Model?.CitasPendientes ?? 0)</div>
                     <div class="text-muted small">Pendientes</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card shadow-sm text-center h-100">
                 <div class="card-body">
-                    <div class="fs-1">✅</div>
-                    <div class="fs-2 fw-bold text-success">@(Model?.CitasCompletadas ?? 0)</div>
+                    <div class="fs-2 fw-bold">@(Model?.CitasCompletadas ?? 0)</div>
                     <div class="text-muted small">Completadas</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm text-center h-100">
+            <div class="card shadow-sm text-center h-100">
                 <div class="card-body">
-                    <div class="fs-1">❌</div>
-                    <div class="fs-2 fw-bold text-danger">
+                    <div class="fs-2 fw-bold">
                         @(Model?.HistorialCitas?.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Cancelada) ?? 0)
                     </div>
                     <div class="text-muted small">Canceladas</div>
@@ -87,15 +82,15 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 pt-3 d-flex justify-content-between align-items-center">
-            <h5 class="text-primary mb-0">Historial de Citas</h5>
+    <!-- Historial de citas -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Historial de Citas</h5>
         </div>
         <div class="card-body p-0">
             @if (Model?.HistorialCitas == null || !Model.HistorialCitas.Any())
             {
                 <div class="text-center text-muted py-5">
-                    <div class="fs-1">💈</div>
                     <p>No tienes citas registradas aún.</p>
                     <a asp-action="Agendar" class="btn btn-success">Agendar tu primera cita</a>
                 </div>
@@ -104,7 +99,7 @@
             {
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
-                        <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>Barbero</th>
                                 <th>Servicio</th>

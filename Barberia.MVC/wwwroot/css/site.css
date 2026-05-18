@@ -1322,7 +1322,7 @@ main > .container:first-child {
 }
 
 /* ============================================
-   💬 CHAT N8N - DISEÑO SIMPLE Y RESPONSIVE
+   CHAT N8N - DISEÑO SIMPLE Y RESPONSIVE
    ============================================ */
 
 /* Burbuja flotante */
@@ -1361,10 +1361,10 @@ main > .container:first-child {
     box-shadow: 0 8px 40px rgba(0,0,0,0.18);
     border: 1px solid #e5e7eb;
     z-index: 10000;
-    flex-direction: column;
-    overflow: hidden;
-    background-color: #fff;
     display: none; /* controlado por toggleChat() */
+    background-color: #fff;
+    overflow: hidden;
+    flex-direction: column;
 }
 
 /* Botón cerrar */

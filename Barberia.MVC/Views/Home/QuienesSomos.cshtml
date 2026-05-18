@@ -12,30 +12,29 @@
     </div>
 </div>
 
-<div class="container section">
+<div class="container my-5">
 
     <!-- Historia -->
     <div class="row align-items-center g-5 mb-5">
-        <div class="col-md-6">
+        <div class="col-md-6 order-md-2">
+            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=800&auto=format&fit=crop"
+                 alt="Barbero trabajando" class="img-rounded w-100" style="height:280px;object-fit:cover" />
+        </div>
+        <div class="col-md-6 order-md-1">
             <h2 class="text-primary mb-3">Nuestra Historia</h2>
             <p>Barbershop's Ibarra nació con la visión de crear un espacio donde el cuidado personal se convierta en una experiencia única.</p>
             <p>Desde nuestros inicios hemos combinado la barbería clásica con tendencias modernas para ofrecer un servicio de calidad que supere las expectativas de cada cliente.</p>
         </div>
-        <div class="col-md-6">
-            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=800&auto=format&fit=crop"
-                 alt="Barbero trabajando" class="img-rounded w-100" style="height:280px;object-fit:cover" />
-        </div>
     </div>
 
-    <hr />
+    <hr class="my-5" />
 
     <!-- Misión y Valores -->
     <div class="row g-4 mb-5">
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-body">
-                    <div class="fs-1 mb-3"></div>
-                    <h4 class="card-title text-primary">Nuestra Misión</h4>
+                    <h4 class="card-title text-primary mb-3">Nuestra Misión</h4>
                     <p class="card-text">Brindar a cada cliente confianza, estilo y una experiencia profesional en cada visita, combinando técnica, pasión y atención personalizada.</p>
                 </div>
             </div>
@@ -43,24 +42,25 @@
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-body">
-                    <div class="fs-1 mb-3"></div>
-                    <h4 class="card-title text-primary">Nuestros Valores</h4>
+                    <h4 class="card-title text-primary mb-3">Nuestros Valores</h4>
                     <ul class="lista-servicios">
-                        <li><span>Profesionalismo</span></li>
-                        <li><span>Innovación</span></li>
-                        <li><span>Confianza</span></li>
-                        <li><span>Pasión por el detalle</span></li>
+                        <li>Profesionalismo</li>
+                        <li>Innovación</li>
+                        <li>Confianza</li>
+                        <li>Pasión por el detalle</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <hr />
+    <hr class="my-5" />
 
     <!-- Lo que ofrecemos -->
     <div class="row align-items-center g-5 mb-5">
         <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=800&auto=format&fit=crop"
+                 alt="Corte moderno" class="img-rounded w-100" style="height:280px;object-fit:cover" />
         </div>
         <div class="col-md-6">
             <h2 class="text-primary mb-3">Lo que Ofrecemos</h2>
@@ -70,13 +70,12 @@
     </div>
 
     <!-- CTA -->
-    <div class="card text-white text-center py-5"
+    <div class="card text-white text-center py-5 mt-5"
          style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));border:none">
         <div class="card-body">
-            <div class="fs-1 mb-2"></div>
-            <h3 class="text-white fw-bold">¿Listo para tu próximo corte?</h3>
+            <h3 class="text-white fw-bold mb-3">¿Listo para tu próximo corte?</h3>
             <p style="color:rgba(255,255,255,0.85)">Estamos listos para atenderte y ayudarte a encontrar el estilo que mejor te representa.</p>
-            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-secondary btn-lg mt-2 fw-bold">
+            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-secondary btn-lg mt-3 fw-bold">
                 Reservar Cita
             </a>
         </div>
