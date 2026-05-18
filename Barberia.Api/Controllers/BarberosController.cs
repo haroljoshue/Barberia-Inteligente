@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using Barberia.Api.Data;
-using ModelosBarberia.DTO_s; // Asegúrate de que este namespace apunte a donde creaste el BarberoDto
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Barberia.Api.Controllers
 {
@@ -22,16 +20,16 @@ namespace Barberia.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Barberos
+        // GET: api/barberos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BarberoDto>>> GetBarbero()
+        public async Task<ActionResult<IEnumerable<Barbero>>> GetBarberos()
         {
             try
             {
-                // Al mapear manualmente campo por campo, omitimos b.UserId temporalmente
-                // Esto soluciona de inmediato el error 42703 de PostgreSQL
+                // Seleccionamos las columnas de forma explícita mapeando a la entidad original.
+                // Esto ignora cualquier columna fantasma (como UserId) y rompe la recursión de Citas.
                 var barberos = await _context.Barberos
-                    .Select(b => new BarberoDto
+                    .Select(b => new Barbero
                     {
                         Id = b.Id,
                         Nombre = b.Nombre,
@@ -39,7 +37,8 @@ namespace Barberia.Api.Controllers
                         Telefono = b.Telefono,
                         Email = b.Email,
                         Disponible = b.Disponible,
-                        FechaRegistro = b.FechaRegistro
+                        FechaRegistro = b.FechaRegistro,
+                        Citas = new List<Cita>() // Se envía vacío para evitar bucles en el JSON
                     })
                     .ToListAsync();
 
@@ -47,19 +46,19 @@ namespace Barberia.Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno: {ex.Message} -> {ex.InnerException?.Message}");
+                return StatusCode(500, new { mensaje = "Error al obtener los barberos", detalle = ex.Message });
             }
         }
 
-        // GET: api/Barberos/5
+        // GET: api/barberos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BarberoDto>> GetBarbero(int id)
+        public async Task<ActionResult<Barbero>> GetBarbero(int id)
         {
             try
             {
                 var barbero = await _context.Barberos
                     .Where(b => b.Id == id)
-                    .Select(b => new BarberoDto
+                    .Select(b => new Barbero
                     {
                         Id = b.Id,
                         Nombre = b.Nombre,
@@ -67,83 +66,100 @@ namespace Barberia.Api.Controllers
                         Telefono = b.Telefono,
                         Email = b.Email,
                         Disponible = b.Disponible,
-                        FechaRegistro = b.FechaRegistro
+                        FechaRegistro = b.FechaRegistro,
+                        Citas = new List<Cita>()
                     })
                     .FirstOrDefaultAsync();
 
                 if (barbero == null)
-                {
-                    return NotFound();
-                }
+                    return NotFound(new { mensaje = "Barbero no encontrado" });
 
                 return Ok(barbero);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno: {ex.Message}");
+                return StatusCode(500, new { mensaje = "Error al obtener el barbero", detalle = ex.Message });
             }
         }
 
-        // PUT: api/Barberos/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBarbero(int id, Barbero barbero)
+        // POST: api/barberos
+        [HttpPost]
+        public async Task<ActionResult<Barbero>> PostBarbero([FromBody] Barbero barbero)
         {
-            if (id != barbero.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(barbero).State = EntityState.Modified;
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
+                // Aseguramos valores por defecto si es necesario antes de guardar
+                barbero.FechaRegistro = DateTime.UtcNow;
+                barbero.Citas = null!; // Evitamos que intente insertar datos basura en cascada
+
+                _context.Barberos.Add(barbero);
                 await _context.SaveChangesAsync();
+
+                // Limpiamos la navegación para la respuesta JSON limpia
+                barbero.Citas = new List<Cita>();
+
+                return CreatedAtAction(nameof(GetBarbero), new { id = barbero.Id }, barbero);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al guardar el barbero", detalle = ex.Message });
+            }
+        }
+
+        // PUT: api/barberos/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBarbero(int id, [FromBody] Barbero barbero)
+        {
+            if (id != barbero.Id) return BadRequest(new { mensaje = "El ID no coincide con el cuerpo de la solicitud" });
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            // Buscamos el registro existente para actualizar únicamente las columnas necesarias
+            var registroExistente = await _context.Barberos.FindAsync(id);
+            if (registroExistente == null) return NotFound(new { mensaje = "Barbero no encontrado" });
+
+            try
+            {
+                // Actualizamos las propiedades individualmente, previniendo errores de rastreo de entidades
+                registroExistente.Nombre = barbero.Nombre;
+                registroExistente.Especialidad = barbero.Especialidad;
+                registroExistente.Telefono = barbero.Telefono;
+                registroExistente.Email = barbero.Email;
+                registroExistente.Disponible = barbero.Disponible;
+
+                await _context.SaveChangesAsync();
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BarberoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!_context.Barberos.Any(e => e.Id == id)) return NotFound();
+                else throw;
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al actualizar el barbero", detalle = ex.Message });
+            }
         }
 
-        // POST: api/Barberos
-        [HttpPost]
-        public async Task<ActionResult<Barbero>> PostBarbero(Barbero barbero)
-        {
-            _context.Barberos.Add(barbero);
-            await _context.SaveChangesAsync();
-
-            // Mantenemos la redirección explícita usando el nombre del método GET por Id
-            return CreatedAtAction(nameof(GetBarbero), new { id = barbero.Id }, barbero);
-        }
-
-        // DELETE: api/Barberos/5
+        // DELETE: api/barberos/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBarbero(int id)
         {
-            var barbero = await _context.Barberos.FindAsync(id);
-            if (barbero == null)
+            try
             {
-                return NotFound();
+                var barbero = await _context.Barberos.FindAsync(id);
+                if (barbero == null) return NotFound(new { mensaje = "Barbero no encontrado" });
+
+                _context.Barberos.Remove(barbero);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { mensaje = "Barbero eliminado correctamente" });
             }
-
-            _context.Barberos.Remove(barbero);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool BarberoExists(int id)
-        {
-            return _context.Barberos.Any(e => e.Id == id);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error al eliminar el barbero. Verifique si tiene citas asociadas.", detalle = ex.Message });
+            }
         }
     }
 }
