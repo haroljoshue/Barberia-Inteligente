@@ -30,10 +30,12 @@
                             // Mapeo dinámico de colores de Bootstrap para los estados del Agente de IA
                             var badge = Model.Tipo switch
                             {
-                                ModelosBarberia.Enum.TipoLogAgente.Consulta => "info",
-                                ModelosBarberia.Enum.TipoLogAgente.Respuesta => "success",
+                                ModelosBarberia.Enum.TipoLogAgente.ConsultaGeneral => "info",
+                                ModelosBarberia.Enum.TipoLogAgente.ConsultaCitas => "primary",
+                                ModelosBarberia.Enum.TipoLogAgente.Agendamiento => "success",
+                                ModelosBarberia.Enum.TipoLogAgente.ConsultaDisponibilidad => "warning",
                                 ModelosBarberia.Enum.TipoLogAgente.Error => "danger",
-                                ModelosBarberia.Enum.TipoLogAgente.Timeout => "warning",
+                                ModelosBarberia.Enum.TipoLogAgente.Timeout => "dark",
                                 _ => "secondary"
                             };
                         }
