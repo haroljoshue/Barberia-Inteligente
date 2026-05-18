@@ -117,9 +117,14 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
 
                     _logger.LogInformation("User logged in.");
 
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl != "/")
                     {
                         return LocalRedirect(returnUrl);
+                    }
+
+                    if (user != null && user.RolSistema?.ToString() == "Administrador")
+                    {
+                        return RedirectToAction("Index", "Admin");
                     }
 
                     return RedirectToAction("Index", "Home");
