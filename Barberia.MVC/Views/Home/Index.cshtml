@@ -1,59 +1,66 @@
 ﻿@model List<ModelosBarberia.Servicio>
+
 @{
     ViewData["Title"] = "Inicio - Barbershop's Ibarra";
 }
 
-<div class="bg-dark text-white py-5 mb-5" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;">
-    <div class="container text-center py-4">
-        <h1 class="display-3 fw-bold mb-3">💈 Barbershop's Ibarra</h1>
-        <p class="lead fs-4 text-light opacity-75 mb-4">Tu estilo, nuestra pasión. Descubre lo mejor en cortes, afeitados y cuidado personal.</p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-warning btn-lg fw-bold px-4">
-                ✂️ Reservar Ahora
-            </a>
-        </div>
-    </div>
+<div>
+
+    <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=1400&auto=format&fit=crop"
+         alt="Barbería"
+         width="100%" />
+
+    <h1>Barbershop's Ibarra</h1>
+
+    <p>
+        Tu estilo, nuestra pasión. Descubre lo mejor en cortes,
+        afeitados y cuidado personal.
+    </p>
+
+    <p>
+        <a asp-controller="Cliente" asp-action="Agendar">
+            Reservar Ahora
+        </a>
+    </p>
+
 </div>
 
-<div class="bg-light py-5 mb-5">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">¿Por qué elegirnos?</h2>
-        </div>
-        <div class="row g-4 text-center">
-            <div class="col-6 col-md-3">
-                <div class="fs-1">🏆</div>
-                <h5 class="fw-bold mt-2">Experiencia</h5>
-                <p class="text-muted small">Más de 10 años en el oficio</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fs-1">⏰</div>
-                <h5 class="fw-bold mt-2">Puntualidad</h5>
-                <p class="text-muted small">Respetamos tu tiempo</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fs-1">✨</div>
-                <h5 class="fw-bold mt-2">Calidad</h5>
-                <p class="text-muted small">Productos de primera línea</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="fs-1">📱</div>
-                <h5 class="fw-bold mt-2">Reservas Online</h5>
-                <p class="text-muted small">Agenda desde donde estés</p>
-            </div>
-        </div>
-    </div>
+<hr />
+
+<div>
+
+    <h2>Nuestro Espacio</h2>
+
+    <img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1200&auto=format&fit=crop"
+         alt="Interior barbería"
+         width="100%" />
+
 </div>
 
-<div class="container mb-5">
-    <div class="card border-0 shadow text-white text-center py-5" style="background: linear-gradient(135deg, #0077b6, #0096c7);">
-        <div class="card-body">
-            <div class="fs-1 mb-2">🎉</div>
-            <h3 class="fw-bold">Promoción Especial</h3>
-            <p class="fs-5 opacity-75">¡Corte + arreglo de barba a precio especial todos los viernes!</p>
-            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-warning btn-lg fw-bold px-5 mt-2">
-                Reservar Ahora
-            </a>
-        </div>
+<hr />
+
+<div>
+
+    <h2>¿Por qué elegirnos?</h2>
+
+    <div>
+        <h3>Experiencia Profesional</h3>
+        <p>Más de 10 años ofreciendo servicios de barbería.</p>
     </div>
+
+    <div>
+        <h3>Puntualidad</h3>
+        <p>Valoramos tu tiempo y respetamos cada cita.</p>
+    </div>
+
+    <div>
+        <h3>Calidad Garantizada</h3>
+        <p>Trabajamos con productos y herramientas de calidad.</p>
+    </div>
+
+    <div>
+        <h3>Reservas en Línea</h3>
+        <p>Agenda tu cita de forma rápida y sencilla.</p>
+    </div>
+
 </div>

@@ -5,65 +5,59 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="container py-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-4">
 
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4">
+            <h2 class="text-center mb-4">Crear cuenta</h2>
 
-                    <h2 class="text-center mb-4 fw-bold">Crear una nueva cuenta</h2>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
 
-                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Input.Email" class="form-label"></label>
-                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.Password" class="form-label"></label>
-                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.ConfirmPassword" class="form-label"></label>
-                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Input.NombreCompleto" class="form-label"></label>
-                            <input asp-for="Input.NombreCompleto" class="form-control" aria-required="true" placeholder="Nombre completo" />
-                            <span asp-validation-for="Input.NombreCompleto" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label asp-for="Input.RolSistema" class="form-label"></label>
-                            <select asp-for="Input.RolSistema" class="form-select" aria-required="true">
-                                <option value="">Seleccione un rol</option>
-                                <option value="Barbero">Barbero</option>
-                                <option value="Cliente">Cliente</option>
-                            </select>
-                            <span asp-validation-for="Input.RolSistema" class="text-danger small"></span>
-                        </div>
-
-                        <button id="registerSubmit" type="submit" class="btn btn-dark w-100">
-                            Registrar
-                        </button>
-
-                        <div class="text-center mt-3">
-                            <a asp-page="./Login" class="text-decoration-none">
-                                Ya tengo una cuenta
-                            </a>
-                        </div>
-                    </form>
+                <div class="mb-3">
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-            </div>
 
+                <div class="mb-3">
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.NombreCompleto" class="form-label"></label>
+                    <input asp-for="Input.NombreCompleto" class="form-control" />
+                    <span asp-validation-for="Input.NombreCompleto" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.RolSistema" class="form-label"></label>
+                    <select asp-for="Input.RolSistema" class="form-select">
+                        <option value="">Seleccione un rol</option>
+                        <option value="Barbero">Barbero</option>
+                        <option value="Cliente">Cliente</option>
+                    </select>
+                    <span asp-validation-for="Input.RolSistema" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Registrar
+                </button>
+
+                <div class="text-center mt-3">
+                    <a asp-page="./Login">Ya tengo una cuenta</a>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

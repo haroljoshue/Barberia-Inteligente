@@ -1,87 +1,114 @@
 ﻿@model IEnumerable<ModelosBarberia.Barbero>
+
 @{
     ViewData["Title"] = "Barberos";
 }
 
-<div class="container my-5">
+<div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary mb-0">💈 Nuestros Barberos</h2>
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-action="Create" class="btn btn-success">+ Registrar Barbero</a>
-        }
+    <h1>Nuestros Barberos</h1>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <p>
+            <a asp-action="Create">
+                Registrar Barbero
+            </a>
+        </p>
+    }
+
+</div>
+
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div>
+        @TempData["Success"]
     </div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show">
-            ✅ @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+    <hr />
+}
 
-    @if (!Model.Any())
+@if (!Model.Any())
+{
+    <div>
+
+        <h3>No hay barberos registrados</h3>
+
+        <p>
+            Actualmente no existen barberos disponibles en el sistema.
+        </p>
+
+        <img src="https://images.unsplash.com/photo-1512690459411-b0fd1c86b8c8?q=80&w=1200&auto=format&fit=crop"
+             alt="Barbería"
+             width="100%" />
+
+    </div>
+}
+else
+{
+    @foreach (var barbero in Model)
     {
-        <div class="text-center text-muted py-5">
-            <div class="fs-1">✂️</div>
-            <p>No hay barberos registrados aún.</p>
-        </div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var barbero in Model)
+        <div>
+
+            <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=1200&auto=format&fit=crop"
+                 alt="Barbero"
+                 width="100%" />
+
+            <h2>@barbero.Nombre</h2>
+
+            <p>
+                <strong>Especialidad:</strong>
+                @(barbero.Especialidad ?? "Sin especialidad")
+            </p>
+
+            @if (!string.IsNullOrEmpty(barbero.Telefono))
             {
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="rounded-circle bg-primary text-white d-flex align-items-center
-                                            justify-content-center fw-bold"
-                                     style="width:50px;height:50px;font-size:1.2rem">
-                                    @barbero.Nombre.Substring(0, 1).ToUpper()
-                                </div>
-                                <div>
-                                    <h5 class="mb-0">@barbero.Nombre</h5>
-                                    <small class="text-muted">@(barbero.Especialidad ?? "Sin especialidad")</small>
-                                </div>
-                            </div>
-
-                            <ul class="list-unstyled text-muted small mb-3">
-                                @if (!string.IsNullOrEmpty(barbero.Telefono))
-                                {
-                                    <li>📞 @barbero.Telefono</li>
-                                }
-                                @if (!string.IsNullOrEmpty(barbero.Email))
-                                {
-                                    <li>✉️ @barbero.Email</li>
-                                }
-                                <li>
-                                    @if (barbero.Disponible)
-                                    {
-                                        <span class="badge bg-success">✅ Disponible</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">❌ No disponible</span>
-                                    }
-                                </li>
-                            </ul>
-
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <div class="d-flex gap-2">
-                                    <a asp-action="Edit" asp-route-id="@barbero.Id"
-                                       class="btn btn-sm btn-outline-primary w-50">Editar</a>
-                                    <a asp-action="Delete" asp-route-id="@barbero.Id"
-                                       class="btn btn-sm btn-outline-danger w-50">Eliminar</a>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
+                <p>
+                    <strong>Teléfono:</strong>
+                    @barbero.Telefono
+                </p>
             }
+
+            @if (!string.IsNullOrEmpty(barbero.Email))
+            {
+                <p>
+                    <strong>Email:</strong>
+                    @barbero.Email
+                </p>
+            }
+
+            <p>
+                <strong>Estado:</strong>
+
+                @if (barbero.Disponible)
+                {
+                    <span>Disponible</span>
+                }
+                else
+                {
+                    <span>No disponible</span>
+                }
+            </p>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <p>
+                    <a asp-action="Edit" asp-route-id="@barbero.Id">
+                        Editar
+                    </a>
+
+                    |
+
+                    <a asp-action="Delete" asp-route-id="@barbero.Id">
+                        Eliminar
+                    </a>
+                </p>
+            }
+
         </div>
+
+        <hr />
     }
-</div>
+}
