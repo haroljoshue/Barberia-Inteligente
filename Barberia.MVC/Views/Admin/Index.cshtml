@@ -9,10 +9,11 @@
     <div class="mb-4">
         <h1 class="fw-bold">Dashboard Administrativo</h1>
         <p class="text-muted">
-            Monitoreo de citas, usuarios, agente conversacional y almacenamiento vectorial.
+            Monitoreo de citas, usuarios, agente conversacional, logs del sistema y almacenamiento vectorial.
         </p>
     </div>
 
+    <!-- RESUMEN GENERAL -->
     <h4 class="mb-3">Resumen general</h4>
 
     <div class="row g-3 mb-4">
@@ -59,6 +60,7 @@
 
     </div>
 
+    <!-- AGENTE CONVERSACIONAL -->
     <h4 class="mb-3">Agente conversacional</h4>
 
     <div class="row g-3 mb-4">
@@ -149,6 +151,194 @@
 
     </div>
 
+    <!-- LOGS DEL SISTEMA -->
+    <h4 class="mb-3">Logs del sistema</h4>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total logs sistema</h6>
+                    <h2 class="fw-bold">@Model.TotalLogsSistema</h2>
+                    <small>Eventos registrados por el sistema</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Logs exitosos</h6>
+                    <h2 class="fw-bold text-success">@Model.LogsSistemaExitosos</h2>
+                    <small>Operaciones completadas correctamente</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Logs con error</h6>
+                    <h2 class="fw-bold text-danger">@Model.LogsSistemaError</h2>
+                    <small>Operaciones fallidas o con excepción</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Latencia promedio</h6>
+                    <h2 class="fw-bold">@Model.LatenciaPromedioSistema ms</h2>
+                    <small>Tiempo promedio registrado</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Logs del sistema por tipo</h5>
+
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.LogsSistemaPorTipo != null && Model.LogsSistemaPorTipo.Any())
+                            {
+                                foreach (var item in Model.LogsSistemaPorTipo)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2" class="text-muted">No hay logs del sistema registrados.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="mb-3">Logs del sistema por entidad</h5>
+
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Entidad</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.LogsSistemaPorEntidad != null && Model.LogsSistemaPorEntidad.Any())
+                            {
+                                foreach (var item in Model.LogsSistemaPorEntidad)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="2" class="text-muted">No hay entidades registradas.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="mb-3">Últimos logs del sistema</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Mensaje</th>
+                                    <th>Entidad</th>
+                                    <th>Usuario</th>
+                                    <th>Latencia</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.UltimosLogsSistema != null && Model.UltimosLogsSistema.Any())
+                                {
+                                    foreach (var log in Model.UltimosLogsSistema)
+                                    {
+                                        var badge = log.Exitoso ? "success" : "danger";
+                                        var estado = log.Exitoso ? "Exitoso" : "Error";
+
+                                        <tr>
+                                            <td>@log.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td>@log.Tipo</td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(log.Mensaje))
+                                                {
+                                                    @(log.Mensaje.Length > 80
+                                                                                            ? log.Mensaje.Substring(0, 80) + "..."
+                                                                                            : log.Mensaje)
+                                                                                }
+                                            </td>
+                                            <td>@log.Entidad</td>
+                                            <td>@log.UsuarioId</td>
+                                            <td>@log.LatenciaMs ms</td>
+                                            <td>
+                                                <span class="badge bg-@badge">@estado</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-muted">No existen logs del sistema registrados.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BASE VECTORIAL -->
     <h4 class="mb-3">Base vectorial</h4>
 
     <div class="row g-3 mb-4">
@@ -200,6 +390,7 @@
 
     </div>
 
+    <!-- TABLAS AGENTE -->
     <div class="row g-3 mb-4">
 
         <div class="col-md-6">
@@ -215,7 +406,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.HerramientasUsadas.Any())
+                            @if (Model.HerramientasUsadas != null && Model.HerramientasUsadas.Any())
                             {
                                 foreach (var item in Model.HerramientasUsadas)
                                 {
@@ -251,7 +442,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model.ConsultasPorTipo.Any())
+                            @if (Model.ConsultasPorTipo != null && Model.ConsultasPorTipo.Any())
                             {
                                 foreach (var item in Model.ConsultasPorTipo)
                                 {
@@ -276,6 +467,7 @@
 
     </div>
 
+    <!-- ÚLTIMAS CONSULTAS AGENTE -->
     <div class="row g-3 mb-4">
 
         <div class="col-md-12">
@@ -298,7 +490,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.UltimosLogsAgente.Any())
+                                @if (Model.UltimosLogsAgente != null && Model.UltimosLogsAgente.Any())
                                 {
                                     foreach (var log in Model.UltimosLogsAgente)
                                     {
@@ -342,6 +534,7 @@
 
     </div>
 
+    <!-- RESERVAS Y USUARIOS -->
     <div class="row g-3 mb-5">
 
         <div class="col-md-6">
@@ -357,11 +550,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.ReservasPorServicio)
+                            @if (Model.ReservasPorServicio != null && Model.ReservasPorServicio.Any())
+                            {
+                                foreach (var item in Model.ReservasPorServicio)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@item.Key</td>
-                                    <td>@item.Value</td>
+                                    <td colspan="2" class="text-muted">No hay reservas registradas.</td>
                                 </tr>
                             }
                         </tbody>
@@ -384,11 +586,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.UsuariosPorRol)
+                            @if (Model.UsuariosPorRol != null && Model.UsuariosPorRol.Any())
+                            {
+                                foreach (var item in Model.UsuariosPorRol)
+                                {
+                                    <tr>
+                                        <td>@item.Key</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td>@item.Key</td>
-                                    <td>@item.Value</td>
+                                    <td colspan="2" class="text-muted">No hay usuarios registrados.</td>
                                 </tr>
                             }
                         </tbody>
@@ -400,4 +611,4 @@
 
     </div>
 
-</div>  
+</div>

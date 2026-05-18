@@ -95,20 +95,33 @@ namespace Barberia.MVC.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var user = await _userManager.FindByNameAsync(Input.Email);
 
-                    await _logSistemaService.RegistrarAsync(
-                        tipo: TipoLogSistema.Autenticacion,
-                        mensaje: "Inicio de sesión exitoso.",
-                        entidad: "Usuario",
-                        entidadId: user?.Id,
-                        stackTrace: null,
-                        usuarioId: user?.Id,
-                        latenciaMs: latenciaMs,
-                        exitoso: true
-                    );
+                    try
+                    {
+                        await _logSistemaService.RegistrarAsync(
+                            tipo: TipoLogSistema.Autenticacion,
+                            mensaje: "Inicio de sesión exitoso.",
+                            entidad: "Usuario",
+                            entidadId: user?.Id,
+                            stackTrace: null,
+                            usuarioId: user?.Id,
+                            latenciaMs: latenciaMs,
+                            exitoso: true
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "No se pudo registrar el log de inicio de sesión.");
+                    }
 
                     _logger.LogInformation("User logged in.");
+
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
 
