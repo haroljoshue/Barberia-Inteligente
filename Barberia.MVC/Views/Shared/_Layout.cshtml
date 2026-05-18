@@ -1,5 +1,4 @@
 ﻿@using System.Security.Claims
-@using System.Text.Json
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,8 +7,8 @@
     <title>Barbershop's White City</title>
 
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com/)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com/)" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap -->
@@ -21,11 +20,79 @@
     <!-- CSS del proyecto -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Barberia.MVC.styles.css" asp-append-version="true" />
+
 </head>
 <body>
 
     <header class="sticky-top">
-        <!-- tu navbar aquí -->
+        <nav class="navbar navbar-expand-lg navbar-modern py-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2 fs-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">
+                        <i class="bi bi-scissors"></i>
+                    </span>
+                    <span>Barbershop's <span class="brand-accent">Ibarra</span></span>
+                </a>
+
+                <button class="navbar-toggler px-3 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Servicios" asp-action="Servicios">
+                                <i class="bi bi-scissors me-1"></i> Servicios
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Barberos" asp-action="Barberos">
+                                <i class="bi bi-people me-1"></i> Barberos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Home" asp-action="QuienesSomos">
+                                <i class="bi bi-info-circle me-1"></i> Quiénes Somos
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="auth-area">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="role-btn" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> Panel Admin
+                                </a>
+                            }
+
+                            @if (User.IsInRole("Barbero"))
+                            {
+                                <a class="role-btn" asp-area="" asp-controller="Barbero" asp-action="Index">
+                                    <i class="bi bi-calendar-week"></i> Mi Barbería
+                                </a>
+                            }
+
+                            @if (User.IsInRole("Cliente"))
+                            {
+                                <a class="role-btn" asp-area="" asp-controller="Cliente" asp-action="Index">
+                                    <i class="bi bi-journal-check"></i> Mis Citas
+                                </a>
+                            }
+                        }
+
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </div>
+        </nav>
     </header>
 
     <main role="main">
@@ -33,7 +100,20 @@
     </main>
 
     <footer class="site-footer mt-auto py-4">
-        <!-- tu footer aquí -->
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 text-center text-md-start">
+                <div>
+                    <div class="footer-title mb-1">
+                        &copy; @DateTime.Now.Year <span class="footer-accent">Barbershop's Ibarra</span>
+                    </div>
+                    <small>Estilo, calidad y tradición en Ibarra, Ecuador.</small>
+                </div>
+
+                <div class="text-muted small">
+                    Diseño moderno · Atención profesional · Experiencia premium
+                </div>
+            </div>
+        </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -42,28 +122,29 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 
-    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Cliente"))
+    @using System.Security.Claims
+    @using System.Text.Json
+
+    @if (User.Identity != null
+    && User.Identity.IsAuthenticated
+    && User.IsInRole("Cliente"))
     {
         var clienteId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var emailCliente = User.Identity.Name;
         var clienteIdJson = JsonSerializer.Serialize(clienteId);
         var emailClienteJson = JsonSerializer.Serialize(emailCliente);
 
-        <!-- Estilos del chat n8n -->
         <link href="https://cdn.jsdelivr.net/npm/@@n8n/chat/dist/style.css" rel="stylesheet" />
 
-        <!-- Burbuja flotante -->
+        <!-- Contenedor flotante controlado por nosotros -->
         <div id="chat-bubble" onclick="toggleChat()" title="Asistente IA">
             <i class="bi bi-chat-dots-fill"></i>
         </div>
 
-        <!-- Contenedor del chat -->
-        <div id="chat-container" style="display:none; flex-direction: column;">
-            <!-- Botón cerrar -->
+        <div id="chat-container" style="display:none">
             <div id="chat-close-btn" onclick="toggleChat()">
                 <i class="bi bi-x-lg"></i>
             </div>
-            <!-- Área donde se monta el chat -->
             <div id="n8n-chat-mount"></div>
         </div>
 
