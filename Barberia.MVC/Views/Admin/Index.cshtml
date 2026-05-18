@@ -1,40 +1,46 @@
-﻿@model Barberia.MVC.Controllers.AdminDashboardViewModel
+﻿@model Barberia.MVC.Controllers.AdminController.AdminDashboardViewModel
 
 @{
     ViewData["Title"] = "Dashboard Administrativo";
 
-    var logsSistemaTipoLabels = Model.LogsSistemaPorTipo?.Keys.ToList() ?? new List<string>();
-    var logsSistemaTipoData = Model.LogsSistemaPorTipo?.Values.ToList() ?? new List<int>();
+    string FormatNumber(double value, int decimals = 2)
+    {
+        return value.ToString($"N{decimals}");
+    }
 
-    var logsSistemaEntidadLabels = Model.LogsSistemaPorEntidad?.Keys.ToList() ?? new List<string>();
-    var logsSistemaEntidadData = Model.LogsSistemaPorEntidad?.Values.ToList() ?? new List<int>();
-
-    var consultasAgenteTipoLabels = Model.ConsultasPorTipo?.Keys.ToList() ?? new List<string>();
-    var consultasAgenteTipoData = Model.ConsultasPorTipo?.Values.ToList() ?? new List<int>();
-
-    var herramientasAgenteLabels = Model.HerramientasUsadas?.Keys.ToList() ?? new List<string>();
-    var herramientasAgenteData = Model.HerramientasUsadas?.Values.ToList() ?? new List<int>();
+    string FormatPercent(double value)
+    {
+        return value.ToString("N2") + "%";
+    }
 }
 
 <div class="container-fluid py-4">
 
-    <div class="mb-4">
-        <h1 class="fw-bold">Dashboard Administrativo</h1>
-        <p class="text-muted">
-            Monitoreo general de citas, usuarios, logs del sistema, agente conversacional y almacenamiento vectorial.
-        </p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">Dashboard Administrativo</h1>
+            <p class="text-muted mb-0">
+                Resumen general de citas, usuarios, servicios, agente inteligente y logs del sistema.
+            </p>
+        </div>
+
+        <div class="text-end">
+            <span class="badge bg-dark">
+                Dimensión embedding: @Model.DimensionEmbedding
+            </span>
+        </div>
     </div>
 
-    <h4 class="mb-3">Resumen general</h4>
-
+    <!-- ========================= -->
+    <!-- RESUMEN GENERAL -->
+    <!-- ========================= -->
     <div class="row g-3 mb-4">
 
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h6 class="text-muted">Total de citas</h6>
-                    <h2 class="fw-bold">@Model.TotalCitas</h2>
-                    <small>Reservas registradas</small>
+                    <p class="text-muted mb-1">Total de citas</p>
+                    <h3 class="mb-0">@Model.TotalCitas</h3>
                 </div>
             </div>
         </div>
@@ -42,9 +48,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h6 class="text-muted">Usuarios</h6>
-                    <h2 class="fw-bold">@Model.TotalUsuarios</h2>
-                    <small>Usuarios registrados</small>
+                    <p class="text-muted mb-1">Citas de hoy</p>
+                    <h3 class="mb-0">@Model.CitasHoy</h3>
                 </div>
             </div>
         </div>
@@ -52,9 +57,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h6 class="text-muted">Logs del sistema</h6>
-                    <h2 class="fw-bold">@Model.TotalLogsSistema</h2>
-                    <small>Eventos registrados</small>
+                    <p class="text-muted mb-1">Citas pendientes</p>
+                    <h3 class="mb-0">@Model.CitasPendientes</h3>
                 </div>
             </div>
         </div>
@@ -62,55 +66,8 @@
         <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h6 class="text-muted">Consultas al agente</h6>
-                    <h2 class="fw-bold">@Model.TotalConsultasAgente</h2>
-                    <small>Interacciones con IA</small>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <h4 class="mb-3">Estado de citas y vectorización</h4>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Citas de hoy</h6>
-                    <h2 class="fw-bold">@Model.CitasHoy</h2>
-                    <small>Reservas de la fecha actual</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Citas pendientes</h6>
-                    <h2 class="fw-bold">@Model.CitasPendientes</h2>
-                    <small>Reservas aún no atendidas</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Citas con vector</h6>
-                    <h2 class="fw-bold text-success">@Model.CitasConVector</h2>
-                    <small>Registros almacenados en Qdrant</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Citas sin vector</h6>
-                    <h2 class="fw-bold text-danger">@Model.CitasSinVector</h2>
-                    <small>Registros sin embedding</small>
+                    <p class="text-muted mb-1">Usuarios registrados</p>
+                    <h3 class="mb-0">@Model.TotalUsuarios</h3>
                 </div>
             </div>
         </div>
@@ -119,592 +76,658 @@
 
     <div class="row g-3 mb-4">
 
-        <div class="col-md-8">
+        <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Progreso de vectorización</h5>
+                    <p class="text-muted mb-1">Barberos disponibles</p>
+                    <h3 class="mb-0">@Model.TotalBarberos</h3>
+                </div>
+            </div>
+        </div>
 
-                    <h2 class="fw-bold">@Model.PorcentajeVectorizacion%</h2>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Servicios activos</p>
+                    <h3 class="mb-0">@Model.TotalServicios</h3>
+                </div>
+            </div>
+        </div>
 
-                    <div class="progress mt-2" style="height: 28px;">
-                        <div class="progress-bar" role="progressbar"
-                             style="width:@Model.PorcentajeVectorizacion%">
-                            @Model.PorcentajeVectorizacion%
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Citas con vector</p>
+                    <h3 class="mb-0">@Model.CitasConVector</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Citas sin vector</p>
+                    <h3 class="mb-0">@Model.CitasSinVector</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- VECTOR DB -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <h5 class="mb-0">Vectorización de citas</h5>
+                            <small class="text-muted">
+                                Porcentaje de citas que ya tienen un vector almacenado.
+                            </small>
+                        </div>
+                        <strong>@FormatPercent(Model.PorcentajeVectorizacion)</strong>
+                    </div>
+
+                    <div class="progress" style="height: 22px;">
+                        <div class="progress-bar"
+                             role="progressbar"
+                             style="width: @Model.PorcentajeVectorizacion.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                            @FormatPercent(Model.PorcentajeVectorizacion)
                         </div>
                     </div>
 
-                    <small class="text-muted">
-                        Modelo utilizado: text-embedding-3-small | Dimensión: @Model.DimensionEmbedding
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Vectorización de citas</h5>
-                    <canvas id="chartVectorizacion"></canvas>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <h4 class="mb-3">Logs del sistema</h4>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Total logs</h6>
-                    <h2 class="fw-bold">@Model.TotalLogsSistema</h2>
-                    <small>Eventos del sistema</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Logs exitosos</h6>
-                    <h2 class="fw-bold text-success">@Model.LogsSistemaExitosos</h2>
-                    <small>Operaciones completadas</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Logs con error</h6>
-                    <h2 class="fw-bold text-danger">@Model.LogsSistemaError</h2>
-                    <small>Operaciones fallidas</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Latencia promedio</h6>
-                    <h2 class="fw-bold">@Model.LatenciaPromedioSistema ms</h2>
-                    <small>Tiempo promedio registrado</small>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Estado de logs del sistema</h5>
-                    <canvas id="chartLogsSistemaEstado"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Logs del sistema por tipo</h5>
-                    <canvas id="chartLogsSistemaTipo"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Logs por entidad</h5>
-                    <canvas id="chartLogsSistemaEntidad"></canvas>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <h4 class="mb-3">Agente conversacional</h4>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Consultas exitosas</h6>
-                    <h2 class="fw-bold text-success">@Model.ConsultasExitosasAgente</h2>
-                    <small>Respuestas procesadas correctamente</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Consultas con error</h6>
-                    <h2 class="fw-bold text-danger">@Model.ConsultasErrorAgente</h2>
-                    <small>Consultas fallidas o con error</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Tiempo promedio</h6>
-                    <h2 class="fw-bold">@Model.TiempoPromedioRespuestaAgente ms</h2>
-                    <small>Tiempo promedio de respuesta</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Tokens promedio</h6>
-                    <h2 class="fw-bold">@Model.TokensPromedioAgente</h2>
-                    <small>Uso promedio de tokens</small>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Sin resultados</h6>
-                    <h2 class="fw-bold">@Model.ConsultasSinResultados</h2>
-                    <small>Consultas sin coincidencias vectoriales</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Similitud promedio</h6>
-                    <h2 class="fw-bold">@Model.SimilitudPromedioAgente</h2>
-                    <small>Relevancia semántica promedio</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Similitud máxima</h6>
-                    <h2 class="fw-bold">@Model.SimilitudMaximaAgente</h2>
-                    <small>Mayor coincidencia registrada</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h6 class="text-muted">Herramientas usadas</h6>
-                    <h2 class="fw-bold">@(Model.HerramientasUsadas?.Count ?? 0)</h2>
-                    <small>Herramientas registradas</small>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Estado de consultas del agente</h5>
-                    <canvas id="chartAgenteEstado"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Consultas por tipo</h5>
-                    <canvas id="chartConsultasAgenteTipo"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <h5 class="mb-3">Herramientas usadas</h5>
-                    <canvas id="chartHerramientasAgente"></canvas>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <h4 class="mb-3">Tablas de auditoría</h4>
-
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h5 class="mb-3">Últimos logs del sistema</h5>
-
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Tipo</th>
-                                    <th>Mensaje</th>
-                                    <th>Entidad</th>
-                                    <th>Usuario</th>
-                                    <th>Latencia</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.UltimosLogsSistema != null && Model.UltimosLogsSistema.Any())
-                                {
-                                    foreach (var log in Model.UltimosLogsSistema)
-                                    {
-                                        var badge = log.Exitoso ? "success" : "danger";
-                                        var estado = log.Exitoso ? "Exitoso" : "Error";
-
-                                        <tr>
-                                            <td>@log.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
-                                            <td>@log.Tipo</td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(log.Mensaje))
-                                                {
-                                                    @(log.Mensaje.Length > 90
-                                                                                            ? log.Mensaje.Substring(0, 90) + "..."
-                                                                                            : log.Mensaje)
-                                                                                }
-                                            </td>
-                                            <td>@log.Entidad</td>
-                                            <td>@log.UsuarioId</td>
-                                            <td>@log.LatenciaMs ms</td>
-                                            <td>
-                                                <span class="badge bg-@badge">@estado</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="7" class="text-muted">No existen logs del sistema registrados.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                    <div class="row mt-3 text-center">
+                        <div class="col-md-4">
+                            <span class="text-muted">Total citas</span>
+                            <h5>@Model.TotalCitas</h5>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="text-muted">Con vector</span>
+                            <h5>@Model.CitasConVector</h5>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="text-muted">Sin vector</span>
+                            <h5>@Model.CitasSinVector</h5>
+                        </div>
                     </div>
 
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- MÉTRICAS DEL AGENTE -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12">
+            <h4 class="mb-3">Agente inteligente</h4>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Consultas totales</p>
+                    <h3 class="mb-0">@Model.TotalConsultasAgente</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Consultas exitosas</p>
+                    <h3 class="mb-0">@Model.ConsultasExitosasAgente</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Consultas con error</p>
+                    <h3 class="mb-0">@Model.ConsultasErrorAgente</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Sin resultados</p>
+                    <h3 class="mb-0">@Model.ConsultasSinResultados</h3>
+                </div>
+            </div>
+        </div>
 
     </div>
 
     <div class="row g-3 mb-4">
 
-        <div class="col-md-12">
-            <div class="card shadow-sm border-0">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Últimas consultas al agente</h5>
+                    <p class="text-muted mb-1">Tiempo promedio</p>
+                    <h3 class="mb-0">@FormatNumber(Model.TiempoPromedioRespuestaAgente) ms</h3>
+                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                </div>
+            </div>
+        </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Usuario</th>
-                                    <th>Tipo</th>
-                                    <th>Pregunta</th>
-                                    <th>Herramienta</th>
-                                    <th>Tiempo</th>
-                                    <th>Tokens</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.UltimosLogsAgente != null && Model.UltimosLogsAgente.Any())
-                                {
-                                    foreach (var log in Model.UltimosLogsAgente)
-                                    {
-                                        var badge = log.ConsultaExitosa ? "success" : "danger";
-                                        var estado = log.ConsultaExitosa ? "Exitosa" : "Error";
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Tokens promedio</p>
+                    <h3 class="mb-0">@FormatNumber(Model.TokensPromedioAgente)</h3>
+                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                </div>
+            </div>
+        </div>
 
-                                        <tr>
-                                            <td>@log.Fecha.ToString("yyyy-MM-dd HH:mm")</td>
-                                            <td>@log.UsuarioId</td>
-                                            <td>@log.Tipo</td>
-                                            <td>
-                                                @if (!string.IsNullOrWhiteSpace(log.Pregunta))
-                                                {
-                                                    @(log.Pregunta.Length > 90
-                                                                                            ? log.Pregunta.Substring(0, 90) + "..."
-                                                                                            : log.Pregunta)
-                                                                                }
-                                            </td>
-                                            <td>@log.HerramientaUsada</td>
-                                            <td>@log.TiempoRespuestaMs ms</td>
-                                            <td>@log.TokensUsados</td>
-                                            <td>
-                                                <span class="badge bg-@badge">@estado</span>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="8" class="text-muted">No existen consultas registradas.</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Similitud promedio</p>
+                    <h3 class="mb-0">@FormatNumber(Model.SimilitudPromedioAgente, 4)</h3>
+                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Similitud máxima</p>
+                    <h3 class="mb-0">@FormatNumber(Model.SimilitudMaximaAgente, 4)</h3>
+                    <small class="text-muted">Ignora valores guardados en 0.</small>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <h4 class="mb-3">Distribución general</h4>
+    <!-- ========================= -->
+    <!-- LOGS DEL SISTEMA -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
 
-    <div class="row g-3 mb-5">
+        <div class="col-12">
+            <h4 class="mb-3">Logs del sistema</h4>
+        </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Reservas por servicio</h5>
-
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Servicio</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.ReservasPorServicio != null && Model.ReservasPorServicio.Any())
-                            {
-                                foreach (var item in Model.ReservasPorServicio)
-                                {
-                                    <tr>
-                                        <td>@item.Key</td>
-                                        <td>@item.Value</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="2" class="text-muted">No hay reservas registradas.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
+                    <p class="text-muted mb-1">Total logs</p>
+                    <h3 class="mb-0">@Model.TotalLogsSistema</h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Usuarios por rol</h5>
-
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Rol</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.UsuariosPorRol != null && Model.UsuariosPorRol.Any())
-                            {
-                                foreach (var item in Model.UsuariosPorRol)
-                                {
-                                    <tr>
-                                        <td>@item.Key</td>
-                                        <td>@item.Value</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="2" class="text-muted">No hay usuarios registrados.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
+                    <p class="text-muted mb-1">Exitosos</p>
+                    <h3 class="mb-0">@Model.LogsSistemaExitosos</h3>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-body">
-                    <h5 class="mb-3">Citas por cliente</h5>
-
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.CitasPorCliente != null && Model.CitasPorCliente.Any())
-                            {
-                                foreach (var item in Model.CitasPorCliente.Take(10))
-                                {
-                                    <tr>
-                                        <td>@item.Key</td>
-                                        <td>@item.Value</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="2" class="text-muted">No hay citas registradas por cliente.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
+                    <p class="text-muted mb-1">Errores</p>
+                    <h3 class="mb-0">@Model.LogsSistemaError</h3>
                 </div>
             </div>
         </div>
 
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Latencia promedio</p>
+                    <h3 class="mb-0">@FormatNumber(Model.LatenciaPromedioSistema) ms</h3>
+                    <small class="text-muted">Ignora valores guardados en 0.</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- DISTRIBUCIONES -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Reservas por servicio</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ReservasPorServicio.Any())
+                    {
+                        foreach (var item in Model.ReservasPorServicio.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalCitas == 0 ? 0 : Math.Round((double)item.Value / Model.TotalCitas * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay reservas por servicio para mostrar.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Usuarios por rol</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.UsuariosPorRol.Any())
+                    {
+                        foreach (var item in Model.UsuariosPorRol.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalUsuarios == 0 ? 0 : Math.Round((double)item.Value / Model.TotalUsuarios * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay usuarios por rol para mostrar.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Herramientas usadas por el agente</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.HerramientasUsadas.Any())
+                    {
+                        foreach (var item in Model.HerramientasUsadas.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalConsultasAgente == 0 ? 0 : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            Todavía no hay herramientas registradas por el agente.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Consultas por tipo</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ConsultasPorTipo.Any())
+                    {
+                        foreach (var item in Model.ConsultasPorTipo.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalConsultasAgente == 0 ? 0 : Math.Round((double)item.Value / Model.TotalConsultasAgente * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            Todavía no hay tipos de consulta registrados.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Logs del sistema por tipo</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.LogsSistemaPorTipo.Any())
+                    {
+                        foreach (var item in Model.LogsSistemaPorTipo.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalLogsSistema == 0 ? 0 : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay logs por tipo para mostrar.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Logs del sistema por entidad</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.LogsSistemaPorEntidad.Any())
+                    {
+                        foreach (var item in Model.LogsSistemaPorEntidad.OrderByDescending(x => x.Value))
+                        {
+                            var porcentaje = Model.TotalLogsSistema == 0 ? 0 : Math.Round((double)item.Value / Model.TotalLogsSistema * 100, 2);
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>@item.Key</span>
+                                    <strong>@item.Value</strong>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar"
+                                         style="width: @porcentaje.ToString(System.Globalization.CultureInfo.InvariantCulture)%;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay logs por entidad para mostrar.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- CITAS POR CLIENTE -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Citas por cliente</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.CitasPorCliente.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ClienteId</th>
+                                        <th class="text-end">Cantidad de citas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.CitasPorCliente.OrderByDescending(x => x.Value))
+                                    {
+                                        <tr>
+                                            <td>@item.Key</td>
+                                            <td class="text-end">
+                                                <span class="badge bg-primary">@item.Value</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No hay citas asociadas a clientes.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- ÚLTIMOS LOGS DEL AGENTE -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Últimos logs del agente</h5>
+                    <span class="badge bg-secondary">@Model.UltimosLogsAgente.Count registros</span>
+                </div>
+                <div class="card-body">
+                    @if (Model.UltimosLogsAgente.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Tipo</th>
+                                        <th>Pregunta</th>
+                                        <th>Herramienta</th>
+                                        <th>Resultados</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.UltimosLogsAgente)
+                                    {
+                                        <tr>
+                                            <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@log.UsuarioId</td>
+                                            <td>@log.Tipo</td>
+                                            <td style="max-width: 350px;">
+                                                <span title="@log.Pregunta">
+                                                    @(log.Pregunta.Length > 80 ? log.Pregunta.Substring(0, 80) + "..." : log.Pregunta)
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(log.HerramientaUsada))
+                                                {
+                                                    <span class="badge bg-info text-dark">@log.HerramientaUsada</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Sin herramienta</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @(log.CantidadResultados.HasValue? log.CantidadResultados.Value.ToString() : "N/A")
+                                            </td>
+                                            <td>
+                                                @if (log.ConsultaExitosa && string.IsNullOrWhiteSpace(log.MensajeError))
+                                                {
+                                                    <span class="badge bg-success">Exitosa</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Error</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            Todavía no hay logs del agente. Esto es normal si aún no estás guardando cada consulta del asistente en la tabla <strong>LogsAgente</strong>.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- ÚLTIMOS LOGS DEL SISTEMA -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Últimos logs del sistema</h5>
+                    <span class="badge bg-secondary">@Model.UltimosLogsSistema.Count registros</span>
+                </div>
+                <div class="card-body">
+                    @if (Model.UltimosLogsSistema.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Mensaje</th>
+                                        <th>Entidad</th>
+                                        <th>EntidadId</th>
+                                        <th>Latencia</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.UltimosLogsSistema)
+                                    {
+                                        <tr>
+                                            <td>@log.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@log.Tipo</td>
+                                            <td style="max-width: 420px;">
+                                                <span title="@log.Mensaje">
+                                                    @(log.Mensaje.Length > 90 ? log.Mensaje.Substring(0, 90) + "..." : log.Mensaje)
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(log.Entidad))
+                                                {
+                                                    @log.Entidad
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">N/A</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(log.EntidadId))
+                                                {
+                                                    @log.EntidadId
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">N/A</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (log.LatenciaMs.HasValue && log.LatenciaMs.Value > 0)
+                                                {
+                                                    <span>@log.LatenciaMs ms</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">N/A</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (log.Exitoso)
+                                                {
+                                                    <span class="badge bg-success">Exitoso</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Error</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            No hay logs del sistema registrados.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        const logsSistemaTipoLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(logsSistemaTipoLabels));
-        const logsSistemaTipoData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(logsSistemaTipoData));
-
-        const logsSistemaEntidadLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(logsSistemaEntidadLabels));
-        const logsSistemaEntidadData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(logsSistemaEntidadData));
-
-        const consultasAgenteTipoLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(consultasAgenteTipoLabels));
-        const consultasAgenteTipoData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(consultasAgenteTipoData));
-
-        const herramientasAgenteLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(herramientasAgenteLabels));
-        const herramientasAgenteData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(herramientasAgenteData));
-
-        function crearGrafico(id, tipo, labels, data, label) {
-            const canvas = document.getElementById(id);
-
-            if (!canvas) {
-                return;
-            }
-
-            new Chart(canvas, {
-                type: tipo,
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: label,
-                        data: data
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: tipo !== 'bar'
-                        }
-                    },
-                    scales: tipo === 'bar'
-                        ? {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    precision: 0
-                                }
-                            }
-                        }
-                        : {}
-                }
-            });
-        }
-
-        crearGrafico(
-            'chartVectorizacion',
-            'doughnut',
-            ['Con vector', 'Sin vector'],
-            [@Model.CitasConVector, @Model.CitasSinVector],
-            'Citas'
-        );
-
-        crearGrafico(
-            'chartLogsSistemaEstado',
-            'doughnut',
-            ['Exitosos', 'Con error'],
-            [@Model.LogsSistemaExitosos, @Model.LogsSistemaError],
-            'Logs'
-        );
-
-        crearGrafico(
-            'chartLogsSistemaTipo',
-            'bar',
-            logsSistemaTipoLabels,
-            logsSistemaTipoData,
-            'Logs por tipo'
-        );
-
-        crearGrafico(
-            'chartLogsSistemaEntidad',
-            'bar',
-            logsSistemaEntidadLabels,
-            logsSistemaEntidadData,
-            'Logs por entidad'
-        );
-
-        crearGrafico(
-            'chartAgenteEstado',
-            'doughnut',
-            ['Exitosas', 'Con error'],
-            [@Model.ConsultasExitosasAgente, @Model.ConsultasErrorAgente],
-            'Consultas'
-        );
-
-        crearGrafico(
-            'chartConsultasAgenteTipo',
-            'bar',
-            consultasAgenteTipoLabels,
-            consultasAgenteTipoData,
-            'Consultas por tipo'
-        );
-
-        crearGrafico(
-            'chartHerramientasAgente',
-            'doughnut',
-            herramientasAgenteLabels,
-            herramientasAgenteData,
-            'Herramientas'
-        );
-    </script>
-}
