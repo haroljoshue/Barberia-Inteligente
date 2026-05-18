@@ -35,8 +35,9 @@ namespace Barberia.MVC.Controllers
                 HistorialCitas = citas,
                 CitasPendientes = citas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Pendiente),
                 CitasCompletadas = citas.Count(c => c.Estado == ModelosBarberia.Enum.EstadoCita.Atendida),
+                // 💡 CORRECCIÓN: Usamos DateTime.UtcNow para emparejar con el formato de la API y Supabase
                 ProximaCita = citas
-                    .Where(c => c.FechaHora >= DateTime.Now &&
+                    .Where(c => c.FechaHora >= DateTime.UtcNow &&
                                 c.Estado != ModelosBarberia.Enum.EstadoCita.Cancelada)
                     .OrderBy(c => c.FechaHora)
                     .FirstOrDefault()
@@ -52,14 +53,13 @@ namespace Barberia.MVC.Controllers
             var barberos = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
             var servicios = await client.GetFromJsonAsync<List<Servicio>>("api/servicios") ?? new();
 
-            // ✅ Usa BarberoSelectItem con Id int, no ApplicationUser
             var vm = new AgendarCitaViewModel
             {
                 Barberos = barberos
                     .Where(b => b.Disponible)
                     .Select(b => new BarberoSelectItem
                     {
-                        Id = b.Id,          // ← int correcto
+                        Id = b.Id,
                         Nombre = b.Nombre
                     })
                     .ToList(),
@@ -93,14 +93,38 @@ namespace Barberia.MVC.Controllers
         public async Task<IActionResult> Cancelar(int citaId)
         {
             var client = _httpClientFactory.CreateClient("BarberiaApi");
-            var response = await client.PutAsJsonAsync(
-                $"api/citas/{citaId}/estado",
-                ModelosBarberia.Enum.EstadoCita.Cancelada);
 
-            TempData[response.IsSuccessStatusCode ? "Success" : "Error"] = response.IsSuccessStatusCode
-                ? "Cita cancelada."
-                : "No se pudo cancelar la cita.";
+            // 💡 CORRECCIÓN: Primero obtenemos la cita existente para no perder sus datos nativos
+            var citaResponse = await client.GetAsync($"api/citas/{citaId}");
 
+            if (!citaResponse.IsSuccessStatusCode)
+            {
+                TempData["Error"] = "No se encontró la cita a cancelar.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var cita = await citaResponse.Content.ReadFromJsonAsync<Cita>();
+            if (cita != null)
+            {
+                // Cambiamos el estado a Cancelada
+                cita.Estado = ModelosBarberia.Enum.EstadoCita.Cancelada;
+
+                // Aseguramos que las navegaciones vayan en null para evitar el Error 400 que arreglamos antes
+                cita.Cliente = null;
+                cita.Barbero = null;
+                cita.Servicio = null;
+
+                // Enviamos la actualización al PUT completo que ya sabemos que funciona
+                var response = await client.PutAsJsonAsync($"api/citas/{citaId}", cita);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["Success"] = "Cita cancelada con éxito.";
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            TempData["Error"] = "No se pudo cancelar la cita.";
             return RedirectToAction(nameof(Index));
         }
     }
