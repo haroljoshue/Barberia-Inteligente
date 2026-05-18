@@ -1218,3 +1218,137 @@ hr {
 .breadcrumb-item.active {
     color: var(--color-text-muted) !important;
 }
+
+
+/* Espacio superior en páginas de formulario */
+.container.my-5,
+.container.section {
+    padding-top: 2rem !important;
+}
+
+main > .container:first-child {
+    margin-top: 2rem !important;
+}
+
+/* ============================================
+   🧭 NAVBAR MODERNO
+   ============================================ */
+.navbar-modern {
+    background-color: var(--color-surface) !important;
+    border-bottom: 1px solid var(--color-border-light) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.brand-mark {
+    width: 38px !important;
+    height: 38px !important;
+    background-color: var(--color-primary) !important;
+    border-radius: var(--border-radius-md) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-size: 1.1rem !important;
+}
+
+.brand-accent {
+    color: var(--color-secondary) !important;
+}
+
+.nav-link-custom {
+    font-weight: 500 !important;
+    color: var(--color-text-secondary) !important;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: var(--border-radius-sm) !important;
+    transition: all var(--transition-fast) !important;
+}
+
+    .nav-link-custom:hover {
+        color: var(--color-primary) !important;
+        background-color: rgba(124, 152, 133, 0.1) !important;
+    }
+
+.auth-area {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.role-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    padding: 0.45rem 1rem !important;
+    border-radius: var(--border-radius-md) !important;
+    background-color: var(--color-primary) !important;
+    color: white !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: all var(--transition-fast) !important;
+}
+
+    .role-btn:hover {
+        background-color: var(--color-primary-dark) !important;
+        color: white !important;
+        transform: translateY(-1px) !important;
+    }
+
+/* ============================================
+   👣 FOOTER MODERNO
+   ============================================ */
+.site-footer {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+    border-top: none !important;
+}
+
+.footer-title {
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    color: white !important;
+}
+
+.footer-accent {
+    color: var(--color-secondary-light) !important;
+}
+
+.site-footer small {
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.site-footer .text-muted {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* ============================================
+   💬 CHAT N8N - POSICIÓN Y ESTILO
+   ============================================ */
+#n8n-chat {
+    --chat--color-primary: var(--color-primary) !important;
+    --chat--color-primary-shade-50: var(--color-primary-dark) !important;
+    --chat--color-secondary: var(--color-secondary) !important;
+    --chat--border-radius: 16px !important;
+    --chat--window--width: 380px !important;
+    --chat--window--height: 520px !important;
+}
+
+/* Botón flotante del chat */
+.n8n-chat-window-toggle {
+    bottom: 2rem !important;
+    right: 2rem !important;
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50% !important;
+    background-color: var(--color-primary) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Ventana del chat */
+.n8n-chat-window {
+    bottom: 5rem !important;
+    right: 2rem !important;
+    border-radius: var(--border-radius-xl) !important;
+    box-shadow: var(--shadow-xl) !important;
+    border: 1px solid var(--color-border-light) !important;
+}

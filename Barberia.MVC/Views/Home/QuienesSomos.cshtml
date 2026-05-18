@@ -1,101 +1,87 @@
 ﻿@{
-    ViewData["Title"] = "Quiénes Somos - Barbershop's Ibarra";
+    ViewData["Title"] = "Quiénes Somos";
 }
 
-<div>
-
+<!-- Hero -->
+<div style="position:relative;height:400px;overflow:hidden">
     <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=1400&auto=format&fit=crop"
-         alt="Barbería"
-         width="100%" />
-
-    <h1>Quiénes Somos</h1>
-
-    <p>
-        Tradición, estilo y confianza en cada corte.
-    </p>
-
+         alt="Barbería" style="width:100%;height:100%;object-fit:cover" />
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem">
+        <h1 class="text-white fw-bold mb-2" style="font-size:2.5rem">Quiénes Somos</h1>
+        <p class="text-white opacity-75 fs-5">Tradición, estilo y confianza en cada corte.</p>
+    </div>
 </div>
 
-<hr />
+<div class="container section">
 
-<div>
+    <!-- Historia -->
+    <div class="row align-items-center g-5 mb-5">
+        <div class="col-md-6">
+            <h2 class="text-primary mb-3">📖 Nuestra Historia</h2>
+            <p>Barbershop's Ibarra nació con la visión de crear un espacio donde el cuidado personal se convierta en una experiencia única.</p>
+            <p>Desde nuestros inicios hemos combinado la barbería clásica con tendencias modernas para ofrecer un servicio de calidad que supere las expectativas de cada cliente.</p>
+        </div>
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=800&auto=format&fit=crop"
+                 alt="Barbero trabajando" class="img-rounded w-100" style="height:280px;object-fit:cover" />
+        </div>
+    </div>
 
-    <h2>Nuestra Historia</h2>
+    <hr />
 
-    <p>
-        Barbershop's Ibarra nació con la visión de crear un espacio
-        donde el cuidado personal se convierta en una experiencia única.
-    </p>
+    <!-- Misión y Valores -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="fs-1 mb-3">🎯</div>
+                    <h4 class="card-title text-primary">Nuestra Misión</h4>
+                    <p class="card-text">Brindar a cada cliente confianza, estilo y una experiencia profesional en cada visita, combinando técnica, pasión y atención personalizada.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="fs-1 mb-3">💎</div>
+                    <h4 class="card-title text-primary">Nuestros Valores</h4>
+                    <ul class="lista-servicios">
+                        <li><span>✅ Profesionalismo</span></li>
+                        <li><span>💡 Innovación</span></li>
+                        <li><span>🤝 Confianza</span></li>
+                        <li><span>❤️ Pasión por el detalle</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <p>
-        Desde nuestros inicios hemos combinado la barbería clásica
-        con tendencias modernas para ofrecer un servicio de calidad.
-    </p>
+    <hr />
 
-    <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=1200&auto=format&fit=crop"
-         alt="Barbero trabajando"
-         width="100%" />
+    <!-- Lo que ofrecemos -->
+    <div class="row align-items-center g-5 mb-5">
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1512690459411-b0fd1c86b8c8?q=80&w=800&auto=format&fit=crop"
+                 alt="Servicios" class="img-rounded w-100" style="height:280px;object-fit:cover" />
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-primary mb-3">✂️ Lo que Ofrecemos</h2>
+            <p>Cortes clásicos y modernos, fades, taper, perfilado de barba y atención personalizada para cada estilo y personalidad.</p>
+            <p>Utilizamos productos de primera línea para garantizar el mejor resultado en cada servicio.</p>
+        </div>
+    </div>
 
-</div>
-
-<hr />
-
-<div>
-
-    <h2>Nuestra Misión</h2>
-
-    <p>
-        Brindar a cada cliente confianza, estilo y una experiencia
-        profesional en cada visita.
-    </p>
-
-</div>
-
-<hr />
-
-<div>
-
-    <h2>Nuestros Valores</h2>
-
-    <ul>
-        <li>Profesionalismo</li>
-        <li>Innovación</li>
-        <li>Confianza</li>
-        <li>Pasión por el detalle</li>
-    </ul>
-
-</div>
-
-<hr />
-
-<div>
-
-    <h2>Lo que Ofrecemos</h2>
-
-    <p>
-        Cortes clásicos y modernos, fades, taper, perfilado de barba
-        y atención personalizada.
-    </p>
-
-    <img src="https://images.unsplash.com/photo-1512690459411-b0fd1c86b8c8?q=80&w=1200&auto=format&fit=crop"
-         alt="Servicios de barbería"
-         width="100%" />
-
-</div>
-
-<hr />
-
-<div>
-
-    <h2>Visítanos</h2>
-
-    <p>
-        Estamos listos para atenderte y ayudarte a encontrar
-        el estilo que mejor te representa.
-    </p>
-
-    <a asp-controller="Cliente" asp-action="Agendar">
-        Reservar Cita
-    </a>
+    <!-- CTA -->
+    <div class="card text-white text-center py-5"
+         style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));border:none">
+        <div class="card-body">
+            <div class="fs-1 mb-2">📅</div>
+            <h3 class="text-white fw-bold">¿Listo para tu próximo corte?</h3>
+            <p style="color:rgba(255,255,255,0.85)">Estamos listos para atenderte y ayudarte a encontrar el estilo que mejor te representa.</p>
+            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-secondary btn-lg mt-2 fw-bold">
+                Reservar Cita
+            </a>
+        </div>
+    </div>
 
 </div>
