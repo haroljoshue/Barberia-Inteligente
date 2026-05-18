@@ -73,9 +73,9 @@
 /* ============================================
    🌐 ESTILOS GLOBALES
    ============================================ */
-body.barberia *,
-body.barberia *::before,
-body.barberia *::after {
+body.barberia .container *,
+body.barberia .section *,
+body.barberia .card * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -1295,7 +1295,7 @@ main > .container:first-child {
         transform: translateY(-1px) !important;
     }
 
-/* Botón flotante del chat */
+/* Botón flotante abrir/cerrar */
 #chat-bubble {
     position: fixed;
     bottom: 1.5rem;
@@ -1303,27 +1303,60 @@ main > .container:first-child {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #7C9885; /* color primario */
-    color: #fff;
+    background-color: var(--color-primary); /* tu verde pastel */
+    color: var(--color-text-light);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
     cursor: pointer;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    box-shadow: var(--shadow-md);
     z-index: 9999;
-    transition: all 0.25s ease;
+    transition: all var(--transition-fast);
 }
 
     #chat-bubble:hover {
-        background-color: #5A7A63; /* primario oscuro */
+        background-color: var(--color-primary-dark);
         transform: scale(1.1);
     }
 
-/* Responsive para móviles */
-@media (max-width: 576px) {
-    #chat-bubble {
-        bottom: 1rem;
-        right: 1rem;
-    }
+/* Header del chat */
+#n8n-chat-mount .chat-header {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 1rem;
+    text-align: center;
 }
+
+/* Burbuja de mensajes del sistema */
+#n8n-chat-mount .chat-message {
+    background-color: var(--color-secondary); /* marrón pastel */
+    color: var(--color-text-light);
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    max-width: 80%;
+    margin-bottom: 0.5rem;
+}
+
+    /* Burbuja de mensajes del usuario */
+    #n8n-chat-mount .chat-message.user {
+        background-color: var(--color-accent); /* lila pastel */
+        color: var(--color-text-light);
+    }
+
+/* Botón enviar */
+#n8n-chat-mount .chat-input-send-button {
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast);
+}
+
+    #n8n-chat-mount .chat-input-send-button:hover {
+        background-color: var(--color-secondary-dark);
+    }

@@ -78,3 +78,35 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('citasPorMesChart').getContext('2d');
+        const citasPorMesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Mes))),
+                datasets: [
+                    {
+                        label: 'Total Citas',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Total))),
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    },
+                    {
+                        label: 'Ganancias',
+                        data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CitasPorMes.Select(m => m.Ganancias))),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Citas y Ganancias por Mes' }
+                }
+            }
+        });
+    </script>
+}
