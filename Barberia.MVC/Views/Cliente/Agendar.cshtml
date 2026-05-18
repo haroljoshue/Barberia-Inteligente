@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Agendar Cita";
     var servicioPreseleccionado = Context.Request.Query["servicioId"].ToString();
+
+    // 💡 SOLUCIÓN: Evaluamos aquí si el servicio inicial debe estar seleccionado
+    var sinServicio = string.IsNullOrEmpty(servicioPreseleccionado) ? "selected" : "";
 }
 
 <div class="container my-5">
@@ -32,25 +35,21 @@
                     <form asp-action="Agendar" method="post">
                         @Html.AntiForgeryToken()
 
-                        <!-- 1. Elige el Servicio -->
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">1. Elige el Servicio</label>
                             <select name="ServicioId" class="form-select form-select-lg" required>
-                                <!-- 💡 CORRECCIÓN: Operador ternario limpio dentro de las comillas del atributo HTML -->
-                                <option value="" disabled @(string.IsNullOrEmpty(servicioPreseleccionado) ? "selected" : "")>
+                                <option value="" disabled selected="@(string.IsNullOrEmpty(servicioPreseleccionado) ? "selected" : null)">
                                     -- Selecciona un servicio --
                                 </option>
                                 @foreach (var servicio in Model.Servicios)
                                 {
-                                    <!-- 💡 CORRECCIÓN: Simplificado usando una sola línea limpia -->
-                                    <option value="@servicio.Id" @(servicio.Id.ToString() == servicioPreseleccionado ? "selected" : "")>
+                                    <option value="@servicio.Id" selected="@(servicio.Id.ToString() == servicioPreseleccionado ? "selected" : null)">
                                         @servicio.Nombre ($@servicio.Precio.ToString("F2"))
                                     </option>
                                 }
                             </select>
                         </div>
 
-                        <!-- 2. Selecciona tu Barbero -->
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">2. Selecciona tu Barbero</label>
                             <select name="BarberoId" class="form-select form-select-lg" required>
@@ -62,15 +61,13 @@
                             </select>
                         </div>
 
-                        <!-- 3. Fecha y Hora -->
                         <div class="mb-3">
                             <label class="form-label fw-bold text-secondary">3. Fecha y Hora de la Cita</label>
                             <input type="datetime-local"
                                    name="FechaHora"
                                    id="fechaHoraInput"
-                                   class="form-control form-control-lg" 
+                                   class="form-control form-control-lg"
                                    required />
-                            <!-- 💡 NOTA: Cambié la clase de "form-select" a "form-control" ya que es un input, no un select -->
                             <div class="form-text text-muted small">Nota: Respeta los horarios de atención de la barbería.</div>
                         </div>
 

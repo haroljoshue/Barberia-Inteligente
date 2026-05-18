@@ -1612,3 +1612,98 @@ main > .container:first-child {
     min-width: unset !important;
     width: auto !important;
 }
+
+/* Contenedor principal del footer del chat */
+.chat-footer {
+    background-color: #ffffff !important;
+    border-top: 1px solid #e5e7eb !important;
+    padding: 12px 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Envoltura del input */
+.chat-input {
+    width: 100% !important;
+    max-width: 900px !important; /* Limita el ancho en pantallas grandes para que no se estire feo */
+    margin: 0 auto !important;
+}
+
+/* Contenedor interno que agrupa el textarea y los controles */
+.chat-inputs {
+    display: flex !important;
+    align-items: flex-end !important; /* Alinea el botón abajo si el textarea crece */
+    background-color: #f3f4f6 !important; /* Fondo gris claro moderno */
+    border: 1px solid #e5e7eb !important;
+    border-radius: 24px !important; /* Bordes redondeados elegantes */
+    padding: 8px 12px !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+    /* Efecto cuando el usuario está escribiendo */
+    .chat-inputs:focus-within {
+        background-color: #ffffff !important;
+        border-color: #fbbf24 !important; /* Color dorado/amarillo para hacer match con tu marca */
+        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
+    }
+
+    /* Estilos para la caja de texto (textarea) */
+    .chat-inputs textarea {
+        flex: 1 !important;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        resize: none !important; /* Evita que el usuario lo deforme manualmente */
+        font-family: inherit !important;
+        font-size: 15px !important;
+        line-height: 20px !important;
+        color: #1f2937 !important;
+        padding: 8px 4px !important;
+        margin: 0 !important;
+        max-height: 150px !important; /* Por si el texto es muy largo, activa scroll interno */
+    }
+
+/* Contenedor del botón de enviar */
+.chat-inputs-controls {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-left: 8px !important;
+}
+
+/* Botón de enviar */
+.chat-input-send-button {
+    background-color: #fbbf24 !important; /* Color dorado/amarillo activo */
+    color: #1f2937 !important;
+    border: none !important;
+    border-radius: 50% !important; /* Botón completamente circular */
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+}
+
+    /* Efecto Hover sobre el botón de enviar */
+    .chat-input-send-button:not([disabled]):hover {
+        background-color: #f59e0b !important; /* Un tono más oscuro al pasar el mouse */
+        transform: scale(1.05) !important;
+    }
+
+    /* Estado Deshabilitado (cuando el input está vacío) */
+    .chat-input-send-button:disabled {
+        background-color: #e5e7eb !important; /* Gris claro */
+        color: #9ca3af !important; /* Icono gris oscuro */
+        cursor: not-allowed !important;
+        transform: none !important;
+    }
+
+    /* Ajuste del icono SVG interno */
+    .chat-input-send-button svg {
+        width: 20px !important;
+        height: 20px !important;
+        transform: rotate(0deg) !important; /* Por si necesitas ajustar la inclinación del avión */
+    }
