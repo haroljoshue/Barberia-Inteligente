@@ -1,66 +1,118 @@
 ﻿@model List<ModelosBarberia.Servicio>
-
 @{
     ViewData["Title"] = "Inicio - Barbershop's Ibarra";
 }
 
-<div>
-
+<!-- Hero -->
+<div style="position:relative;height:520px;overflow:hidden">
     <img src="https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=1400&auto=format&fit=crop"
-         alt="Barbería"
-         width="100%" />
-
-    <h1>Barbershop's Ibarra</h1>
-
-    <p>
-        Tu estilo, nuestra pasión. Descubre lo mejor en cortes,
-        afeitados y cuidado personal.
-    </p>
-
-    <p>
-        <a asp-controller="Cliente" asp-action="Agendar">
-            Reservar Ahora
-        </a>
-    </p>
-
+         alt="Barbería" style="width:100%;height:100%;object-fit:cover" />
+    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem">
+        <h1 class="text-white fw-bold mb-3" style="font-size:3rem;font-family:var(--font-heading)">
+            Barbershop's <span style="color:var(--color-secondary-light)">Ibarra</span>
+        </h1>
+        <p class="text-white opacity-75 fs-5 mb-4">
+            Tu estilo, nuestra pasión. Descubre lo mejor en cortes, afeitados y cuidado personal.
+        </p>
+        <div class="d-flex gap-3 flex-wrap justify-content-center">
+            <a asp-controller="Cliente" asp-action="Agendar" class="btn btn-secondary btn-lg fw-bold px-4">
+                Reservar Ahora
+            </a>
+            <a asp-controller="Barberos" asp-action="Barberos" class="btn btn-outline-light btn-lg px-4">
+                Ver Barberos
+            </a>
+        </div>
+    </div>
 </div>
 
-<hr />
+<div class="container section">
 
-<div>
-
-    <h2>Nuestro Espacio</h2>
-
+    <!-- Nuestro Espacio -->
+    <div class="text-center mb-4">
+        <h2 class="text-primary">Nuestro Espacio</h2>
+        <p class="text-muted">Un ambiente moderno y acogedor para tu experiencia</p>
+    </div>
     <img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1200&auto=format&fit=crop"
-         alt="Interior barbería"
-         width="100%" />
+         alt="Interior barbería" class="img-rounded w-100 mb-5" style="height:350px;object-fit:cover" />
 
-</div>
+    <hr />
 
-<hr />
-
-<div>
-
-    <h2>¿Por qué elegirnos?</h2>
-
-    <div>
-        <h3>Experiencia Profesional</h3>
-        <p>Más de 10 años ofreciendo servicios de barbería.</p>
+    <!-- Por qué elegirnos -->
+    <div class="text-center my-5">
+        <h2 class="text-primary mb-2">⭐ ¿Por qué elegirnos?</h2>
+        <p class="text-muted">Más que una barbería, una experiencia</p>
     </div>
 
-    <div>
-        <h3>Puntualidad</h3>
-        <p>Valoramos tu tiempo y respetamos cada cita.</p>
+    <div class="row g-4 mb-5">
+        @{
+            var razones = new[]
+            {
+        new { Icono = "🏆", Titulo = "Experiencia Profesional", Texto = "Más de 10 años ofreciendo servicios de barbería de primera calidad." },
+        new { Icono = "⏰", Titulo = "Puntualidad", Texto = "Valoramos tu tiempo y respetamos cada cita al máximo." },
+        new { Icono = "✨", Titulo = "Calidad Garantizada", Texto = "Trabajamos con productos y herramientas de la más alta calidad." },
+        new { Icono = "📱", Titulo = "Reservas en Línea", Texto = "Agenda tu cita de forma rápida, fácil y sencilla desde donde estés." },
+        };
+        }
+        @foreach (var r in razones)
+        {
+            <div class="col-6 col-md-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <div class="fs-1 mb-2">@r.Icono</div>
+                        <h5 class="card-title">@r.Titulo</h5>
+                        <p class="card-text small">@r.Texto</p>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
-    <div>
-        <h3>Calidad Garantizada</h3>
-        <p>Trabajamos con productos y herramientas de calidad.</p>
-    </div>
+    <hr />
 
-    <div>
-        <h3>Reservas en Línea</h3>
-        <p>Agenda tu cita de forma rápida y sencilla.</p>
+    <!-- Servicios destacados -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="text-center my-5">
+            <h2 class="text-primary mb-2">Servicios Destacados</h2>
+            <p class="text-muted">Lo que mejor hacemos</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            @foreach (var s in Model.Where(x => x.Activo).Take(3))
+            {
+                <div class="col-12 col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="fs-1 mb-2">✂️</div>
+                            <h5 class="card-title">@s.Nombre</h5>
+                            <p class="card-text small">@(s.Descripcion ?? "Servicio profesional de barbería.")</p>
+                            <div class="precio mb-3">$@s.Precio.ToString("F2")</div>
+                            <a asp-controller="Cliente" asp-action="Agendar"
+                               asp-route-servicioId="@s.Id"
+                               class="btn btn-outline-primary btn-sm">
+                                Reservar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- CTA final -->
+    <div class="card text-white text-center py-5"
+         style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));border:none">
+        <div class="card-body">
+            <div class="fs-1 mb-2"></div>
+            <h3 class="text-white fw-bold">¡Promoción Especial!</h3>
+            <p style="color:rgba(255,255,255,0.85)">
+                Corte + arreglo de barba a precio especial todos los viernes.
+            </p>
+            <a asp-controller="Cliente" asp-action="Agendar"
+               class="btn btn-secondary btn-lg fw-bold px-5 mt-2">
+                Reservar Ahora
+            </a>
+        </div>
     </div>
 
 </div>
