@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ModelosBarberia;
 using Barberia.Api.Data;
+using ModelosBarberia;
+using ModelosBarberia.DTOs;
 using ModelosBarberia.Enum;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,12 @@ namespace Barberia.Api.Controllers
             _context = context;
         }
 
-        // GET: api/citas
+        // GET: api/Citas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cita>>> GetCitas()
         {
-            // Construimos estructuras limpias mapeadas a la entidad original para que MVC la entienda
-            var citas = await _context.Citas
+            // Proyección limpia a la clase Cita para evitar bucles infinitos en el JSON
+            return await _context.Citas
                 .Select(c => new Cita
                 {
                     Id = c.Id,
@@ -38,36 +39,18 @@ namespace Barberia.Api.Controllers
                     Observacion = c.Observacion,
                     PrecioFinal = c.PrecioFinal,
                     FechaRegistro = c.FechaRegistro,
-                    IdVector = c.IdVector,
-                    Cliente = c.Cliente == null ? null! : new ApplicationUser
-                    {
-                        Id = c.Cliente.Id,
-                        NombreCompleto = c.Cliente.NombreCompleto,
-                        Email = c.Cliente.Email
-                    },
-                    Barbero = c.Barbero == null ? null! : new Barbero
-                    {
-                        Id = c.Barbero.Id,
-                        Nombre = c.Barbero.Nombre
-                    },
-                    Servicio = c.Servicio == null ? null! : new Servicio
-                    {
-                        Id = c.Servicio.Id,
-                        Nombre = c.Servicio.Nombre,
-                        Precio = c.Servicio.Precio
-                    }
+                    Cliente = c.Cliente == null ? null! : new ApplicationUser { Id = c.Cliente.Id, NombreCompleto = c.Cliente.NombreCompleto, Email = c.Cliente.Email },
+                    Barbero = c.Barbero == null ? null! : new Barbero { Id = c.Barbero.Id, Nombre = c.Barbero.Nombre },
+                    Servicio = c.Servicio == null ? null! : new Servicio { Id = c.Servicio.Id, Nombre = c.Servicio.Nombre, Precio = c.Servicio.Precio }
                 })
                 .ToListAsync();
-
-            return Ok(citas);
         }
 
-        // GET: api/citas/cliente/{clienteId}
+        // GET: api/Citas/cliente/{clienteId} -> REQUERIDO POR MVC (ClienteController)
         [HttpGet("cliente/{clienteId}")]
         public async Task<ActionResult<IEnumerable<Cita>>> ObtenerPorCliente(string clienteId)
         {
-            // Este endpoint lo lee directamente tu index del MVC como List<Cita>
-            var citas = await _context.Citas
+            return await _context.Citas
                 .Where(c => c.ClienteId == clienteId)
                 .OrderByDescending(c => c.FechaHora)
                 .Select(c => new Cita
@@ -81,57 +64,66 @@ namespace Barberia.Api.Controllers
                     Observacion = c.Observacion,
                     PrecioFinal = c.PrecioFinal,
                     FechaRegistro = c.FechaRegistro,
-                    Barbero = c.Barbero == null ? null! : new Barbero
-                    {
-                        Id = c.Barbero.Id,
-                        Nombre = c.Barbero.Nombre,
-                        Especialidad = c.Barbero.Especialidad
-                    },
-                    Servicio = c.Servicio == null ? null! : new Servicio
-                    {
-                        Id = c.Servicio.Id,
-                        Nombre = c.Servicio.Nombre,
-                        Precio = c.Servicio.Precio
-                    }
+                    Barbero = c.Barbero == null ? null! : new Barbero { Id = c.Barbero.Id, Nombre = c.Barbero.Nombre, Especialidad = c.Barbero.Especialidad },
+                    Servicio = c.Servicio == null ? null! : new Servicio { Id = c.Servicio.Id, Nombre = c.Servicio.Nombre, Precio = c.Servicio.Precio }
                 })
                 .ToListAsync();
-
-            return Ok(citas);
         }
 
-        // POST: api/citas
+        // GET: api/Citas/barbero/{barberoId} -> REQUERIDO POR MVC (BarberoController)
+        [HttpGet("barbero/{barberoId}")]
+        public async Task<ActionResult<IEnumerable<CitaBarberoDto>>> ObtenerPorBarbero(int barberoId)
+        {
+            return await _context.Citas
+                .Where(c => c.BarberoId == barberoId)
+                .OrderBy(c => c.FechaHora)
+                .Select(c => new CitaBarberoDto
+                {
+                    Id = c.Id,
+                    ClienteNombre = c.Cliente != null ? c.Cliente.NombreCompleto : "Sin cliente",
+                    ServicioNombre = c.Servicio != null ? c.Servicio.Nombre : "Sin servicio",
+                    FechaHora = c.FechaHora,
+                    Estado = (int)c.Estado,
+                    Observacion = c.Observacion,
+                    PrecioFinal = c.PrecioFinal
+                })
+                .ToListAsync();
+        }
+
+        // POST: api/Citas -> REQUERIDO POR MVC (Usa el Request plano para Swagger)
         [HttpPost]
         public async Task<ActionResult<Cita>> PostCita(AgendarCitaRequest request)
         {
-            try
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            // Buscamos el precio del servicio para asignarlo automáticamente a la cita
+            var servicio = await _context.Servicios.FindAsync(request.ServicioId);
+            if (servicio == null) return BadRequest("El servicio seleccionado no existe.");
+
+            var cita = new Cita
             {
-                var cita = new Cita
-                {
-                    ClienteId = request.ClienteId,
-                    ServicioId = request.ServicioId,
-                    BarberoId = request.BarberoId,
-                    FechaHora = request.FechaHora,
-                    Observacion = request.Observacion,
-                    Estado = EstadoCita.Pendiente,
-                    FechaRegistro = DateTime.UtcNow
-                };
+                ClienteId = request.ClienteId,
+                ServicioId = request.ServicioId,
+                BarberoId = request.BarberoId,
+                FechaHora = request.FechaHora,
+                Observacion = request.Observacion,
+                Estado = EstadoCita.Pendiente,
+                PrecioFinal = servicio.Precio, // Se llena con el precio real del servicio
+                FechaRegistro = DateTime.UtcNow
+            };
 
-                _context.Citas.Add(cita);
-                await _context.SaveChangesAsync();
+            _context.Citas.Add(cita);
+            await _context.SaveChangesAsync();
 
-                // Para que no de error 500 al serializar la respuesta, instanciamos propiedades de navegación vacías
-                cita.Cliente = null!;
-                cita.Barbero = null!;
-                cita.Servicio = null!;
+            // Seteamos las propiedades complejas en null para evitar referencias cíclicas al responder
+            cita.Cliente = null!;
+            cita.Barbero = null!;
+            cita.Servicio = null!;
 
-                return Ok(cita);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al guardar: {ex.Message}");
-            }
+            return CreatedAtAction(nameof(GetCitas), new { id = cita.Id }, cita);
         }
 
+        // PUT: api/Citas/5/estado -> REQUERIDO POR MVC (Cancelar y cambiar flujos)
         [HttpPut("{id}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoCita estado)
         {
@@ -140,19 +132,32 @@ namespace Barberia.Api.Controllers
 
             cita.Estado = estado;
             await _context.SaveChangesAsync();
+
             return Ok();
         }
 
+        // PUT: api/Citas/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCita(int id, Cita cita)
         {
             if (id != cita.Id) return BadRequest();
 
             _context.Entry(cita).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Citas.Any(e => e.Id == id)) return NotFound();
+                else throw;
+            }
+
             return NoContent();
         }
 
+        // DELETE: api/Citas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCita(int id)
         {
@@ -161,6 +166,7 @@ namespace Barberia.Api.Controllers
 
             _context.Citas.Remove(cita);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
