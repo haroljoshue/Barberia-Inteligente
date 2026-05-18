@@ -82,12 +82,14 @@ namespace Barberia.MVC.Controllers
             // Enviamos el estado correctamente en formato JSON hacia el PUT de la API
             var response = await client.PutAsJsonAsync($"api/citas/{citaId}/estado", nuevoEstado);
 
+
             TempData[response.IsSuccessStatusCode ? "Success" : "Error"] =
                 response.IsSuccessStatusCode
                     ? "Estado actualizado correctamente."
                     : "Error al actualizar estado.";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Dashboard));
+
         }
 
         [Authorize(Roles = "Barbero")]
