@@ -1322,7 +1322,7 @@ main > .container:first-child {
 }
 
 /* ============================================
-   💬 CHAT N8N - FLOTANTE CONTROLADO
+   💬 CHAT N8N - FLOTANTE CONTROLADO (EXTERIOR)
    ============================================ */
 
 /* Burbuja flotante */
@@ -1390,230 +1390,27 @@ main > .container:first-child {
         background-color: rgba(255,255,255,0.35) !important;
     }
 
-/* Mount del chat fullscreen */
-#n8n-chat-mount {
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-    #n8n-chat-mount .chat-wrapper {
-        height: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    #n8n-chat-mount .chat-header {
-        background-color: var(--color-primary) !important;
-        padding: 1rem 1.25rem !important;
-        flex-shrink: 0 !important;
-    }
-
-        #n8n-chat-mount .chat-header h1 {
-            color: white !important;
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            margin: 0 0 0.2rem 0 !important;
-        }
-
-        #n8n-chat-mount .chat-header p {
-            color: rgba(255,255,255,0.8) !important;
-            font-size: 0.8rem !important;
-            margin: 0 !important;
-        }
-
-    #n8n-chat-mount .chat-body {
-        flex: 1 !important;
-        overflow: hidden !important;
-        display: flex !important;
-        flex-direction: column !important;
-    }
-
-    #n8n-chat-mount .chat-messages-list {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        padding: 1rem !important;
-        background-color: #f8f8f6 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 0.75rem !important;
-    }
-
-    /* Mensaje bot */
-    #n8n-chat-mount .chat-message-from-bot .chat-message-markdown {
-        background-color: white !important;
-        border: 1px solid var(--color-border-light) !important;
-        border-radius: 4px 12px 12px 12px !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 0.875rem !important;
-        color: var(--color-text-primary) !important;
-        max-width: 82% !important;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
-    }
-
-        #n8n-chat-mount .chat-message-from-bot .chat-message-markdown p {
-            margin: 0 0 0.4rem 0 !important;
-            color: var(--color-text-primary) !important;
-        }
-
-            #n8n-chat-mount .chat-message-from-bot .chat-message-markdown p:last-child {
-                margin-bottom: 0 !important;
-            }
-
-    /* Mensaje usuario */
-    #n8n-chat-mount .chat-message-from-user {
-        display: flex !important;
-        justify-content: flex-end !important;
-    }
-
-        #n8n-chat-mount .chat-message-from-user .chat-message-markdown {
-            background-color: var(--color-primary) !important;
-            color: white !important;
-            border-radius: 12px 4px 12px 12px !important;
-            padding: 0.75rem 1rem !important;
-            font-size: 0.875rem !important;
-            max-width: 82% !important;
-        }
-
-            #n8n-chat-mount .chat-message-from-user .chat-message-markdown p {
-                margin: 0 !important;
-                color: white !important;
-            }
-
-    /* Footer input */
-    #n8n-chat-mount .chat-footer {
-        padding: 0.75rem !important;
-        background-color: white !important;
-        border-top: 1px solid var(--color-border-light) !important;
-        flex-shrink: 0 !important;
-    }
-
-    #n8n-chat-mount .chat-inputs {
-        display: flex !important;
-        align-items: flex-end !important;
-        gap: 0.5rem !important;
-    }
-
-    #n8n-chat-mount .chat-input textarea {
-        flex: 1 !important;
-        border: 2px solid var(--color-border) !important;
-        border-radius: 10px !important;
-        padding: 0.6rem 0.9rem !important;
-        font-size: 0.875rem !important;
-        resize: none !important;
-        min-height: 44px !important;
-        max-height: 100px !important;
-        font-family: var(--font-primary) !important;
-        width: auto !important;
-    }
-
-        #n8n-chat-mount .chat-input textarea:focus {
-            border-color: var(--color-primary) !important;
-            outline: none !important;
-        }
-
-    #n8n-chat-mount .chat-input-send-button {
-        width: 40px !important;
-        height: 40px !important;
-        border-radius: 10px !important;
-        background-color: var(--color-primary) !important;
-        color: white !important;
-        border: none !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        flex-shrink: 0 !important;
-    }
-
-        #n8n-chat-mount .chat-input-send-button:disabled {
-            background-color: var(--color-border) !important;
-            cursor: not-allowed !important;
-        }
-
-/* Responsive móvil */
-@media (max-width: 480px) {
-    #chat-container {
-        right: 0.5rem !important;
-        left: 0.5rem !important;
-        width: auto !important;
-        bottom: 0.5rem !important;
-        height: 85vh !important;
-        border-radius: 16px 16px 12px 12px !important;
-    }
-
-    #chat-bubble {
-        right: 1rem !important;
-        bottom: 1rem !important;
-    }
-}
-
-/* Fix mensaje usuario */
-#n8n-chat-mount .chat-message-from-user .chat-message-markdown {
+/* Header */
+#n8n-chat-mount .chat-header {
     background-color: var(--color-primary) !important;
-    color: white !important;
-    border-radius: 12px 4px 12px 12px !important;
-    padding: 0.5rem 0.9rem !important;
-    font-size: 0.875rem !important;
-    max-width: 75% !important;
-    display: inline-block !important;
-    word-break: break-word !important;
+    padding: 1rem 1.25rem !important;
+    flex-shrink: 0 !important;
 }
 
-    #n8n-chat-mount .chat-message-from-user .chat-message-markdown p {
+    #n8n-chat-mount .chat-header h1 {
+        color: white !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        margin: 0 0 0.2rem 0 !important;
+    }
+
+    #n8n-chat-mount .chat-header p {
+        color: rgba(255,255,255,0.8) !important;
+        font-size: 0.8rem !important;
         margin: 0 !important;
-        color: white !important;
-        font-size: 0.875rem !important;
     }
 
-/* Alinea el mensaje usuario a la derecha */
-#n8n-chat-mount .chat-message.chat-message-from-user {
-    display: flex !important;
-    justify-content: flex-end !important;
-    align-items: flex-end !important;
-}
-
-/* Quita el fondo grande verde del contenedor */
-#n8n-chat-mount .chat-message-from-user > div:not(.chat-message-markdown):not(.chat-message-actions) {
-    background: none !important;
-    padding: 0 !important;
-}
-
-/* Fix burbuja usuario chat */
-.chat-message-from-user {
-    display: flex !important;
-    justify-content: flex-end !important;
-    padding: 0 !important;
-    background: none !important;
-}
-
-    .chat-message-from-user .chat-message-markdown {
-        background-color: var(--color-primary) !important;
-        color: white !important;
-        border-radius: 12px 4px 12px 12px !important;
-        padding: 0.5rem 0.9rem !important;
-        font-size: 0.875rem !important;
-        max-width: 75% !important;
-        display: inline-block !important;
-        min-width: unset !important;
-        width: auto !important;
-    }
-
-        .chat-message-from-user .chat-message-markdown p {
-            margin: 0 !important;
-            color: white !important;
-            white-space: normal !important;
-        }
-
-/* Quita el fondo verde del contenedor padre */
-.chat-message.chat-message-from-user > *:not(.chat-message-markdown) {
-    background: transparent !important;
-    min-width: unset !important;
-    width: auto !important;
-}
-
-/* Contenedor principal del footer del chat */
+/* Footer e input */
 .chat-footer {
     background-color: #ffffff !important;
     border-top: 1px solid #e5e7eb !important;
@@ -1622,61 +1419,41 @@ main > .container:first-child {
     box-sizing: border-box !important;
 }
 
-/* Envoltura del input */
-.chat-input {
-    width: 100% !important;
-    max-width: 900px !important; /* Limita el ancho en pantallas grandes para que no se estire feo */
-    margin: 0 auto !important;
-}
-
-/* Contenedor interno que agrupa el textarea y los controles */
 .chat-inputs {
     display: flex !important;
-    align-items: flex-end !important; /* Alinea el botón abajo si el textarea crece */
-    background-color: #f3f4f6 !important; /* Fondo gris claro moderno */
+    align-items: flex-end !important;
+    background-color: #f3f4f6 !important;
     border: 1px solid #e5e7eb !important;
-    border-radius: 24px !important; /* Bordes redondeados elegantes */
+    border-radius: 24px !important;
     padding: 8px 12px !important;
     transition: all 0.2s ease-in-out !important;
 }
 
-    /* Efecto cuando el usuario está escribiendo */
     .chat-inputs:focus-within {
         background-color: #ffffff !important;
-        border-color: #fbbf24 !important; /* Color dorado/amarillo para hacer match con tu marca */
-        box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
+        border-color: #fbbf24 !important;
+        box-shadow: 0 0 0 3px rgba(251,191,36,0.2) !important;
     }
 
-    /* Estilos para la caja de texto (textarea) */
     .chat-inputs textarea {
         flex: 1 !important;
         background: transparent !important;
         border: none !important;
         outline: none !important;
-        resize: none !important; /* Evita que el usuario lo deforme manualmente */
-        font-family: inherit !important;
+        resize: none !important;
         font-size: 15px !important;
         line-height: 20px !important;
         color: #1f2937 !important;
         padding: 8px 4px !important;
         margin: 0 !important;
-        max-height: 150px !important; /* Por si el texto es muy largo, activa scroll interno */
+        max-height: 150px !important;
     }
 
-/* Contenedor del botón de enviar */
-.chat-inputs-controls {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding-left: 8px !important;
-}
-
-/* Botón de enviar */
 .chat-input-send-button {
-    background-color: #fbbf24 !important; /* Color dorado/amarillo activo */
+    background-color: #fbbf24 !important;
     color: #1f2937 !important;
     border: none !important;
-    border-radius: 50% !important; /* Botón completamente circular */
+    border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
     display: flex !important;
@@ -1687,23 +1464,18 @@ main > .container:first-child {
     padding: 0 !important;
 }
 
-    /* Efecto Hover sobre el botón de enviar */
     .chat-input-send-button:not([disabled]):hover {
-        background-color: #f59e0b !important; /* Un tono más oscuro al pasar el mouse */
+        background-color: #f59e0b !important;
         transform: scale(1.05) !important;
     }
 
-    /* Estado Deshabilitado (cuando el input está vacío) */
     .chat-input-send-button:disabled {
-        background-color: #e5e7eb !important; /* Gris claro */
-        color: #9ca3af !important; /* Icono gris oscuro */
+        background-color: #e5e7eb !important;
+        color: #9ca3af !important;
         cursor: not-allowed !important;
-        transform: none !important;
     }
 
-    /* Ajuste del icono SVG interno */
     .chat-input-send-button svg {
         width: 20px !important;
         height: 20px !important;
-        transform: rotate(0deg) !important; /* Por si necesitas ajustar la inclinación del avión */
     }
