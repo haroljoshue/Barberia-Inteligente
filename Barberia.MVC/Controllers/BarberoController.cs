@@ -25,16 +25,9 @@ namespace Barberia.MVC.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var client = _httpClientFactory.CreateClient("BarberiaApi");
 
-            // 1. SOLUCIÓN AL ID: 
-            // Si tu tabla 'Barberos' tiene un Id numérico, pero Identity usa String GUID, 
-            // necesitas obtener el Id numérico del barbero usando su Email o su UserId de la API.
-            // Por ahora, asumiremos que logras obtener el entero, o puedes hacer una petición intermedia:
-
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-
-            // Suponiendo que buscas el barbero asociado al usuario logueado:
+            // Buscar el barbero actual por UserId
             var barberos = await client.GetFromJsonAsync<List<Barbero>>("api/barberos") ?? new();
-            var barberoActual = barberos.FirstOrDefault(b => b.Email == userEmail);
+            var barberoActual = barberos.FirstOrDefault(b => b.UserId == userId);
 
             if (barberoActual == null)
             {
@@ -42,13 +35,11 @@ namespace Barberia.MVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            int barberoId = barberoActual.Id; // Aquí tienes el int real de la base de datos
+            int barberoId = barberoActual.Id;
 
-            // 2. SOLUCIÓN AL MApeo: Recibimos CitaBarberoDto como lo manda tu API
+            // Obtener citas del barbero
             var citasDto = await client.GetFromJsonAsync<List<CitaBarberoDto>>($"api/citas/barbero/{barberoId}") ?? new();
 
-            // Si tu 'BarberoDashboardViewModel' requiere estrictamente List<Cita>, 
-            // adaptamos los datos del DTO a Citas ficticias para que la vista no se rompa:
             var citasMapeadas = citasDto.Select(dto => new Cita
             {
                 Id = dto.Id,
@@ -60,17 +51,41 @@ namespace Barberia.MVC.Controllers
                 Servicio = new Servicio { Nombre = dto.ServicioNombre }
             }).ToList();
 
+            // Calcular métricas
+            var totalCitas = citasMapeadas.Count;
+            var citasPendientes = citasMapeadas.Count(c => c.Estado == EstadoCita.Pendiente);
+            var citasCompletadas = citasMapeadas.Count(c => c.Estado == EstadoCita.Atendida);
+            var citasCanceladas = citasMapeadas.Count(c => c.Estado == EstadoCita.Cancelada);
+            var gananciasTotales = citasMapeadas
+                .Where(c => c.Estado == EstadoCita.Atendida)
+                .Sum(c => c.PrecioFinal ?? 0); // <-- conversión segura
+
+            var citasPorMes = citasMapeadas
+                .GroupBy(c => new { c.FechaHora.Year, c.FechaHora.Month })
+                .Select(g => new BarberoDashboardViewModel.CitasMes
+                {
+                    Mes = $"{g.Key.Month}/{g.Key.Year}",
+                    Total = g.Count(),
+                    Ganancias = g.Where(c => c.Estado == EstadoCita.Atendida)
+                                 .Sum(c => c.PrecioFinal ?? 0) // <-- conversión segura
+                }).ToList();
+
             var dashboard = new BarberoDashboardViewModel
             {
-                Citas = citasMapeadas, // Ahora la lista coincide perfectamente
+                Citas = citasMapeadas,
                 CitasHoy = citasMapeadas.Count(c => c.FechaHora.Date == DateTime.Today),
-                CitasPendientes = citasMapeadas.Count(c => c.Estado == EstadoCita.Pendiente),
-                CitasCompletadas = citasMapeadas.Count(c => c.Estado == EstadoCita.Atendida),
-                TopClientes = new List<ApplicationUser>()
+                CitasPendientes = citasPendientes,
+                CitasCompletadas = citasCompletadas,
+                CitasCanceladas = citasCanceladas,
+                TotalCitas = totalCitas,
+                GananciasTotales = gananciasTotales,
+                CitasPorMes = citasPorMes,
+                TopClientes = new List<ApplicationUser>() // puedes calcular top clientes si quieres
             };
 
             return View(dashboard);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
