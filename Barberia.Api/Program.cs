@@ -6,14 +6,12 @@ using ModelosBarberia;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Conexión a PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Identity con ApplicationUser
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -24,12 +22,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient<EmbeddingService>();
-builder.Services.AddHttpClient<QdrantService>();
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -38,21 +30,18 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = false;
     });
 
-
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient<EmbeddingService>();
+builder.Services.AddHttpClient<QdrantService>();
 
 var app = builder.Build();
 
-
 app.UseSwagger();
 app.UseSwaggerUI();
-
-
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");
