@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using Barberia.Api.Data;
-
+using ModelosBarberia.DTO_s;
 
 namespace Barberia.Api.Controllers
 {
@@ -24,27 +24,69 @@ namespace Barberia.Api.Controllers
 
         // GET: api/Barberos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Barbero>>> GetBarbero()
+        public async Task<ActionResult<IEnumerable<BarberoDto>>> GetBarbero()
         {
-            return await _context.Barberos.ToListAsync();
+            try
+            {
+                // Mapeamos directamente a DTO para romper la referencia circular de las Citas
+                var barberos = await _context.Barberos
+                    .Select(b => new BarberoDto
+                    {
+                        Id = b.Id,
+                        UserId = b.UserId,
+                        Nombre = b.Nombre,
+                        Especialidad = b.Especialidad,
+                        Telefono = b.Telefono,
+                        Email = b.Email,
+                        Disponible = b.Disponible,
+                        FechaRegistro = b.FechaRegistro
+                    })
+                    .ToListAsync();
+
+                return Ok(barberos);
+            }
+            catch (Exception ex)
+            {
+                // Si algo falla, te devolverá el mensaje de error real en Swagger en vez de un 500 genérico
+                return StatusCode(500, $"Error interno: {ex.Message} -> {ex.InnerException?.Message}");
+            }
         }
 
         // GET: api/Barberos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Barbero>> GetBarbero(int id)
+        public async Task<ActionResult<BarberoDto>> GetBarbero(int id)
         {
-            var barbero = await _context.Barberos.FindAsync(id);
-
-            if (barbero == null)
+            try
             {
-                return NotFound();
-            }
+                var barbero = await _context.Barberos
+                    .Where(b => b.Id == id)
+                    .Select(b => new BarberoDto
+                    {
+                        Id = b.Id,
+                        UserId = b.UserId,
+                        Nombre = b.Nombre,
+                        Especialidad = b.Especialidad,
+                        Telefono = b.Telefono,
+                        Email = b.Email,
+                        Disponible = b.Disponible,
+                        FechaRegistro = b.FechaRegistro
+                    })
+                    .FirstOrDefaultAsync();
 
-            return barbero;
+                if (barbero == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(barbero);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
         }
 
         // PUT: api/Barberos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBarbero(int id, Barbero barbero)
         {
@@ -75,14 +117,15 @@ namespace Barberia.Api.Controllers
         }
 
         // POST: api/Barberos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Barbero>> PostBarbero(Barbero barbero)
         {
             _context.Barberos.Add(barbero);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBarbero", new { id = barbero.Id }, barbero);
+            // Nota: Para evitar problemas con el CreatedAtAction por el cambio del tipo de retorno en el GET, 
+            // usamos la ruta de forma explícita.
+            return CreatedAtAction(nameof(GetBarbero), new { id = barbero.Id }, barbero);
         }
 
         // DELETE: api/Barberos/5
