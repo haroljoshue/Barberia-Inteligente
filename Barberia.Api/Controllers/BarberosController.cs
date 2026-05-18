@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModelosBarberia;
 using Barberia.Api.Data;
-using ModelosBarberia.DTO_s;
+using ModelosBarberia.DTO_s; // Asegúrate de que este namespace apunte a donde creaste el BarberoDto
 
 namespace Barberia.Api.Controllers
 {
@@ -28,12 +28,12 @@ namespace Barberia.Api.Controllers
         {
             try
             {
-                // Mapeamos directamente a DTO para romper la referencia circular de las Citas
+                // Al mapear manualmente campo por campo, omitimos b.UserId temporalmente
+                // Esto soluciona de inmediato el error 42703 de PostgreSQL
                 var barberos = await _context.Barberos
                     .Select(b => new BarberoDto
                     {
                         Id = b.Id,
-                        UserId = b.UserId,
                         Nombre = b.Nombre,
                         Especialidad = b.Especialidad,
                         Telefono = b.Telefono,
@@ -47,7 +47,6 @@ namespace Barberia.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Si algo falla, te devolverá el mensaje de error real en Swagger en vez de un 500 genérico
                 return StatusCode(500, $"Error interno: {ex.Message} -> {ex.InnerException?.Message}");
             }
         }
@@ -63,7 +62,6 @@ namespace Barberia.Api.Controllers
                     .Select(b => new BarberoDto
                     {
                         Id = b.Id,
-                        UserId = b.UserId,
                         Nombre = b.Nombre,
                         Especialidad = b.Especialidad,
                         Telefono = b.Telefono,
@@ -123,8 +121,7 @@ namespace Barberia.Api.Controllers
             _context.Barberos.Add(barbero);
             await _context.SaveChangesAsync();
 
-            // Nota: Para evitar problemas con el CreatedAtAction por el cambio del tipo de retorno en el GET, 
-            // usamos la ruta de forma explícita.
+            // Mantenemos la redirección explícita usando el nombre del método GET por Id
             return CreatedAtAction(nameof(GetBarbero), new { id = barbero.Id }, barbero);
         }
 
